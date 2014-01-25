@@ -38,7 +38,7 @@ namespace GlitchGame
             Window.LostFocus += (sender, args) => HasFocus = false;
 
             Camera = new Camera(Window.DefaultView);
-            Camera.Zoom = 2f;
+            Camera.Zoom = 1.5f;
 
             HasFocus = true;
             World = new World(new Vector2(0, 0));

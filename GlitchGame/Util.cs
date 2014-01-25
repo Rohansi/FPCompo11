@@ -80,6 +80,16 @@ namespace GlitchGame
             return new Vector2(vec2.X, vec2.Y);
         }
 
+        public static Vector2f Mul(this Vector2f v1, Vector2f v2)
+        {
+            return new Vector2f(v1.X * v2.X, v1.Y * v2.Y);
+        }
+
+        public static Vector2f Div(this Vector2f v1, Vector2f v2)
+        {
+            return new Vector2f(v1.X / v2.X, v1.Y / v2.Y);
+        }
+
         public static Sprite Center(this Sprite sprite)
         {
             sprite.Origin = new Vector2f(sprite.Texture.Size.X / 2f, sprite.Texture.Size.Y / 2f);

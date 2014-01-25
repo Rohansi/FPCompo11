@@ -20,7 +20,7 @@ namespace GlitchGame.Entities
             _sprite = new Sprite(Assets.LoadTexture("bullet.png"));
             _sprite.Origin = new Vector2f(_sprite.Texture.Size.X / 2f, 0);
 
-            _body = Util.CreateBullet(parent, offset, 10f, (a, b, contact) =>
+            _body = Util.CreateBullet(parent, offset, 7.5f, (a, b, contact) =>
             {
                 Program.Entities.Remove(this);
                 return true;

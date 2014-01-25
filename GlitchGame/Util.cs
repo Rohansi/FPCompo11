@@ -32,10 +32,10 @@ namespace GlitchGame
             body.AngularDamping = 1.0f;
 
             // tip
-            var rect1 = new PolygonShape(PolygonTools.CreateRectangle(0.25f * scale, 0.5f * scale, new Vector2(0, -0.5f) * scale, 0), 1);
+            var rect1 = new PolygonShape(PolygonTools.CreateRectangle(0.23f * scale, 0.55f * scale, new Vector2(0, -0.45f) * scale, 0), 1);
 
             // tail
-            var rect2 = new PolygonShape(PolygonTools.CreateRectangle(0.75f * scale, 0.5f * scale, new Vector2(0, 0.5f) * scale, 0), 3);
+            var rect2 = new PolygonShape(PolygonTools.CreateRectangle(0.725f * scale, 0.45f * scale, new Vector2(0, 0.55f) * scale, 0), 3);
 
             body.CreateFixture(rect1);
             body.CreateFixture(rect2);

@@ -19,12 +19,12 @@ namespace GlitchGame
             body.LinearDamping = 0.5f;
             body.AngularDamping = 1.0f;
 
-            var shape = new CircleShape(radius, 30 * radius);
+            var shape = new CircleShape(radius, 20 * radius);
             body.CreateFixture(shape);
             return body;
         }
 
-        public static Body CreateShip()
+        public static Body CreateShip(float scale = 1)
         {
             var body = new Body(Program.World);
             body.BodyType = BodyType.Dynamic;
@@ -32,10 +32,10 @@ namespace GlitchGame
             body.AngularDamping = 1.0f;
 
             // tip
-            var rect1 = new PolygonShape(PolygonTools.CreateRectangle(0.25f, 0.5f, new Vector2(0, -0.5f), 0), 1);
+            var rect1 = new PolygonShape(PolygonTools.CreateRectangle(0.25f * scale, 0.5f * scale, new Vector2(0, -0.5f) * scale, 0), 1);
 
             // tail
-            var rect2 = new PolygonShape(PolygonTools.CreateRectangle(0.75f, 0.5f, new Vector2(0, 0.5f), 0), 3);
+            var rect2 = new PolygonShape(PolygonTools.CreateRectangle(0.75f * scale, 0.5f * scale, new Vector2(0, 0.5f) * scale, 0), 3);
 
             body.CreateFixture(rect1);
             body.CreateFixture(rect2);

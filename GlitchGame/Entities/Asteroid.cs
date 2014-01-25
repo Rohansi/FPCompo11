@@ -6,7 +6,7 @@ using SFML.Graphics;
 
 namespace GlitchGame.Entities
 {
-    public class Asteroid : Transformable, IEntity
+    public sealed class Asteroid : Transformable, IEntity
     {
         public static readonly List<float> Radiuses = new List<float> { 0.25f, 0.35f, 0.5f, 1.0f };
 

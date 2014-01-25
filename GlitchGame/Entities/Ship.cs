@@ -8,6 +8,7 @@ namespace GlitchGame.Entities
 {
     public abstract class Ship : Transformable, IEntity
     {
+        private float _scale;
         private float _timer;
 
         private Sprite _forward;
@@ -24,13 +25,17 @@ namespace GlitchGame.Entities
 
         protected virtual float GunCooldown { get { return 0.15f; } }
 
-        protected Ship(Vector2 position, string sprite)
+        protected Ship(Vector2 position, string sprite, float scale)
         {
             Sprite = new Sprite(Assets.LoadTexture(sprite)).Center();
+            Scale = new Vector2f(scale, scale);
 
-            Body = Util.CreateShip();
+            Body = Util.CreateShip(scale);
             Body.UserData = this;
             Body.Position = position;
+
+            _scale = scale;
+            _timer = 0;
 
             _forward = new Sprite(Assets.LoadTexture("ship_forward.png"));
             _forward.Origin = new Vector2f(_forward.Texture.Size.X / 2f, 0) - new Vector2f(0, 65);
@@ -62,16 +67,17 @@ namespace GlitchGame.Entities
             {
                 Shoot();
                 _timer = GunCooldown;
-            }
+            }   
 
-            Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * 25)));
-            Body.ApplyTorque(AngularThruster * 10);
+            // TODO: speed doesnt scale properly
+            Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * 25 * (float)Math.Pow(_scale, 2))));
+            Body.ApplyTorque(AngularThruster * 10 * (float)Math.Pow(_scale, 2));
         }
 
         public virtual void Shoot()
         {
-            var b1 = new Bullet(Body, new Vector2(-0.575f, -0.20f));
-            var b2 = new Bullet(Body, new Vector2(0.575f, -0.20f));
+            var b1 = new Bullet(Body, new Vector2(-0.485f, -0.20f) * _scale);
+            var b2 = new Bullet(Body, new Vector2(0.485f, -0.20f) * _scale);
 
             Program.Entities.AddLast(b1);
             Program.Entities.AddLast(b2);

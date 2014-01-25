@@ -74,6 +74,9 @@ namespace GlitchGame
             }
             #endregion
 
+            Player = new Player(new Vector2(0, 0));
+            Entities.AddLast(Player);
+
             #region Asteroids
             // TODO: fill in the circle border
             const int asteroids = (int)(radius * radius) / 10;
@@ -107,9 +110,6 @@ namespace GlitchGame
             }
             #endregion
 
-            Player = new Player(new Vector2(0, 0));
-            Entities.AddLast(Player);
-
             while (Window.IsOpen())
             {
                 // INPUT
@@ -142,7 +142,6 @@ namespace GlitchGame
                 background.TextureRect = new IntRect((int)(Camera.Position.X % bgTex.Size.X), (int)(Camera.Position.Y % bgTex.Size.Y), (int)bounds.Width, (int)bounds.Height);
                 Window.Draw(background);
 
-                // TODO: do some farseer query to know what to draw
                 foreach (var e in EntitiesInRegion(Camera.Bounds))
                 {
                     e.Draw(Window);
@@ -169,7 +168,7 @@ namespace GlitchGame
             }, ref aabb);
 
             return result.Distinct().OrderBy(e => e.DrawOrder);
-        } 
+        }
 
         private static Vector2? FindOpenSpace(FloatRect area, Vector2 size)
         {

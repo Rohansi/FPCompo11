@@ -3,15 +3,15 @@ using SFML.Window;
 
 namespace GlitchGame.Entities
 {
-    public class Player : Ship
+    public sealed class Player : Ship
     {
         public override int DrawOrder { get { return 10; } }
         public override byte RadarType { get { return 1; } }
 
         public Player(Vector2 position)
-            : base(position, "ship.png")
+            : base(position, "ship.png", 1)
         {
-            
+
         }
 
         public override void Update()

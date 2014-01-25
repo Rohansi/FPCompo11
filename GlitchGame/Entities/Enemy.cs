@@ -8,7 +8,7 @@ using SFML.Graphics;
 
 namespace GlitchGame.Entities
 {
-    public class Enemy : Ship
+    public sealed class Enemy : Ship
     {
         private VirtualMachine _vm;
         private Engines _engines;
@@ -18,7 +18,7 @@ namespace GlitchGame.Entities
         public override byte RadarType { get { return 3; } }
 
         public Enemy(Vector2 position)
-            : base(position, "ship.png")
+            : base(position, "ship.png", 1)
         {
             Sprite.Color = new Color(255, 180, 200);
 

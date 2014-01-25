@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GlitchGame.Weapons;
+using Microsoft.Xna.Framework;
 using SFML.Window;
 
 namespace GlitchGame.Entities
@@ -11,7 +12,7 @@ namespace GlitchGame.Entities
         public Player(Vector2 position)
             : base(position, "ship.png", 1)
         {
-
+            Weapon = new DualLaserGun(this);
         }
 
         public override void Update()
@@ -37,6 +38,8 @@ namespace GlitchGame.Entities
                 if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
                     Shooting = true;
             }
+
+            Weapon.Update();
 
             base.Update();
         }

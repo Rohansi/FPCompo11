@@ -114,7 +114,7 @@ namespace GlitchGame
             {
                 // INPUT
                 Window.DispatchEvents();
-
+                
                 // UPDATE
                 foreach (var e in Entities.Iterate())
                 {
@@ -128,6 +128,7 @@ namespace GlitchGame
                 }
 
                 World.Step(FrameTime);
+
                 Camera.Position = Player.Position;
 
                 // DRAW

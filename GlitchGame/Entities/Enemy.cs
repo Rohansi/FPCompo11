@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using GlitchGame.Devices;
+using GlitchGame.Weapons;
 using LoonyVM;
 using Microsoft.Xna.Framework;
 using SFML.Graphics;
@@ -41,6 +42,8 @@ namespace GlitchGame.Entities
             {
                 _vm.Memory[i] = code[i];
             }
+
+            Weapon = new LaserGun(this);
         }
 
         public override void Update()
@@ -66,6 +69,8 @@ namespace GlitchGame.Entities
                 Console.WriteLine(e);
                 Dead = true;
             }
+
+            Weapon.Update();
 
             Shooting = _guns.Shooting;
             Thruster = _engines.Thruster;

@@ -1,5 +1,6 @@
 ﻿using System;
 using FarseerPhysics.Dynamics;
+using GlitchGame.Weapons;
 using Microsoft.Xna.Framework;
 using SFML.Graphics;
 using SFML.Window;
@@ -8,34 +9,34 @@ namespace GlitchGame.Entities
 {
     public abstract class Ship : Transformable, IEntity
     {
-        private float _scale;
-        private float _timer;
-
         private Sprite _forward;
         private Sprite _backward;
         private Sprite _left;
         private Sprite _right;
 
-        internal Sprite Sprite;
-        internal Body Body;
+        public abstract int DrawOrder { get; }
+        public abstract byte RadarType { get; }
+        public bool Dead { get; protected set; }
 
-        internal float Thruster;
-        internal float AngularThruster;
-        internal bool Shooting;
+        public Sprite Sprite { get; protected set; }
+        public Body Body { get; protected set; }
+        public float Size { get; protected set; }
 
-        protected virtual float GunCooldown { get { return 0.15f; } }
+        protected Weapon Weapon;
+        protected float Thruster;
+        protected float AngularThruster;
+        protected bool Shooting;
 
-        protected Ship(Vector2 position, string sprite, float scale)
+        protected Ship(Vector2 position, string texture, float size)
         {
-            Sprite = new Sprite(Assets.LoadTexture(sprite)).Center();
-            Scale = new Vector2f(scale, scale);
+            Sprite = new Sprite(Assets.LoadTexture(texture)).Center();
+            Scale = new Vector2f(size, size);
 
-            Body = Util.CreateShip(scale);
+            Body = Util.CreateShip(size);
             Body.UserData = this;
             Body.Position = position;
 
-            _scale = scale;
-            _timer = 0;
+            Size = size;
 
             _forward = new Sprite(Assets.LoadTexture("ship_forward.png"));
             _forward.Origin = new Vector2f(_forward.Texture.Size.X / 2f, 0) - new Vector2f(0, 65);
@@ -50,10 +51,6 @@ namespace GlitchGame.Entities
             _right.Origin = new Vector2f(_right.Texture.Size.X, _right.Texture.Size.Y / 2f) - new Vector2f(-15, -37);
         }
 
-        public abstract int DrawOrder { get; }
-        public abstract byte RadarType { get; }
-        public bool Dead { get; protected set; }
-
         public void Destroyed()
         {
             Program.World.RemoveBody(Body);
@@ -61,26 +58,12 @@ namespace GlitchGame.Entities
 
         public virtual void Update()
         {
-            _timer = Math.Max(_timer - Program.FrameTime, 0);
-
-            if (Shooting && _timer <= 0)
-            {
-                Shoot();
-                _timer = GunCooldown;
-            }   
+            if (Weapon != null && Shooting)
+                Weapon.TryShoot();
 
             // TODO: speed doesnt scale properly
-            Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * 25 * (float)Math.Pow(_scale, 2))));
-            Body.ApplyTorque(AngularThruster * 10 * (float)Math.Pow(_scale, 2));
-        }
-
-        public virtual void Shoot()
-        {
-            var b1 = new Bullet(Body, new Vector2(-0.485f, -0.20f) * _scale);
-            var b2 = new Bullet(Body, new Vector2(0.485f, -0.20f) * _scale);
-
-            Program.Entities.AddLast(b1);
-            Program.Entities.AddLast(b2);
+            Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * 25 * (float)Math.Pow(Size, 2))));
+            Body.ApplyTorque(AngularThruster * 7.5f * (float)Math.Pow(Size, 2));
         }
 
         public void Draw(RenderTarget target)

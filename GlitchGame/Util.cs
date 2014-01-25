@@ -43,18 +43,16 @@ namespace GlitchGame
             return body;
         }
 
-        public static Body CreateBullet(Body relativeTo, Vector2 offset, float speed = 10f, OnCollisionEventHandler collisionHandler = null)
+        public static Body CreateBullet(Body parent, Vector2 offset, OnCollisionEventHandler collisionHandler = null)
         {
             var body = new Body(Program.World);
             body.BodyType = BodyType.Dynamic;
             body.IsBullet = true;
 
-            var shape = new CircleShape(0.15f / 4, 1);
+            var shape = new CircleShape(0.15f / 4, 1f);
             body.CreateFixture(shape);
-
-            body.Position = relativeTo.Position + relativeTo.GetWorldVector(offset);
-            body.Rotation = relativeTo.Rotation;
-            body.ApplyForce(body.GetWorldVector(new Vector2(0.0f, -speed)));
+            body.Position = parent.Position + parent.GetWorldVector(offset);
+            body.Rotation = parent.Rotation;
 
             body.OnCollision += (a, b, contact) =>
             {
@@ -66,8 +64,6 @@ namespace GlitchGame
             };
 
             return body;
-            /*createBullet(new Vector2(-0.575f, -0.20f));
-            createBullet(new Vector2(0.575f, -0.20f));*/
         }
 
         public static Vector2f ToSfml(this Vector2 vec2)
@@ -99,6 +95,11 @@ namespace GlitchGame
         public static float Clamp(float value, float min, float max)
         {
             return value > max ? max : (value < min ? min : value);
+        }
+
+        public static float Direction(Vector2 vec)
+        {
+            return (float)Math.Atan2(vec.Y, vec.X);
         }
 
         public static Vector2f LengthDir(float dir, float len)

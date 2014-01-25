@@ -71,6 +71,9 @@ namespace GlitchGame.Devices
 
                 Program.World.RayCast((f, p, n, fr) =>
                 {
+                    if (f.Body == _body)
+                        return -1;
+
                     if (fr > min)
                         return 1;
 

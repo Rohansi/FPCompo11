@@ -17,7 +17,7 @@ namespace GlitchGame
             var body = new Body(Program.World);
             body.BodyType = BodyType.Dynamic;
             body.LinearDamping = 0.5f;
-            body.AngularDamping = 1.0f;
+            body.AngularDamping = 0.5f;
 
             var shape = new CircleShape(radius, 20 * radius);
             body.CreateFixture(shape);
@@ -29,7 +29,7 @@ namespace GlitchGame
             var body = new Body(Program.World);
             body.BodyType = BodyType.Dynamic;
             body.LinearDamping = 0.5f;
-            body.AngularDamping = 1.0f;
+            body.AngularDamping = 0.5f;
 
             // tip
             var rect1 = new PolygonShape(PolygonTools.CreateRectangle(0.23f * scale, 0.55f * scale, new Vector2(0, -0.45f) * scale, 0), 1);

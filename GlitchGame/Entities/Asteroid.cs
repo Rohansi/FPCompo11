@@ -8,7 +8,7 @@ namespace GlitchGame.Entities
 {
     public sealed class Asteroid : Transformable, IEntity
     {
-        public static readonly List<float> Radiuses = new List<float> { 0.25f, 0.35f, 0.5f, 1.0f };
+        public static readonly List<float> Radiuses = new List<float> { 0.215f, 0.35f, 0.5f, 0.95f };
 
         public int DrawOrder { get { return 1; } }
         public byte RadarType { get { return 0; } }

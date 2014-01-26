@@ -42,12 +42,7 @@ namespace GlitchGame
 
         public void Apply(RenderTarget rt)
         {
-            var center = Position;
-            var offset = 0.25f * Zoom;
-            center.X += offset;
-            center.Y += offset;
-
-            View.Center = center;
+            View.Center = Position;
             rt.SetView(View);
         }
     }

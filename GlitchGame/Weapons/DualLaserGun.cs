@@ -2,6 +2,7 @@
 using GlitchGame.Entities;
 using GlitchGame.Entities.Projectiles;
 using Microsoft.Xna.Framework;
+using SFML.Graphics;
 
 namespace GlitchGame.Weapons
 {
@@ -11,7 +12,8 @@ namespace GlitchGame.Weapons
 
         public DualLaserGun(Ship parent) : base(parent)
         {
-            MaxCooldown = 0.15f;
+            Icon = new Sprite(Assets.LoadTexture("wep_dual_laser.png")).Center();
+            MaxCooldown = 0.30f;
         }
 
         public override void Shoot()

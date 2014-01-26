@@ -24,6 +24,8 @@ namespace GlitchGame
         public static Random Random = new Random();
         public static RenderWindow Window;
         public static bool HasFocus { get; private set; }
+
+        public static Camera HudCamera;
         public static Camera Camera;
         public static World World;
         public static LinkedList<IEntity> Entities;
@@ -36,6 +38,16 @@ namespace GlitchGame
             Window.Closed += (sender, eventArgs) => Window.Close();
             Window.GainedFocus += (sender, args) => HasFocus = true;
             Window.LostFocus += (sender, args) => HasFocus = false;
+
+            Window.KeyPressed += (sender, args) =>
+            {
+                if (args.Code >= Keyboard.Key.Num1 && args.Code <= Keyboard.Key.Num9)
+                {
+                    Player.SwitchWeapon((int)args.Code - (int)Keyboard.Key.Num1);
+                }
+            };
+
+            HudCamera = new Camera(Window.DefaultView);
 
             Camera = new Camera(Window.DefaultView);
             Camera.Zoom = 1.5f;
@@ -79,7 +91,7 @@ namespace GlitchGame
 
             #region Asteroids
             // TODO: fill in the circle border
-            const int asteroids = (int)(radius * radius) / 10;
+            const int asteroids = (int)(radius * radius) / 20;
 
             for (var i = 0; i < asteroids; i++)
             {
@@ -95,7 +107,7 @@ namespace GlitchGame
             #endregion
 
             #region Enemies
-            const int ships = 10;
+            const int ships = 6;
 
             for (var i = 0; i < ships; i++)
             {
@@ -110,11 +122,14 @@ namespace GlitchGame
             }
             #endregion
 
+            var background = new Background("background.png");
+            var hud = new Hud();
+
             while (Window.IsOpen())
             {
                 // INPUT
                 Window.DispatchEvents();
-                
+
                 // UPDATE
                 foreach (var e in Entities.Iterate())
                 {
@@ -129,18 +144,9 @@ namespace GlitchGame
 
                 World.Step(FrameTime);
 
-                Camera.Position = Player.Position;
-
                 // DRAW
+                Camera.Position = Player.Position;
                 Camera.Apply(Window);
-
-                var bgTex = Assets.LoadTexture("background.png");
-                bgTex.Repeated = true;
-
-                var bounds = Camera.Bounds;
-                var background = new Sprite(bgTex);
-                background.Position = Camera.Position - new Vector2f(bounds.Width / 2, bounds.Height / 2);
-                background.TextureRect = new IntRect((int)(Camera.Position.X % bgTex.Size.X), (int)(Camera.Position.Y % bgTex.Size.Y), (int)bounds.Width, (int)bounds.Height);
                 Window.Draw(background);
 
                 foreach (var e in EntitiesInRegion(Camera.Bounds))
@@ -151,6 +157,10 @@ namespace GlitchGame
 #if DEBUG
                 debugView.Draw(Window);
 #endif
+
+                // DRAW HUD
+                HudCamera.Apply(Window);
+                Window.Draw(hud);
 
                 Window.Display();
             }

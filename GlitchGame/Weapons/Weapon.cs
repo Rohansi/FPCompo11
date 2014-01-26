@@ -1,14 +1,16 @@
 ﻿using System;
 using GlitchGame.Entities;
 using Microsoft.Xna.Framework;
+using SFML.Graphics;
 
 namespace GlitchGame.Weapons
 {
     public abstract class Weapon
     {
-        protected static readonly Vector2 Left = new Vector2(-0.485f, -0.20f);
-        protected static readonly Vector2 Right = new Vector2(0.485f, -0.20f);
+        protected static readonly Vector2 Left = new Vector2(-0.485f, 0.05f);
+        protected static readonly Vector2 Right = new Vector2(0.485f, 0.05f);
 
+        public Sprite Icon { get; protected set; }
         public float MaxCooldown { get; protected set; }
         public float Cooldown { get; protected set; }
 

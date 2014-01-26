@@ -21,8 +21,8 @@ namespace GlitchGame.Entities
         public Sprite Sprite { get; protected set; }
         public Body Body { get; protected set; }
         public float Size { get; protected set; }
+        public Weapon Weapon { get; protected set; }
 
-        protected Weapon Weapon;
         protected float Thruster;
         protected float AngularThruster;
         protected bool Shooting;
@@ -62,8 +62,8 @@ namespace GlitchGame.Entities
                 Weapon.TryShoot();
 
             // TODO: speed doesnt scale properly
-            Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * 25 * (float)Math.Pow(Size, 2))));
-            Body.ApplyTorque(AngularThruster * 7.5f * (float)Math.Pow(Size, 2));
+            Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * 25 * (float)Math.Pow(Size, 2.5))));
+            Body.ApplyTorque(AngularThruster * 7.5f * (float)Math.Pow(Size, 3));
         }
 
         public void Draw(RenderTarget target)

@@ -1,7 +1,7 @@
-﻿using System;
-using GlitchGame.Entities;
+﻿using GlitchGame.Entities;
 using GlitchGame.Entities.Projectiles;
 using Microsoft.Xna.Framework;
+using SFML.Graphics;
 
 namespace GlitchGame.Weapons
 {
@@ -11,6 +11,7 @@ namespace GlitchGame.Weapons
 
         public LaserGun(Ship parent) : base(parent)
         {
+            Icon = new Sprite(Assets.LoadTexture("wep_laser.png")).Center();
             MaxCooldown = 0.15f;
         }
 

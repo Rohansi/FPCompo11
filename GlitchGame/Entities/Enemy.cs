@@ -14,6 +14,7 @@ namespace GlitchGame.Entities
         private VirtualMachine _vm;
         private Engines _engines;
         private Guns _guns;
+        private bool _vmDead;
 
         public override int DrawOrder { get { return 2; } }
         public override byte RadarType { get { return 3; } }
@@ -43,6 +44,8 @@ namespace GlitchGame.Entities
                 _vm.Memory[i] = code[i];
             }
 
+            _vmDead = false;
+
             Weapon = new LaserGun(this);
         }
 
@@ -51,23 +54,26 @@ namespace GlitchGame.Entities
             var instr = _vm.GetType().GetField("_instruction", BindingFlags.NonPublic | BindingFlags.Instance);
             var inter = _vm.GetType().GetField("_interrupted", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            try
+            if (!_vmDead)
             {
-                for (var i = 0; i < Program.InstructionsPerFrame; i++)
+                try
                 {
-                    _vm.Step();
+                    for (var i = 0; i < Program.InstructionsPerFrame; i++)
+                    {
+                        _vm.Step();
 
-                    /*var instrValue = (Instruction)instr.GetValue(_vm);
-                    var interValue = (bool)inter.GetValue(_vm);
+                        /*var instrValue = (Instruction)instr.GetValue(_vm);
+                        var interValue = (bool)inter.GetValue(_vm);
 
-                    //if (!interValue)
-                        Console.WriteLine(instrValue);*/
+                        //if (!interValue)
+                            Console.WriteLine(instrValue);*/
+                    }
                 }
-            }
-            catch (VirtualMachineException e)
-            {
-                Console.WriteLine(e);
-                Dead = true;
+                catch (VirtualMachineException e)
+                {
+                    Console.WriteLine(e);
+                    _vmDead = true;
+                }
             }
 
             Weapon.Update();

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FarseerPhysics.Dynamics;
-using Microsoft.Xna.Framework;
-using SFML.Graphics;
+﻿using Microsoft.Xna.Framework;
 using SFML.Window;
 
 namespace GlitchGame.Entities.Projectiles

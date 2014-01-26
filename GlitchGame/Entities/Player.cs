@@ -28,6 +28,9 @@ namespace GlitchGame.Entities
             };
 
             SwitchWeapon(0);
+
+            MaxHealth = 10000;
+            Health = MaxHealth;
         }
 
         public void SwitchWeapon(int index)

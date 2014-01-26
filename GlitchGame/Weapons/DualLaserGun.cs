@@ -8,7 +8,7 @@ namespace GlitchGame.Weapons
 {
     public sealed class DualLaserGun : Weapon
     {
-        private const float Speed = 10f;
+        private const float Speed = 40;
 
         public DualLaserGun(Ship parent) : base(parent)
         {

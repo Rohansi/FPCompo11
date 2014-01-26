@@ -7,7 +7,7 @@ namespace GlitchGame.Weapons
 {
     public sealed class LaserGun : Weapon
     {
-        private static readonly Vector2 Speed = new Vector2(0, -10f);
+        private const float Speed = 40f;
 
         public LaserGun(Ship parent) : base(parent)
         {
@@ -17,8 +17,8 @@ namespace GlitchGame.Weapons
 
         public override void Shoot()
         {
-            Program.Entities.AddLast(new Bullet(Parent, Left * Parent.Size, Speed));
-            Program.Entities.AddLast(new Bullet(Parent, Right * Parent.Size, Speed));
+            Program.Entities.AddLast(new Bullet(Parent, Left * Parent.Size, new Vector2(0, -Speed)));
+            Program.Entities.AddLast(new Bullet(Parent, Right * Parent.Size, new Vector2(0, -Speed)));
         }
     }
 }

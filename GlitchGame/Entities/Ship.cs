@@ -23,6 +23,9 @@ namespace GlitchGame.Entities
         public float Size { get; protected set; }
         public Weapon Weapon { get; protected set; }
 
+        public float MaxHealth { get; protected set; }
+        public float Health;
+
         protected float Thruster;
         protected float AngularThruster;
         protected bool Shooting;
@@ -58,6 +61,12 @@ namespace GlitchGame.Entities
 
         public virtual void Update()
         {
+            if (Health <= 0)
+            {
+                Dead = true;
+                return;
+            }
+
             if (Weapon != null && Shooting)
                 Weapon.TryShoot();
 

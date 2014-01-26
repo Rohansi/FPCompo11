@@ -12,12 +12,21 @@ namespace GlitchGame.Entities.Projectiles
 
             Body = Util.CreateBullet(Parent.Body, offset, (a, b, contact) =>
             {
-                Program.Entities.Remove(this);
+                var ship = b.Body.UserData as Ship;
+                if (ship != null && !Dead)
+                    Hit(ship);
+
+                Dead = true;
                 return true;
             });
 
-            Body.ApplyForce(Body.GetWorldVector(speed));
+            Body.LinearVelocity = Parent.Body.LinearVelocity + Body.GetWorldVector(speed);
             Body.UserData = this;
+        }
+
+        public override void Hit(Ship ship)
+        {
+            ship.Health -= 10;
         }
     }
 }

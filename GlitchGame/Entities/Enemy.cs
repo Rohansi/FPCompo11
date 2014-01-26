@@ -47,6 +47,9 @@ namespace GlitchGame.Entities
             _vmDead = false;
 
             Weapon = new LaserGun(this);
+
+            MaxHealth = 1000;
+            Health = MaxHealth;
         }
 
         public override void Update()

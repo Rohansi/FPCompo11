@@ -32,7 +32,10 @@ namespace GlitchGame.Entities.Projectiles
 
         public virtual void Update()
         {
+
         }
+
+        public abstract void Hit(Ship ship);
 
         public void Draw(RenderTarget target)
         {

@@ -19,6 +19,8 @@ namespace GlitchGame.Weapons
         {
             Program.Entities.AddLast(new Laser(Parent, Left * Parent.Size, new Vector2(0, -Speed)));
             Program.Entities.AddLast(new Laser(Parent, Right * Parent.Size, new Vector2(0, -Speed)));
+
+            Assets.PlaySound("shoot_laser.wav");
         }
     }
 }

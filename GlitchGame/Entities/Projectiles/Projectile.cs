@@ -34,7 +34,10 @@ namespace GlitchGame.Entities.Projectiles
 
         }
 
-        public abstract void Hit(Ship ship);
+        public virtual void Hit(Ship ship)
+        {
+            Assets.PlaySound("hit.wav");
+        }
 
         public void Draw(RenderTarget target)
         {

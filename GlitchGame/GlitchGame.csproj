@@ -60,6 +60,9 @@
     <Reference Include="LoonyVM">
       <HintPath>..\Libraries\LoonyVM.dll</HintPath>
     </Reference>
+    <Reference Include="sfmlnet-audio-2">
+      <HintPath>..\Libraries\sfmlnet-audio-2.dll</HintPath>
+    </Reference>
     <Reference Include="sfmlnet-graphics-2">
       <HintPath>..\Libraries\sfmlnet-graphics-2.dll</HintPath>
     </Reference>
@@ -113,6 +116,9 @@
     <Content Include="Data\background.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\hit.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\laser.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -132,6 +138,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\ship_right.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\shoot_laser.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\shoot_nerf.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\wep_dual_laser.png">

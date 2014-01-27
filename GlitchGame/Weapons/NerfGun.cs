@@ -27,6 +27,8 @@ namespace GlitchGame.Weapons
                 Program.Entities.AddLast(new NerfBall(Parent, Right * Parent.Size, new Vector2(0, -Speed)));
 
             _left = !_left;
+
+            Assets.PlaySound("shoot_nerf.wav");
         }
     }
 }

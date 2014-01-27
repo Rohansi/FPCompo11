@@ -26,10 +26,5 @@ namespace GlitchGame.Entities.Projectiles
 
             Radar = RadarValue.Bullet;
         }
-
-        public override void Hit(Ship ship)
-        {
-            
-        }
     }
 }

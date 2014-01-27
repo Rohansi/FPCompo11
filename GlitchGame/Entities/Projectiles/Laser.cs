@@ -12,6 +12,8 @@ namespace GlitchGame.Entities.Projectiles
 
         public override void Hit(Ship ship)
         {
+            base.Hit(ship);
+
             ship.Health -= 10 * Size * ship.DamageTakenMultiplier;
 
             var r = Program.Random.NextDouble();

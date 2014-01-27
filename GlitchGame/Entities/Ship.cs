@@ -1,5 +1,6 @@
 ﻿using System;
 using FarseerPhysics.Dynamics;
+using GlitchGame.Devices;
 using GlitchGame.Weapons;
 using Microsoft.Xna.Framework;
 using SFML.Graphics;
@@ -14,8 +15,8 @@ namespace GlitchGame.Entities
         private Sprite _left;
         private Sprite _right;
 
-        public abstract int DrawOrder { get; }
-        public abstract byte RadarType { get; }
+        public abstract int Depth { get; }
+        public abstract RadarValue Radar { get; }
         public bool Dead { get; protected set; }
 
         public Sprite Sprite { get; protected set; }
@@ -25,6 +26,10 @@ namespace GlitchGame.Entities
 
         public float MaxHealth { get; protected set; }
         public float Health;
+        public float RegenRate;
+        public float DamageTakenMultiplier; // armor
+        public float DamageMultiplier;
+        public float SpeedMultiplier;
 
         protected float Thruster;
         protected float AngularThruster;
@@ -67,12 +72,16 @@ namespace GlitchGame.Entities
                 return;
             }
 
+            Health = Math.Min(Health + RegenRate * Program.FrameTime, MaxHealth);
+
             if (Weapon != null && Shooting)
                 Weapon.TryShoot();
 
             // TODO: speed doesnt scale properly
-            Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * 25 * (float)Math.Pow(Size, 2.5))));
-            Body.ApplyTorque(AngularThruster * 7.5f * (float)Math.Pow(Size, 3));
+            var linearSpeed = 25 * (float)Math.Pow(Size, 2.5) * SpeedMultiplier;
+            var angularSpeed = 7.5f * (float)Math.Pow(Size, 3) * SpeedMultiplier;
+            Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * linearSpeed)));
+            Body.ApplyTorque(AngularThruster * angularSpeed);
         }
 
         public void Draw(RenderTarget target)

@@ -1,11 +1,12 @@
-﻿using SFML.Graphics;
+﻿using GlitchGame.Devices;
+using SFML.Graphics;
 
 namespace GlitchGame
 {
     public interface IEntity
     {
-        int DrawOrder { get; }
-        byte RadarType { get; }
+        int Depth { get; }
+        RadarValue Radar { get; }
 
         bool Dead { get; }
 

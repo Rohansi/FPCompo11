@@ -43,13 +43,13 @@ namespace GlitchGame
             return body;
         }
 
-        public static Body CreateBullet(Body parent, Vector2 offset, OnCollisionEventHandler collisionHandler = null)
+        public static Body CreateBullet(Body parent, Vector2 offset, float scale = 1, OnCollisionEventHandler collisionHandler = null)
         {
             var body = new Body(Program.World);
             body.BodyType = BodyType.Dynamic;
             body.IsBullet = true;
 
-            var shape = new CircleShape(0.15f / 4, 1f);
+            var shape = new CircleShape((0.15f / 4) * scale, 0);
             body.CreateFixture(shape);
             body.Position = parent.Position + parent.GetWorldVector(offset);
             body.Rotation = parent.Rotation;

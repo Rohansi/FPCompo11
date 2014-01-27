@@ -178,7 +178,7 @@ namespace GlitchGame
                 return true;
             }, ref aabb);
 
-            return result.Distinct().OrderBy(e => e.DrawOrder);
+            return result.Distinct().OrderBy(e => e.Depth);
         }
 
         private static Vector2? FindOpenSpace(FloatRect area, Vector2 size)

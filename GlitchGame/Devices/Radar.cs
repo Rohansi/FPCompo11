@@ -4,9 +4,19 @@ using LoonyVM;
 
 namespace GlitchGame.Devices
 {
+    public enum RadarValue
+    {
+        Asteroid,
+        Player,
+        Bullet,
+        Computer,
+
+        Count
+    }
+
     public class Radar : IDevice
     {
-        private const float MaxDistance = 20;
+        private const float MaxDistance = 30;
         private const int UpdateEvery = Program.InstructionsPerSecond / 10;
 
         private Body _body;
@@ -45,8 +55,7 @@ namespace GlitchGame.Devices
 
             for (var i = 0; i < _radarData.Length; i++)
             {
-                machine.Memory[_radarPointer + (i * 2) + 0] = (byte)(_radarData[i] >> 8);
-                machine.Memory[_radarPointer + (i * 2) + 1] = (byte)(_radarData[i] & 0xFF);
+                machine.Memory.WriteShort(_radarPointer + (i * 2), _radarData[i]);
             }
         }
 
@@ -79,12 +88,13 @@ namespace GlitchGame.Devices
 
                     min = fr;
 
-                    type = ((IEntity)f.Body.UserData).RadarType;
+                    var entity = (IEntity)f.Body.UserData;
+                    type = (byte)entity.Radar;
                     distance = (byte)(fr * 126);
                     return fr;
                 }, start, point);
 
-                _radarData[i] = (short)(type << 8 | distance);
+                _radarData[i] = (short)(distance << 8 | type);
             }
         }
     }

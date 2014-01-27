@@ -17,8 +17,8 @@ namespace GlitchGame.Weapons
 
         public override void Shoot()
         {
-            Program.Entities.AddLast(new Bullet(Parent, Left * Parent.Size, new Vector2(0, -Speed)));
-            Program.Entities.AddLast(new Bullet(Parent, Right * Parent.Size, new Vector2(0, -Speed)));
+            Program.Entities.AddLast(new Laser(Parent, Left * Parent.Size, new Vector2(0, -Speed)));
+            Program.Entities.AddLast(new Laser(Parent, Right * Parent.Size, new Vector2(0, -Speed)));
         }
     }
 }

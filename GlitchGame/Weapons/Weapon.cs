@@ -1,5 +1,4 @@
-﻿using System;
-using GlitchGame.Entities;
+﻿using GlitchGame.Entities;
 using Microsoft.Xna.Framework;
 using SFML.Graphics;
 
@@ -7,8 +6,8 @@ namespace GlitchGame.Weapons
 {
     public abstract class Weapon
     {
-        protected static readonly Vector2 Left = new Vector2(-0.485f, 0.05f);
-        protected static readonly Vector2 Right = new Vector2(0.485f, 0.05f);
+        protected static readonly Vector2 Left = new Vector2(-0.485f, 0);
+        protected static readonly Vector2 Right = new Vector2(0.485f, 0);
 
         public Sprite Icon { get; protected set; }
         public float MaxCooldown { get; protected set; }
@@ -33,13 +32,14 @@ namespace GlitchGame.Weapons
             if (Cooldown > 0)
                 return;
 
-            Cooldown = MaxCooldown;
+            Cooldown += MaxCooldown;
             Shoot();
         }
 
         public void Update()
         {
-            Cooldown = Math.Max(Cooldown - Program.FrameTime, 0);
+            if (Cooldown > 0)
+                Cooldown -= Program.FrameTime;
         }
 
         protected Vector2 Direction(float dir)

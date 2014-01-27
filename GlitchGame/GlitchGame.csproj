@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1C0AB704-E23A-4CEC-AA6C-7C87584F3B39}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GlitchGame</RootNamespace>
     <AssemblyName>GlitchGame</AssemblyName>
@@ -81,6 +81,8 @@
     <Compile Include="Entities\Asteroid.cs" />
     <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\Projectiles\Bullet.cs" />
+    <Compile Include="Entities\Projectiles\Laser.cs" />
+    <Compile Include="Entities\Projectiles\NerfBall.cs" />
     <Compile Include="Entities\Projectiles\Projectile.cs" />
     <Compile Include="Entities\Ship.cs" />
     <Compile Include="Hud.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="SFMLDebugView.cs" />
     <Compile Include="Weapons\LaserGun.cs" />
     <Compile Include="Weapons\DualLaserGun.cs" />
+    <Compile Include="Weapons\NerfGun.cs" />
     <Compile Include="Weapons\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -110,7 +113,10 @@
     <Content Include="Data\background.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\bullet.png">
+    <Content Include="Data\laser.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\nerfball.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\ship.png">
@@ -132,6 +138,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\wep_laser.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\wep_nerfgun.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\wep_selected.png">

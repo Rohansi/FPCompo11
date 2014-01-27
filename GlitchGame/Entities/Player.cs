@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using GlitchGame.Devices;
 using GlitchGame.Weapons;
 using Microsoft.Xna.Framework;
 using SFML.Window;
@@ -8,8 +9,8 @@ namespace GlitchGame.Entities
 {
     public sealed class Player : Ship
     {
-        public override int DrawOrder { get { return 10; } }
-        public override byte RadarType { get { return 1; } }
+        public override int Depth { get { return 10; } }
+        public override RadarValue Radar { get { return RadarValue.Player; } }
 
         private List<Weapon> _weapons; 
 
@@ -24,13 +25,18 @@ namespace GlitchGame.Entities
             _weapons = new List<Weapon>()
             {
                 new LaserGun(this),
-                new DualLaserGun(this)
+                new DualLaserGun(this),
+                new NerfGun(this)
             };
 
             SwitchWeapon(0);
 
             MaxHealth = 10000;
             Health = MaxHealth;
+            RegenRate = 10;
+            DamageTakenMultiplier = 0.5f;
+            DamageMultiplier = 1;
+            SpeedMultiplier = 1;
         }
 
         public void SwitchWeapon(int index)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FarseerPhysics.Dynamics;
+using GlitchGame.Devices;
 using Microsoft.Xna.Framework;
 using SFML.Graphics;
 
@@ -10,8 +11,8 @@ namespace GlitchGame.Entities
     {
         public static readonly List<float> Radiuses = new List<float> { 0.215f, 0.35f, 0.5f, 0.95f };
 
-        public int DrawOrder { get { return 1; } }
-        public byte RadarType { get { return 0; } }
+        public int Depth { get { return 1; } }
+        public RadarValue Radar { get { return RadarValue.Asteroid; } }
         public bool Dead { get; private set; }
 
         private Sprite _sprite;

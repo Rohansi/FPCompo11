@@ -1,4 +1,5 @@
 ﻿using FarseerPhysics.Dynamics;
+using GlitchGame.Devices;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -6,8 +7,8 @@ namespace GlitchGame.Entities.Projectiles
 {
     public abstract class Projectile : Transformable, IEntity
     {
-        public int DrawOrder { get { return 0; } }
-        public byte RadarType { get; protected set; }
+        public int Depth { get { return 0; } }
+        public RadarValue Radar { get; protected set; }
         public bool Dead { get; protected set; }
 
         public Ship Parent { get; protected set; }
@@ -21,8 +22,6 @@ namespace GlitchGame.Entities.Projectiles
             Sprite = new Sprite(Assets.LoadTexture(texture)).Center();
             Size = size;
             Scale = new Vector2f(size, size);
-
-            RadarType = 2;
         }
 
         public void Destroyed()

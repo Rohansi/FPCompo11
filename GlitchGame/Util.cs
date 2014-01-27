@@ -92,6 +92,32 @@ namespace GlitchGame
             return sprite;
         }
 
+        public static void Center(this Text text, bool horizontal = true, bool vertical = true)
+        {
+            text.Origin = new Vector2f();
+
+            var bounds = text.GetGlobalBounds();
+            bounds.Left -= text.Position.X;
+            bounds.Top -= text.Position.Y;
+
+            var x = 0f;
+            var y = 0f;
+
+            if (horizontal)
+            {
+                x = bounds.Left / text.Scale.X;
+                x += (bounds.Width / text.Scale.X) / 2;
+            }
+
+            if (vertical)
+            {
+                y = bounds.Top / text.Scale.Y;
+                y += (bounds.Height / text.Scale.Y) / 2;
+            }
+
+            text.Origin = new Vector2f(x, y);
+        }
+
         public static float Clamp(float value, float min, float max)
         {
             return value > max ? max : (value < min ? min : value);

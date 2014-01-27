@@ -18,30 +18,30 @@ namespace GlitchGame.Entities.Projectiles
             var d = Program.Random.NextDouble() <= 0.75 ? 1f : -1f;
             var r = Program.Random.NextDouble();
 
-            if (r <= 0.25f) // 25% chance to do nothing
+            if (r <= 0.20f) // 20% chance to do nothing
             {
                 return;
             }
 
-            if (r <= 0.50f) // 25% chance to change damage
+            if (r <= 0.40f) // 20% chance to change damage
             {
                 ship.DamageMultiplier = Math.Max(ship.DamageMultiplier - 0.05f * d, 0);
                 return;
             }
 
-            if (r <= 0.75f) // 25% chance to change speed
+            if (r <= 0.60f) // 20% chance to change speed
             {
                 ship.SpeedMultiplier -= 0.05f * d;
                 return;
             }
 
-            if (r <= 0.90f) // 15% chance to change regen
+            if (r <= 0.80f) // 20% chance to change regen
             {
                 ship.RegenRate -= 1 * d;
                 return;
             }
 
-            if (r <= 1.0f) // 10% chance to corrupt memory
+            if (r <= 1.0f) // 20% chance to corrupt memory
             {
                 if (ship is Enemy)
                 {

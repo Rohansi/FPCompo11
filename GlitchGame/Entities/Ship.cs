@@ -84,7 +84,7 @@ namespace GlitchGame.Entities
             Body.ApplyTorque(AngularThruster * angularSpeed);
         }
 
-        public void Draw(RenderTarget target)
+        public virtual void Draw(RenderTarget target)
         {
             Position = Body.Position.ToSfml() * Program.PixelsPerMeter;
             Rotation = Body.Rotation * Program.DegreesPerRadian;

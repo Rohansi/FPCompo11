@@ -30,6 +30,7 @@ namespace GlitchGame
         public static World World;
         public static LinkedList<IEntity> Entities;
         public static Player Player;
+        public static Font Font;
 
         public static void Main()
         {
@@ -55,6 +56,8 @@ namespace GlitchGame
             HasFocus = true;
             World = new World(new Vector2(0, 0));
             Entities = new LinkedList<IEntity>();
+
+            Font = new Font("Data/OpenSans-Regular.ttf");
 
 #if DEBUG
             var debugView = new SFMLDebugView(World);

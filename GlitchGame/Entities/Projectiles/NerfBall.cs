@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace GlitchGame.Entities.Projectiles
 {
@@ -27,19 +26,19 @@ namespace GlitchGame.Entities.Projectiles
 
             if (r <= 0.40f) // 20% chance to change damage
             {
-                ship.DamageMultiplier = Math.Max(ship.DamageMultiplier - 0.05f * d, 0);
+                ship.DamageMultiplier -= 0.05f * Size * d;
                 return;
             }
 
             if (r <= 0.60f) // 20% chance to change speed
             {
-                ship.SpeedMultiplier -= 0.05f * d;
+                ship.SpeedMultiplier -= 0.05f * Size * d;
                 return;
             }
 
             if (r <= 0.80f) // 20% chance to change regen
             {
-                ship.RegenRate -= 1 * d;
+                ship.RegenRate -= 1 * Size * d;
                 return;
             }
 

@@ -25,7 +25,7 @@ namespace GlitchGame.Entities.Projectiles
 
             if (r <= 1.00f) // 5% chance to damage hull
             {
-                ship.DamageTakenMultiplier += 0.01f;
+                ship.DamageTakenMultiplier += 0.01f * Size;
                 return;
             }
         }

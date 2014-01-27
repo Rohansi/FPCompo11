@@ -134,6 +134,8 @@ namespace GlitchGame
                 Window.DispatchEvents();
 
                 // UPDATE
+                Assets.ResetSoundCounters();
+
                 foreach (var e in Entities.Iterate())
                 {
                     e.Update();

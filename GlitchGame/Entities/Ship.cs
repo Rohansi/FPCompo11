@@ -73,6 +73,9 @@ namespace GlitchGame.Entities
             }
 
             Health = Math.Min(Health + RegenRate * Program.FrameTime, MaxHealth);
+            DamageMultiplier = Util.Clamp(DamageMultiplier, 0.05f, 2.00f);
+            DamageTakenMultiplier = Util.Clamp(DamageTakenMultiplier, 0.50f, 1.50f);
+
 
             if (Weapon != null && Shooting)
                 Weapon.TryShoot();

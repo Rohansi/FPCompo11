@@ -7,6 +7,10 @@ namespace GlitchGame.Entities.Projectiles
 {
     public abstract class Projectile : Transformable, IEntity
     {
+        private const float MaxLifeTime = 15;
+
+        private float _lifeTime;
+
         public int Depth { get { return 0; } }
         public RadarValue Radar { get; protected set; }
         public bool Dead { get; protected set; }
@@ -22,6 +26,8 @@ namespace GlitchGame.Entities.Projectiles
             Sprite = new Sprite(Assets.LoadTexture(texture)).Center();
             Size = size;
             Scale = new Vector2f(size, size);
+
+            _lifeTime = 0;
         }
 
         public void Destroyed()
@@ -31,7 +37,10 @@ namespace GlitchGame.Entities.Projectiles
 
         public virtual void Update()
         {
+            _lifeTime += Program.FrameTime;
 
+            if (_lifeTime >= MaxLifeTime)
+                Dead = true;
         }
 
         public virtual void Hit(Ship ship)

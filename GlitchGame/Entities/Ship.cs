@@ -76,13 +76,13 @@ namespace GlitchGame.Entities
                 return;
             }
 
-            Health = Math.Min(Health + HealthRegenRate * Program.FrameTime, MaxHealth);
-            Energy = Math.Min(Energy + EnergyRegenRate * Program.FrameTime, MaxEnergy);
+            Health = Util.Clamp(Health + HealthRegenRate * Program.FrameTime, 0, MaxHealth);
+            Energy = Util.Clamp(Energy + EnergyRegenRate * Program.FrameTime, 0, MaxEnergy);
 
             HealthRegenRate = Math.Max(HealthRegenRate, 0);
             DamageMultiplier = Util.Clamp(DamageMultiplier, 0.05f, 2.00f);
             DamageTakenMultiplier = Util.Clamp(DamageTakenMultiplier, 0.50f, 1.50f);
-            SpeedMultiplier = Math.Max(SpeedMultiplier, 0.80f);
+            SpeedMultiplier = Math.Max(SpeedMultiplier, 0.90f);
 
             if (Weapon != null && Shooting)
                 Weapon.TryShoot();

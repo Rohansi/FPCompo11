@@ -167,7 +167,6 @@ namespace GlitchGame.Entities
                 var bit = Program.Random.Next(8);
 
                 _vm.Memory[addr] ^= (byte)(1 << bit);
-                return;
             }
         }
 

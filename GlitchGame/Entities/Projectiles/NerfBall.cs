@@ -17,6 +17,7 @@ namespace GlitchGame.Entities.Projectiles
             base.Hit(ship);
 
             ship.Health -= 2.5f * Size * ship.DamageTakenMultiplier;
+            ship.Energy -= 5 * Size;
 
             var d = Program.Random.NextDouble() <= 0.75 ? 1f : -1f;
             var r = Program.Random.NextDouble();
@@ -41,7 +42,6 @@ namespace GlitchGame.Entities.Projectiles
             if (r <= 1.00f) // 25% chance to change regen
             {
                 ship.HealthRegenRate -= 1 * Size * d;
-                return;
             }
         }
     }

@@ -34,25 +34,51 @@ namespace GlitchGame
 
         public static void Main()
         {
-            Window = new RenderWindow(new VideoMode(1280, 720), "", Styles.Close, new ContextSettings(0, 0, 16));
+            Window = new RenderWindow(new VideoMode(1280, 720), "", Styles.Default, new ContextSettings(0, 0, 16));
             Window.SetFramerateLimit(FrameRate);
             Window.Closed += (sender, eventArgs) => Window.Close();
+
             Window.GainedFocus += (sender, args) => HasFocus = true;
             Window.LostFocus += (sender, args) => HasFocus = false;
             HasFocus = true;
 
+            Window.Resized += (sender, args) =>
+            {
+                if (args.Width < 800 || args.Height < 600)
+                {
+                    Window.Size = new Vector2u(Math.Max(args.Width, 800), Math.Max(args.Height, 600));
+                    return;
+                }
+
+                HudCamera = new Camera(new FloatRect(0, 0, args.Width, args.Height));
+                Camera = new Camera(new FloatRect(0, 0, args.Width, args.Height));
+                Camera.Zoom = 2;
+            };
+
+            HudCamera = new Camera(Window.DefaultView);
+            Camera = new Camera(Window.DefaultView);
+            Camera.Zoom = 2;
+
             Window.KeyPressed += (sender, args) =>
             {
+                var weapons = Player.Weapons;
+                var currentWeapon = weapons.IndexOf(Player.Weapon);
+
                 if (args.Code >= Keyboard.Key.Num1 && args.Code <= Keyboard.Key.Num9)
                 {
                     Player.SwitchWeapon((int)args.Code - (int)Keyboard.Key.Num1);
                 }
+
+                if (args.Code == Keyboard.Key.Q)
+                {
+                    Player.SwitchWeapon((currentWeapon + weapons.Count - 1) % weapons.Count);
+                }
+
+                if (args.Code == Keyboard.Key.E)
+                {
+                    Player.SwitchWeapon((currentWeapon + weapons.Count + 1) % weapons.Count);
+                }
             };
-
-            HudCamera = new Camera(Window.DefaultView);
-
-            Camera = new Camera(Window.DefaultView);
-            Camera.Zoom = 2;
 
             World = new World(new Vector2(0, 0));
             Entities = new LinkedList<IEntity>();

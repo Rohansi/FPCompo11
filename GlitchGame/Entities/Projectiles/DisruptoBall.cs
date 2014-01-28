@@ -16,7 +16,7 @@ namespace GlitchGame.Entities.Projectiles
         {
             base.Hit(ship);
 
-            // TODO: remove some energy?
+            ship.Energy -= 10 * Size;
 
             var r = Program.Random.NextDouble();
 
@@ -31,8 +31,6 @@ namespace GlitchGame.Entities.Projectiles
                 {
                     (ship as Enemy).Corrupt();
                 }
-
-                return;
             }
         }
     }

@@ -16,7 +16,7 @@ namespace GlitchGame.Devices
 
     public class Radar : IDevice
     {
-        private const float MaxDistance = 30;
+        private const float MaxDistance = 25;
         private const int UpdateEvery = Program.InstructionsPerSecond / 10;
 
         private Body _body;

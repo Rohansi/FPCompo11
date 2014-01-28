@@ -4,11 +4,10 @@ using GlitchGame.Devices;
 using GlitchGame.Weapons;
 using LoonyVM;
 using Microsoft.Xna.Framework;
-using SFML.Graphics;
 
 namespace GlitchGame.Entities
 {
-    public sealed class Enemy : Ship
+    public sealed class Computer : Ship
     {
         private VirtualMachine _vm;
         private bool _programDead;
@@ -19,13 +18,10 @@ namespace GlitchGame.Entities
         private Guns _guns;
 
         public override int Depth { get { return 2; } }
-        public override RadarValue Radar { get { return RadarValue.Computer; } }
 
-        public Enemy(Vector2 position)
-            : base(position, "ship.png", 1)
+        public Computer(Vector2 position)
+            : base(position, "ship.png", 1, 1)
         {
-            Sprite.Color = new Color(255, 180, 200);
-
             #region VM Setup
             _vm = new VirtualMachine(4096);
 
@@ -56,7 +52,7 @@ namespace GlitchGame.Entities
             _programDead = false;
 
             _vm.Attach(new Navigation(Body));
-            _vm.Attach(new Radar(Body));
+            _vm.Attach(new Radar(this));
 
 #if DEBUG
             _vm.Attach(new Debug());
@@ -110,7 +106,7 @@ namespace GlitchGame.Entities
                             Console.WriteLine(instrValue);*/
                     }
                 }
-                catch (VirtualMachineException e)
+                catch (VirtualMachineException)
                 {
                     _programDead = true;
                 }

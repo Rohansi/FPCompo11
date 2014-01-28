@@ -1,19 +1,16 @@
 ﻿using FarseerPhysics.Dynamics;
-using GlitchGame.Devices;
 using SFML.Graphics;
 using SFML.Window;
 
 namespace GlitchGame.Entities.Projectiles
 {
-    public abstract class Projectile : Transformable, IEntity
+    public abstract class Projectile : Entity
     {
         private const float MaxLifeTime = 15;
 
         private float _lifeTime;
 
-        public int Depth { get { return 0; } }
-        public RadarValue Radar { get; protected set; }
-        public bool Dead { get; protected set; }
+        public override int Depth { get { return 0; } }
 
         public Ship Parent { get; protected set; }
         public Sprite Sprite { get; protected set; }
@@ -30,12 +27,12 @@ namespace GlitchGame.Entities.Projectiles
             _lifeTime = 0;
         }
 
-        public void Destroyed()
+        public override void Destroyed()
         {
             Program.World.RemoveBody(Body);
         }
 
-        public virtual void Update()
+        public override void Update()
         {
             _lifeTime += Program.FrameTime;
 
@@ -48,7 +45,7 @@ namespace GlitchGame.Entities.Projectiles
             Assets.PlaySound("hit.wav");
         }
 
-        public void Draw(RenderTarget target)
+        public override void Draw(RenderTarget target)
         {
             Position = Body.Position.ToSfml() * Program.PixelsPerMeter;
             Rotation = Util.Direction(Body.LinearVelocity) * Program.DegreesPerRadian + 90;

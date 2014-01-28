@@ -1,5 +1,5 @@
 ﻿using System;
-using FarseerPhysics.Dynamics;
+using GlitchGame.Entities;
 using LoonyVM;
 
 namespace GlitchGame.Devices
@@ -7,9 +7,9 @@ namespace GlitchGame.Devices
     public enum RadarValue
     {
         Asteroid,
-        Player,
         Bullet,
-        Computer,
+        Ally,
+        Enemy,
 
         Count
     }
@@ -19,7 +19,7 @@ namespace GlitchGame.Devices
         private const float MaxDistance = 25;
         private const int UpdateEvery = Program.InstructionsPerSecond / 10;
 
-        private Body _body;
+        private Ship _parent;
         private int _radarPointer;
         private short[] _radarData;
         private int _timer;
@@ -38,13 +38,13 @@ namespace GlitchGame.Devices
             }
         }
 
-        public Radar(Body body)
+        public Radar(Ship parent)
         {
             _radarPointer = 0;
             _radarData = new short[Program.RadarRays];
             _timer = UpdateEvery;
 
-            _body = body;
+            _parent = parent;
         }
 
         public void HandleInterruptRequest(VirtualMachine machine)
@@ -68,7 +68,7 @@ namespace GlitchGame.Devices
         {
             const float step = (float)(2 * Math.PI) / Program.RadarRays;
 
-            var start = _body.Position;
+            var start = _parent.Body.Position;
             var i = 0;
             for (var dir = 0f; dir <= 2 * Math.PI; dir += step, i++)
             {
@@ -80,7 +80,7 @@ namespace GlitchGame.Devices
 
                 Program.World.RayCast((f, p, n, fr) =>
                 {
-                    if (f.Body == _body)
+                    if (f.Body == _parent.Body)
                         return -1;
 
                     if (fr > min)
@@ -88,8 +88,18 @@ namespace GlitchGame.Devices
 
                     min = fr;
 
-                    var entity = (IEntity)f.Body.UserData;
-                    type = (byte)entity.Radar;
+                    var entity = (Entity)f.Body.UserData;
+                    var ship = entity as Ship;
+
+                    if (ship != null)
+                    {
+                        type = (byte)(ship.Team == _parent.Team ? RadarValue.Ally : RadarValue.Enemy);
+                    }
+                    else
+                    {
+                        type = (byte)entity.Radar;
+                    }
+                    
                     distance = (byte)(fr * 126);
                     return fr;
                 }, start, point);

@@ -21,6 +21,10 @@ namespace GlitchGame
         public const int InstructionsPerSecond = 10000;
         public const int InstructionsPerFrame = (int)(FrameTime * InstructionsPerSecond);
 
+        private const float Zoom = 2;
+        private const uint MinWidth = 800;
+        private const uint MinHeight = 600;
+
         public static Random Random = new Random();
         public static RenderWindow Window;
         public static bool HasFocus { get; private set; }
@@ -28,7 +32,7 @@ namespace GlitchGame
         public static Camera HudCamera;
         public static Camera Camera;
         public static World World;
-        public static LinkedList<IEntity> Entities;
+        public static LinkedList<Entity> Entities;
         public static Player Player;
         public static Font Font;
 
@@ -44,20 +48,20 @@ namespace GlitchGame
 
             Window.Resized += (sender, args) =>
             {
-                if (args.Width < 800 || args.Height < 600)
+                if (args.Width < MinWidth || args.Height < MinHeight)
                 {
-                    Window.Size = new Vector2u(Math.Max(args.Width, 800), Math.Max(args.Height, 600));
+                    Window.Size = new Vector2u(Math.Max(args.Width, MinWidth), Math.Max(args.Height, MinHeight));
                     return;
                 }
 
                 HudCamera = new Camera(new FloatRect(0, 0, args.Width, args.Height));
                 Camera = new Camera(new FloatRect(0, 0, args.Width, args.Height));
-                Camera.Zoom = 2;
+                Camera.Zoom = Zoom;
             };
 
             HudCamera = new Camera(Window.DefaultView);
             Camera = new Camera(Window.DefaultView);
-            Camera.Zoom = 2;
+            Camera.Zoom = Zoom;
 
             Window.KeyPressed += (sender, args) =>
             {
@@ -81,7 +85,7 @@ namespace GlitchGame
             };
 
             World = new World(new Vector2(0, 0));
-            Entities = new LinkedList<IEntity>();
+            Entities = new LinkedList<Entity>();
 
             Font = new Font("Data/OpenSans-Regular.ttf");
 
@@ -147,7 +151,7 @@ namespace GlitchGame
                 if (!space.HasValue)
                     continue;
 
-                Entities.AddLast(new Enemy(space.Value));
+                Entities.AddLast(new Computer(space.Value));
             }
             #endregion
 
@@ -197,19 +201,19 @@ namespace GlitchGame
             }
         }
 
-        private static IEnumerable<IEntity> EntitiesInRegion(FloatRect rect)
+        private static IEnumerable<Entity> EntitiesInRegion(FloatRect rect)
         {
             var min = new Vector2(rect.Left, rect.Top) / PixelsPerMeter;
             var aabb = new AABB(min, min + (new Vector2(rect.Width, rect.Height) / PixelsPerMeter));
-            var result = new List<IEntity>(256);
+            var result = new List<Entity>(256);
 
             World.QueryAABB(f =>
             {
-                result.Add((IEntity)f.Body.UserData);
+                result.Add((Entity)f.Body.UserData);
                 return true;
             }, ref aabb);
 
-            return result.Distinct().OrderBy(e => e.Depth);
+            return result.Distinct().OrderBy(e => e.Depth + e.DepthBias);
         }
 
         private static Vector2? FindOpenSpace(FloatRect area, Vector2 size)

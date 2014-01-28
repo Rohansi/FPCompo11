@@ -40,7 +40,7 @@ reverseDist:
     dd 20
 
 targetType:
-    dd RADAR_PLAYER
+    dd RADAR_ENEMY
 
 targetDir:
     dd RADAR_INVALID

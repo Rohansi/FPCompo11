@@ -7,13 +7,12 @@ using SFML.Graphics;
 
 namespace GlitchGame.Entities
 {
-    public sealed class Asteroid : Transformable, IEntity
+    public sealed class Asteroid : Entity
     {
         public static readonly List<float> Radiuses = new List<float> { 0.215f, 0.35f, 0.5f, 0.95f };
 
-        public int Depth { get { return 1; } }
-        public RadarValue Radar { get { return RadarValue.Asteroid; } }
-        public bool Dead { get; private set; }
+        public override int Depth { get { return 1; } }
+        public override RadarValue Radar { get { return RadarValue.Asteroid; } }
 
         private Sprite _sprite;
         private Body _body;
@@ -35,17 +34,17 @@ namespace GlitchGame.Entities
             _body.Rotation = (float)(Program.Random.NextDouble() * (Math.PI * 2));
         }
 
-        public void Destroyed()
+        public override void Destroyed()
         {
             Program.World.RemoveBody(_body);
         }
 
-        public void Update()
+        public override void Update()
         {
 
         }
 
-        public void Draw(RenderTarget target)
+        public override void Draw(RenderTarget target)
         {
             Position = _body.Position.ToSfml() * Program.PixelsPerMeter;
             Rotation = _body.Rotation * Program.DegreesPerRadian;

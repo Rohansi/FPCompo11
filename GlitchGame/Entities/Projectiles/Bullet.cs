@@ -6,6 +6,8 @@ namespace GlitchGame.Entities.Projectiles
 {
     public abstract class Bullet : Projectile
     {
+        public override RadarValue Radar { get { return RadarValue.Bullet; } }
+
         protected Bullet(Ship parent, Vector2 offset, Vector2 speed, string texture)
             : base(parent, texture, parent.Size)
         {
@@ -30,8 +32,6 @@ namespace GlitchGame.Entities.Projectiles
 
             Body.LinearVelocity = Parent.Body.LinearVelocity + Body.GetWorldVector(speed);
             Body.UserData = this;
-
-            Radar = RadarValue.Bullet;
         }
     }
 }

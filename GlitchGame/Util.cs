@@ -149,7 +149,7 @@ namespace GlitchGame
             return (short)value;
         }
 
-        public static IEnumerable<IEntity> Iterate(this LinkedList<IEntity> entities)
+        public static IEnumerable<Entity> Iterate(this LinkedList<Entity> entities)
         {
             var next = entities.First;
 

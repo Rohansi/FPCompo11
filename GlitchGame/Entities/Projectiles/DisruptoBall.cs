@@ -27,9 +27,9 @@ namespace GlitchGame.Entities.Projectiles
 
             if (r <= 1.00f) // 75% chance to corrupt
             {
-                if (ship is Enemy)
+                if (ship is Computer)
                 {
-                    (ship as Enemy).Corrupt();
+                    (ship as Computer).Corrupt();
                 }
             }
         }

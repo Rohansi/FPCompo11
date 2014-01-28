@@ -8,22 +8,21 @@ using SFML.Window;
 
 namespace GlitchGame.Entities
 {
-    public abstract class Ship : Transformable, IEntity
+    public abstract class Ship : Entity
     {
         private Sprite _forward;
         private Sprite _backward;
         private Sprite _left;
         private Sprite _right;
 
-        public abstract int Depth { get; }
-        public abstract RadarValue Radar { get; }
-        public bool Dead { get; protected set; }
+        public override RadarValue Radar { get { return RadarValue.Count; } }
 
         public Sprite Sprite { get; protected set; }
         public Body Body { get; protected set; }
         public float Size { get; protected set; }
         public Weapon Weapon { get; protected set; }
 
+        public int Team { get; private set; }
         public float MaxHealth { get; protected set; }
         public float Health;
         public float MaxEnergy { get; protected set; }
@@ -39,9 +38,13 @@ namespace GlitchGame.Entities
         protected float AngularThruster;
         protected bool Shooting;
 
-        protected Ship(Vector2 position, string texture, float size)
+        protected Ship(Vector2 position, string texture, float size, int team)
         {
             Sprite = new Sprite(Assets.LoadTexture(texture)).Center();
+
+            if (team != 0)
+                Sprite.Color = new Color(255, 180, 200);
+
             Scale = new Vector2f(size, size);
 
             Body = Util.CreateShip(size);
@@ -49,6 +52,7 @@ namespace GlitchGame.Entities
             Body.Position = position;
 
             Size = size;
+            Team = team;
 
             _forward = new Sprite(Assets.LoadTexture("ship_forward.png"));
             _forward.Origin = new Vector2f(_forward.Texture.Size.X / 2f, 0) - new Vector2f(0, 65);
@@ -63,12 +67,12 @@ namespace GlitchGame.Entities
             _right.Origin = new Vector2f(_right.Texture.Size.X, _right.Texture.Size.Y / 2f) - new Vector2f(-15, -37);
         }
 
-        public void Destroyed()
+        public override void Destroyed()
         {
             Program.World.RemoveBody(Body);
         }
 
-        public virtual void Update()
+        public override void Update()
         {
             if (Health <= 0)
             {
@@ -94,7 +98,7 @@ namespace GlitchGame.Entities
             Body.ApplyTorque(AngularThruster * angularSpeed);
         }
 
-        public virtual void Draw(RenderTarget target)
+        public override void Draw(RenderTarget target)
         {
             Position = Body.Position.ToSfml() * Program.PixelsPerMeter;
             Rotation = Body.Rotation * Program.DegreesPerRadian;

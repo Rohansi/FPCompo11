@@ -82,7 +82,7 @@
     <Compile Include="Devices\Navigation.cs" />
     <Compile Include="Devices\Radar.cs" />
     <Compile Include="Entities\Asteroid.cs" />
-    <Compile Include="Entities\Enemy.cs" />
+    <Compile Include="Entities\Computer.cs" />
     <Compile Include="Entities\Projectiles\Bullet.cs" />
     <Compile Include="Entities\Projectiles\DisruptoBall.cs" />
     <Compile Include="Entities\Projectiles\Laser.cs" />
@@ -90,7 +90,7 @@
     <Compile Include="Entities\Projectiles\Projectile.cs" />
     <Compile Include="Entities\Ship.cs" />
     <Compile Include="Hud.cs" />
-    <Compile Include="IEntity.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Program.cs" />

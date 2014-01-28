@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using GlitchGame.Devices;
 using GlitchGame.Weapons;
 using Microsoft.Xna.Framework;
 using SFML.Window;
@@ -10,7 +9,6 @@ namespace GlitchGame.Entities
     public sealed class Player : Ship
     {
         public override int Depth { get { return 10; } }
-        public override RadarValue Radar { get { return RadarValue.Player; } }
 
         private List<Weapon> _weapons; 
 
@@ -20,7 +18,7 @@ namespace GlitchGame.Entities
         } 
 
         public Player(Vector2 position)
-            : base(position, "ship.png", 2)
+            : base(position, "ship.png", 2, 0)
         {
             _weapons = new List<Weapon>()
             {

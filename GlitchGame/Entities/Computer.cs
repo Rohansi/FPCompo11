@@ -125,7 +125,7 @@ namespace GlitchGame.Entities
         {
             var r = Program.Random.NextDouble();
 
-            if (r <= 0.40f && _variables.Count > 0) // 40% chance to corrupt variable
+            if (r <= 0.60f && _variables.Count > 0) // 60% chance to corrupt variable
             {
                 var variable = _variables[Program.Random.Next(_variables.Count)];
                 int newValue;
@@ -149,7 +149,7 @@ namespace GlitchGame.Entities
                 return;
             }
 
-            if (r <= 0.80f) // 40% chance to corrupt register
+            if (r <= 0.80f) // 20% chance to corrupt register
             {
                 var reg = Program.Random.Next(10);
                 var bit = Program.Random.Next(32);

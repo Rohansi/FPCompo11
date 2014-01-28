@@ -10,7 +10,7 @@ namespace GlitchGame
         private const float IconSize = 64;
         private const float IconSizeHalf = IconSize / 2f;
         private const float BarWidth = 300;
-        private const float BarHeight = 24;
+        private const float BarHeight = 20;
 
         private Sprite _selected;
 

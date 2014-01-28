@@ -26,7 +26,11 @@ namespace GlitchGame.Entities
 
         public float MaxHealth { get; protected set; }
         public float Health;
-        public float RegenRate;
+        public float MaxEnergy { get; protected set; }
+        public float Energy;
+
+        public float HealthRegenRate;
+        public float EnergyRegenRate;
         public float DamageTakenMultiplier; // armor
         public float DamageMultiplier;
         public float SpeedMultiplier;
@@ -72,9 +76,10 @@ namespace GlitchGame.Entities
                 return;
             }
 
-            Health = Math.Min(Health + RegenRate * Program.FrameTime, MaxHealth);
+            Health = Math.Min(Health + HealthRegenRate * Program.FrameTime, MaxHealth);
+            Energy = Math.Min(Energy + EnergyRegenRate * Program.FrameTime, MaxEnergy);
 
-            RegenRate = Math.Max(RegenRate, 0);
+            HealthRegenRate = Math.Max(HealthRegenRate, 0);
             DamageMultiplier = Util.Clamp(DamageMultiplier, 0.05f, 2.00f);
             DamageTakenMultiplier = Util.Clamp(DamageTakenMultiplier, 0.50f, 1.50f);
             SpeedMultiplier = Math.Max(SpeedMultiplier, 0.80f);

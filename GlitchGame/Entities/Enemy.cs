@@ -79,7 +79,12 @@ namespace GlitchGame.Entities
 
             MaxHealth = 1000;
             Health = MaxHealth;
-            RegenRate = 5;
+            MaxEnergy = 500;
+            Energy = MaxEnergy;
+
+            HealthRegenRate = 5;
+            EnergyRegenRate = 10;
+
             DamageTakenMultiplier = 1;
             DamageMultiplier = 1;
             SpeedMultiplier = 1;

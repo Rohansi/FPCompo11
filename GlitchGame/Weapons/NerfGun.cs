@@ -9,12 +9,14 @@ namespace GlitchGame.Weapons
     {
         private const float Speed = 30;
 
+        public override float MaxCooldown { get { return 0.30f; } }
+        public override float EnergyCost { get { return 15; } }
+
         private bool _left;
 
         public NerfGun(Ship parent) : base(parent)
         {
             Icon = new Sprite(Assets.LoadTexture("wep_nerfgun.png")).Center();
-            MaxCooldown = 0.30f;
 
             _left = true;
         }

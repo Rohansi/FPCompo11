@@ -9,10 +9,12 @@ namespace GlitchGame.Weapons
     {
         private const float Speed = 40f;
 
+        public override float MaxCooldown { get { return 0.15f; } }
+        public override float EnergyCost { get { return 5; } }
+
         public LaserGun(Ship parent) : base(parent)
         {
             Icon = new Sprite(Assets.LoadTexture("wep_laser.png")).Center();
-            MaxCooldown = 0.15f;
         }
 
         public override void Shoot()

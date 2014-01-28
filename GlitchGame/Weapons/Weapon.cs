@@ -11,20 +11,16 @@ namespace GlitchGame.Weapons
         protected static readonly Vector2 Center = new Vector2(0, -0.5f);
 
         public Sprite Icon { get; protected set; }
-        public float MaxCooldown { get; protected set; }
-        public float Cooldown { get; protected set; }
 
-        public float Progress
-        {
-            get { return MaxCooldown > 0 ? (Cooldown / MaxCooldown) : 1; }
-        }
+        public abstract float MaxCooldown { get; }
+        public float Cooldown { get; protected set; }
+        public abstract float EnergyCost { get; }
         
         protected Ship Parent { get; private set; }
 
         protected Weapon(Ship parent)
         {
             Parent = parent;
-            MaxCooldown = 0;
             Cooldown = 0;
         }
 
@@ -33,7 +29,11 @@ namespace GlitchGame.Weapons
             if (Cooldown > 0)
                 return;
 
+            if (Parent.Energy < EnergyCost)
+                return;
+
             Cooldown += MaxCooldown;
+            Parent.Energy -= EnergyCost;
             Shoot();
         }
 

@@ -9,10 +9,12 @@ namespace GlitchGame.Weapons
     {
         private const float Speed = 30;
 
+        public override float MaxCooldown { get { return 0.75f; } }
+        public override float EnergyCost { get { return 30; } }
+
         public Disruptor(Ship parent) : base(parent)
         {
             Icon = new Sprite(Assets.LoadTexture("wep_disruptor.png")).Center();
-            MaxCooldown = 0.75f;
         }
 
         public override void Shoot()

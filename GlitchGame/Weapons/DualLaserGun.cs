@@ -35,7 +35,7 @@ namespace GlitchGame.Weapons
             dir = Direction(up - diff);
             Program.Entities.AddLast(new Laser(Parent, (new Vector2(0.2f, 0) + Right) * Parent.Size, dir * Speed));
 
-            Assets.PlaySound("shoot_laser.wav");
+            Assets.PlaySound("shoot_laser.wav", Parent.Position);
         }
     }
 }

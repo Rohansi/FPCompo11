@@ -20,7 +20,7 @@ namespace GlitchGame.Weapons
         public override void Shoot()
         {
             Program.Entities.AddLast(new DisruptoBall(Parent, Center * Parent.Size, new Vector2(0, -Speed)));
-            Assets.PlaySound("shoot_disruptor.wav");
+            Assets.PlaySound("shoot_disruptor.wav", Parent.Position);
         }
     }
 }

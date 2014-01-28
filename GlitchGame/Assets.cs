@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using SFML.Audio;
 using SFML.Graphics;
+using SFML.Window;
 
 namespace GlitchGame
 {
@@ -42,9 +43,19 @@ namespace GlitchGame
             return soundBuffer;
         }
 
-        public static void PlaySound(string name)
+        public static void PlaySound(string name, Vector2f position)
         {
+            const float maxDist = 2000;
+            const float maxVol = 15;
+            const float pitchVariation = 0.15f;
+
             Sounds.RemoveAll(snd => snd.Status != SoundStatus.Playing);
+
+            var dist = Util.Distance(Program.Camera.Position, position);
+            var volume = Util.Clamp(1 - (dist / maxDist), 0, 1);
+
+            if (volume <= 0)
+                return;
 
             if (Sounds.Count >= 10)
                 return;
@@ -59,8 +70,9 @@ namespace GlitchGame
             SoundCounters[name] = count + 1;
 
             var sound = new Sound(LoadSound(name));
-            sound.Volume = 10;
-            
+            sound.Volume = maxVol * volume;
+            sound.Pitch = 1 + ((float)Program.Random.NextDouble() * 2 - 1) * pitchVariation;
+
             sound.Play();
             Sounds.Add(sound);
         }

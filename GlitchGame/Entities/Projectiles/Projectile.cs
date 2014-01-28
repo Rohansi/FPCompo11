@@ -42,7 +42,7 @@ namespace GlitchGame.Entities.Projectiles
 
         public virtual void Hit(Ship ship)
         {
-            Assets.PlaySound("hit.wav");
+            Assets.PlaySound("hit.wav", ship.Position);
         }
 
         public override void Draw(RenderTarget target)

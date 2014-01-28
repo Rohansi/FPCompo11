@@ -30,7 +30,7 @@ namespace GlitchGame.Weapons
 
             _left = !_left;
 
-            Assets.PlaySound("shoot_nerf.wav");
+            Assets.PlaySound("shoot_nerf.wav", Parent.Position);
         }
     }
 }

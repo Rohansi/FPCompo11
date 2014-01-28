@@ -13,7 +13,14 @@ namespace GlitchGame.Entities.Projectiles
 
             Body = Util.CreateBullet(Parent.Body, offset, parent.Size, (a, b, contact) =>
             {
+                if (b.Body.UserData is Bullet)
+                    return false;
+
                 var ship = b.Body.UserData as Ship;
+
+                if (ship == Parent)
+                    return false;
+
                 if (ship != null && !Dead)
                     Hit(ship);
 

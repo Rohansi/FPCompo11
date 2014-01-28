@@ -8,6 +8,7 @@ namespace GlitchGame.Weapons
     {
         protected static readonly Vector2 Left = new Vector2(-0.485f, 0);
         protected static readonly Vector2 Right = new Vector2(0.485f, 0);
+        protected static readonly Vector2 Center = new Vector2(0, -0.5f);
 
         public Sprite Icon { get; protected set; }
         public float MaxCooldown { get; protected set; }

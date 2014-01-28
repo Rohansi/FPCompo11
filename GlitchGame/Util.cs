@@ -29,7 +29,7 @@ namespace GlitchGame
             var body = new Body(Program.World);
             body.BodyType = BodyType.Dynamic;
             body.LinearDamping = 0.5f;
-            body.AngularDamping = 0.5f;
+            body.AngularDamping = 1.0f;
 
             // tip
             var rect1 = new PolygonShape(PolygonTools.CreateRectangle(0.23f * scale, 0.55f * scale, new Vector2(0, -0.45f) * scale, 0), 1);
@@ -57,7 +57,10 @@ namespace GlitchGame
             body.OnCollision += (a, b, contact) =>
             {
                 if (collisionHandler != null)
-                    collisionHandler(a, b, contact);
+                {
+                    if (!collisionHandler(a, b, contact))
+                        return false;
+                }
 
                 Program.World.RemoveBody(body);
                 return false;

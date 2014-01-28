@@ -73,16 +73,18 @@ namespace GlitchGame.Entities
             }
 
             Health = Math.Min(Health + RegenRate * Program.FrameTime, MaxHealth);
+
+            RegenRate = Math.Max(RegenRate, 0);
             DamageMultiplier = Util.Clamp(DamageMultiplier, 0.05f, 2.00f);
             DamageTakenMultiplier = Util.Clamp(DamageTakenMultiplier, 0.50f, 1.50f);
-
+            SpeedMultiplier = Math.Max(SpeedMultiplier, 0.80f);
 
             if (Weapon != null && Shooting)
                 Weapon.TryShoot();
 
             // TODO: speed doesnt scale properly
             var linearSpeed = 25 * (float)Math.Pow(Size, 2.5) * SpeedMultiplier;
-            var angularSpeed = 7.5f * (float)Math.Pow(Size, 3) * SpeedMultiplier;
+            var angularSpeed = 8 * (float)Math.Pow(Size, 3) * SpeedMultiplier;
             Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * linearSpeed)));
             Body.ApplyTorque(AngularThruster * angularSpeed);
         }

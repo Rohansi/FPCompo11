@@ -18,18 +18,5 @@ namespace GlitchGame.Devices
         {
 
         }
-
-        /*public bool Update()
-        {
-            _timer = Math.Max(_timer - Program.FrameTime, 0);
-
-            if (_shooting && _timer <= 0)
-            {
-                _timer = Cooldown;
-                return true;
-            }
-
-            return false;
-        }*/
     }
 }

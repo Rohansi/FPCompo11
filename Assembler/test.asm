@@ -8,7 +8,7 @@ rb 8 - ($-$$)
 ;
 
 variableCount:
-    dd 5
+    dd 4
 
 varTurnSpeed:
     db VAR_SPEED
@@ -19,16 +19,12 @@ varThrustSpeed:
     dd thrustSpeed
 
 varReverseDist:
-    db VAR_GENERAL
+    db VAR_SPEED
     dd reverseDist
 
 varTargetType:
     db VAR_RADARVALUE
     dd targetType
-
-varTargetDir:
-    db VAR_GENERAL
-    dd targetDir
 
 ;
 ; Variable declarations
@@ -41,7 +37,7 @@ thrustSpeed:
     dd 100
 
 reverseDist:
-    dd 15
+    dd 20
 
 targetType:
     dd RADAR_PLAYER
@@ -96,24 +92,22 @@ main:
 
     pop r0
     mul r0, 2
-    mov r1, byte [r0 + radarData] ; type
-    cmp r1, [targetType]
-    jne .notFacingTarget
+.checkReverse:
     xor r7, r7
     mov r8, [thrustSpeed]
+    cmp byte [r0 + radarData + 1], [reverseDist]
+    ja .noReverse
+    neg r8
+.noReverse:
     int DEV_ENGINES
+
+.checkShoot:
+    cmp byte [r0 + radarData + 0], [targetType]
+    jne .noShoot
     inc r7
+.noShoot:
     int DEV_GUNS
-    jmp main
-.notFacingTarget:
-    xor r7, r7
-    int DEV_GUNS
-    mov r1, byte [r0 + radarData + 1] ; dist
-    cmp r1, [reverseDist]
-    ja main
-    xor r8, r8
-    sub r8, [thrustSpeed]
-    int DEV_ENGINES
+
     jmp main
  
 ; Returns the direction to spin to reach a target angle the fastest
@@ -201,7 +195,7 @@ radarData:
 
 ;while (true)
 ;{
-;   if (target == 127) {
+;   if (targetDir == RADAR_INVALID) {
 ;       setThrustSpeed(0);
 ;       setTurnSpeed(0);
 ;       setShooting(false);
@@ -210,20 +204,23 @@ radarData:
 ;   
 ;   var heading = getHeading();
 ;   if (heading != target) {
-;       var direction = closestDirection();
-;       setTurnSpeed(direction * 75);
+;       var direction = closestDirection(heading, targetDir);
+;       setTurnSpeed(turnSpeed * direction);
 ;   } else {
 ;       setTurnSpeed(0);
 ;   }
-;   
-;   var headingRay = radar[heading];
-;   if ((headingRay >> 8) == 1) {
+;
+;   var headDist = radarData[heading * 2 + 1];
+;   if (headDist <= reverseDist) {
+;       setThrustSpeed(-thrustSpeed);
+;   } else {
+;       setThrustSpeed(thrustSpeed);
+;   }
+;
+;   var headType = radarData[heading * 2 + 0];
+;   if (headType == targetType) {
 ;       setShooting(true);
-;       setThrustSpeed(-100);
 ;   } else {
 ;       setShooting(false);
-;       if ((headingRay & 0xFF) <= 15) {
-;           setThrustSpeed(-100);
-;       }
 ;   }
 ;}

@@ -46,9 +46,6 @@ namespace GlitchGame
         {
             Sounds.RemoveAll(snd => snd.Status != SoundStatus.Playing);
 
-            if (Sounds.Count >= 10)
-                return;
-
             int count;
             if (!SoundCounters.TryGetValue(name, out count))
                 count = 0;

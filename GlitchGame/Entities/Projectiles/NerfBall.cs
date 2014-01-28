@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SFML.Window;
 
 namespace GlitchGame.Entities.Projectiles
 {
@@ -7,7 +8,8 @@ namespace GlitchGame.Entities.Projectiles
         public NerfBall(Ship parent, Vector2 offset, Vector2 speed)
             : base(parent, offset, speed, "nerfball.png")
         {
-            
+            var texSize = Sprite.Texture.Size;
+            Sprite.Origin = new Vector2f(texSize.X / 2f, texSize.Y / 2f);
         }
 
         public override void Hit(Ship ship)
@@ -19,36 +21,26 @@ namespace GlitchGame.Entities.Projectiles
             var d = Program.Random.NextDouble() <= 0.75 ? 1f : -1f;
             var r = Program.Random.NextDouble();
 
-            if (r <= 0.20f) // 20% chance to do nothing
+            if (r <= 0.25f) // 25% chance to do nothing
             {
                 return;
             }
 
-            if (r <= 0.40f) // 20% chance to change damage
+            if (r <= 0.50f) // 25% chance to change damage
             {
                 ship.DamageMultiplier -= 0.05f * Size * d;
                 return;
             }
 
-            if (r <= 0.60f) // 20% chance to change speed
+            if (r <= 0.75f) // 25% chance to change speed
             {
                 ship.SpeedMultiplier -= 0.05f * Size * d;
                 return;
             }
 
-            if (r <= 0.80f) // 20% chance to change regen
+            if (r <= 1.00f) // 25% chance to change regen
             {
                 ship.RegenRate -= 1 * Size * d;
-                return;
-            }
-
-            if (r <= 1.0f) // 20% chance to corrupt memory
-            {
-                if (ship is Enemy)
-                {
-                    (ship as Enemy).Corrupt();
-                }
-                
                 return;
             }
         }

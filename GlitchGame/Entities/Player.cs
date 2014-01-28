@@ -20,13 +20,14 @@ namespace GlitchGame.Entities
         } 
 
         public Player(Vector2 position)
-            : base(position, "ship.png", 1.5f)
+            : base(position, "ship.png", 2)
         {
             _weapons = new List<Weapon>()
             {
                 new LaserGun(this),
                 new DualLaserGun(this),
-                new NerfGun(this)
+                new NerfGun(this),
+                new Disruptor(this)
             };
 
             SwitchWeapon(0);
@@ -71,7 +72,10 @@ namespace GlitchGame.Entities
                     Shooting = true;
             }
 
-            Weapon.Update();
+            foreach (var weapon in Weapons)
+            {
+                weapon.Update();
+            }
 
             base.Update();
         }

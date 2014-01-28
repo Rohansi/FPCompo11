@@ -39,6 +39,7 @@ namespace GlitchGame
             Window.Closed += (sender, eventArgs) => Window.Close();
             Window.GainedFocus += (sender, args) => HasFocus = true;
             Window.LostFocus += (sender, args) => HasFocus = false;
+            HasFocus = true;
 
             Window.KeyPressed += (sender, args) =>
             {
@@ -51,9 +52,8 @@ namespace GlitchGame
             HudCamera = new Camera(Window.DefaultView);
 
             Camera = new Camera(Window.DefaultView);
-            Camera.Zoom = 1.5f;
+            Camera.Zoom = 2;
 
-            HasFocus = true;
             World = new World(new Vector2(0, 0));
             Entities = new LinkedList<IEntity>();
 
@@ -110,7 +110,7 @@ namespace GlitchGame
             #endregion
 
             #region Enemies
-            const int ships = 6;
+            const int ships = 10;
 
             for (var i = 0; i < ships; i++)
             {

@@ -70,7 +70,12 @@ namespace GlitchGame.Entities
 
             #endregion
 
-            Weapon = new LaserGun(this);
+            var r = Program.Random.NextDouble();
+
+            if (r <= 0.75f)
+                Weapon = new LaserGun(this);
+            else
+                Weapon = new NerfGun(this);
 
             MaxHealth = 1000;
             Health = MaxHealth;
@@ -119,7 +124,7 @@ namespace GlitchGame.Entities
         {
             var r = Program.Random.NextDouble();
 
-            if (r <= 0.75f && _variables.Count > 0) // 75% chance to corrupt variable
+            if (r <= 0.40f && _variables.Count > 0) // 40% chance to corrupt variable
             {
                 var variable = _variables[Program.Random.Next(_variables.Count)];
                 int newValue;
@@ -143,7 +148,15 @@ namespace GlitchGame.Entities
                 return;
             }
 
-            if (r <= 1.00f) // 25% chance to corrupt random memory
+            if (r <= 0.80f) // 40% chance to corrupt register
+            {
+                var reg = Program.Random.Next(10);
+                var bit = Program.Random.Next(32);
+
+                _vm.Registers[reg] ^= 1 << bit;
+            }
+
+            if (r <= 1.00f) // 20% chance to corrupt random memory
             {
                 var addr = Program.Random.Next(_programOffset, _programLen - _programOffset);
                 var bit = Program.Random.Next(8);

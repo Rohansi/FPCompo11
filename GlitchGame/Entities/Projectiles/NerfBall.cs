@@ -41,7 +41,7 @@ namespace GlitchGame.Entities.Projectiles
 
             if (r <= 1.00f) // 25% chance to change regen
             {
-                ship.HealthRegenRate -= 1 * Size * d;
+                ship.HealthRegenRate -= 0.05f * Size * d;
             }
         }
     }

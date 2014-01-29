@@ -91,9 +91,9 @@ namespace GlitchGame.Entities
             if (Weapon != null && Shooting)
                 Weapon.TryShoot();
 
-            // TODO: speed doesnt scale properly
-            var linearSpeed = 25 * (float)Math.Pow(Size, 2.5) * SpeedMultiplier;
-            var angularSpeed = 8 * (float)Math.Pow(Size, 3) * SpeedMultiplier;
+            // TODO: see if we can make large ships turn slower
+            var linearSpeed = 7.5f * Body.Mass * SpeedMultiplier;
+            var angularSpeed = 2.5f * Body.Inertia * SpeedMultiplier;
             Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * linearSpeed)));
             Body.ApplyTorque(AngularThruster * angularSpeed);
         }

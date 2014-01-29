@@ -12,6 +12,8 @@ namespace GlitchGame
 {
     public static class Util
     {
+        public const float Pi2 = (float)Math.PI * 2;
+
         public static Body CreateAsteroid(float radius)
         {
             var body = new Body(Program.World);

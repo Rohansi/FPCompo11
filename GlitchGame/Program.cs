@@ -96,9 +96,9 @@ namespace GlitchGame
 
             #region Border
             const float radius = 30;
-            const float step = (float)(2 * Math.PI) / 600;
+            const float step = Util.Pi2 / (Util.Pi2 * radius);
 
-            for (var dir = 0f; dir <= 2 * Math.PI; dir += step)
+            for (var dir = 0f; dir <= Util.Pi2; dir += step)
             {
                 var count = 1;
 
@@ -106,9 +106,8 @@ namespace GlitchGame
                 {
                     var idx = Random.Next(Asteroid.Radiuses.Count);
                     var size = new Vector2(Asteroid.Radiuses[idx]);
-                    var pos = Util.LengthDir(dir, radius);
-                    var area = new FloatRect(pos.X - 0.5f, pos.Y - 0.5f, 1f, 1f);
-                    var space = FindOpenSpace(area, size);
+                    var pos = Util.LengthDir(dir, radius).ToFarseer();
+                    var space = FindOpenSpace(pos, 1, size);
 
                     if (!space.HasValue || count >= 10)
                         break;
@@ -123,14 +122,12 @@ namespace GlitchGame
             Entities.AddLast(Player);
 
             #region Asteroids
-            // TODO: fill in the circle border
-            const int asteroids = (int)(radius * radius) / 20;
+            const int asteroids = (int)(Math.PI * (radius * radius)) / 50;
 
             for (var i = 0; i < asteroids; i++)
             {
                 var size = new Vector2(2, 2);
-                var area = new FloatRect(-radius + 7, -radius + 7, radius * 2 - 14, radius * 2 - 14);
-                var space = FindOpenSpace(area, size);
+                var space = FindOpenSpace(new Vector2(0), radius, size);
 
                 if (!space.HasValue)
                     continue;
@@ -140,13 +137,12 @@ namespace GlitchGame
             #endregion
 
             #region Enemies
-            const int ships = 10;
+            const int enemies = 10;
 
-            for (var i = 0; i < ships; i++)
+            for (var i = 0; i < enemies; i++)
             {
                 var size = new Vector2(2, 2);
-                var area = new FloatRect(-radius + 7, -radius + 7, radius * 2 - 14, radius * 2 - 14);
-                var space = FindOpenSpace(area, size);
+                var space = FindOpenSpace(new Vector2(), radius, size);
 
                 if (!space.HasValue)
                     continue;
@@ -216,7 +212,7 @@ namespace GlitchGame
             return result.Distinct().OrderBy(e => e.Depth + e.DepthBias);
         }
 
-        private static Vector2? FindOpenSpace(FloatRect area, Vector2 size)
+        private static Vector2? FindOpenSpace(Vector2 center, float radius, Vector2 size)
         {
             const int maxRetry = 25;
 
@@ -226,7 +222,7 @@ namespace GlitchGame
 
             do
             {
-                position = new Vector2(area.Left + (float)Random.NextDouble() * area.Width, area.Top + (float)Random.NextDouble() * area.Height);
+                position = center + Util.LengthDir((float)Random.NextDouble() * Util.Pi2, (float)Math.Sqrt(Random.NextDouble()) * radius).ToFarseer();
                 empty = true;
 
                 var aabb = new AABB(position, size.X, size.Y);

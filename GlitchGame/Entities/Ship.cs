@@ -10,6 +10,9 @@ namespace GlitchGame.Entities
 {
     public abstract class Ship : Entity
     {
+        private const int DamageSprites = 5;
+        private const string SpriteFormat = "{0}{1}.png";
+
         private Sprite _forward;
         private Sprite _backward;
         private Sprite _left;
@@ -38,9 +41,9 @@ namespace GlitchGame.Entities
         protected float AngularThruster;
         protected bool Shooting;
 
-        protected Ship(Vector2 position, string texture, float size, int team)
+        protected Ship(Vector2 position, float size, int team)
         {
-            Sprite = new Sprite(Assets.LoadTexture(texture)).Center();
+            Sprite = new Sprite(Assets.LoadTexture(string.Format(SpriteFormat, "ship", 0))).Center();
 
             if (team != 0)
                 Sprite.Color = new Color(255, 180, 200);
@@ -100,6 +103,10 @@ namespace GlitchGame.Entities
 
         public override void Draw(RenderTarget target)
         {
+            var damage = Health / MaxHealth;
+            var damageIdx = (DamageSprites - 1) - (int)Util.Clamp(damage * DamageSprites, 0, DamageSprites - 1);
+            Sprite.Texture = Assets.LoadTexture(string.Format(SpriteFormat, "ship", damageIdx));
+
             Position = Body.Position.ToSfml() * Program.PixelsPerMeter;
             Rotation = Body.Rotation * Program.DegreesPerRadian;
 

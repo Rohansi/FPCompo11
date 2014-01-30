@@ -18,7 +18,7 @@ namespace GlitchGame.Entities
         } 
 
         public Player(Vector2 position)
-            : base(position, "ship.png", 2, 0)
+            : base(position, 2, 0)
         {
             _weapons = new List<Weapon>
             {

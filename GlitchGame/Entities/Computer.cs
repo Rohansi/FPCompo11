@@ -18,8 +18,8 @@ namespace GlitchGame.Entities
 
         public override int Depth { get { return 2; } }
 
-        protected Computer(Vector2 position, string texture, float size, int team)
-            : base(position, texture, size, team)
+        protected Computer(Vector2 position, float size, int team)
+            : base(position, size, team)
         {
             _vm = new VirtualMachine(4096);
 

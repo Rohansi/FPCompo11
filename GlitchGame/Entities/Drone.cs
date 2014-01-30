@@ -6,7 +6,7 @@ namespace GlitchGame.Entities
     public sealed class Drone : Computer
     {
         public Drone(Vector2 position, float size)
-            : base(position, "ship.png", size, 0)
+            : base(position, size, 0)
         {
             Weapon = new LaserGun(this);
 

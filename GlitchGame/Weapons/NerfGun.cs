@@ -24,13 +24,10 @@ namespace GlitchGame.Weapons
 
         public override bool Shoot()
         {
-            if (_left)
-                Program.Entities.AddLast(new NerfBall(Parent, Left * Parent.Size, new Vector2(0, -Speed)));
-            else
-                Program.Entities.AddLast(new NerfBall(Parent, Right * Parent.Size, new Vector2(0, -Speed)));
-
+            var side = _left ? Left : Right;
             _left = !_left;
 
+            Program.Entities.AddLast(new NerfBall(Parent, side * Parent.Size, new Vector2(0, -Speed)));
             Assets.PlaySound("shoot_nerf.wav", Parent.Position);
 
             return true;

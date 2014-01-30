@@ -20,7 +20,7 @@ namespace GlitchGame.Entities
         public Player(Vector2 position)
             : base(position, "ship.png", 2, 0)
         {
-            _weapons = new List<Weapon>()
+            _weapons = new List<Weapon>
             {
                 new LaserGun(this),
                 new DualLaserGun(this),

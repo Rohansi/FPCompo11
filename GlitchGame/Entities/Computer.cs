@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using GlitchGame.Devices;
-using GlitchGame.Weapons;
 using LoonyVM;
 using Microsoft.Xna.Framework;
 

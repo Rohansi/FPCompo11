@@ -35,7 +35,7 @@ namespace GlitchGame
 
         public Camera(View view)
         {
-            this.View = new View(view);
+            View = new View(view);
             Position = view.Size / 2;
             _originalSize = view.Size;
         }

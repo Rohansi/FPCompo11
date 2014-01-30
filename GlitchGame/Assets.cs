@@ -14,7 +14,7 @@ namespace GlitchGame
         private static readonly List<Sound> Sounds = new List<Sound>();
         private static readonly Dictionary<string, int> SoundCounters = new Dictionary<string, int>();
          
-        public static string BaseLocation = "Data/";
+        public static string BaseLocation = "Data";
 
         public static Texture LoadTexture(string name)
         {
@@ -23,7 +23,7 @@ namespace GlitchGame
             if (Textures.TryGetValue(name, out texture))
                 return texture;
 
-            texture = new Texture(Path.Combine(BaseLocation, name));
+            texture = new Texture(Path.Combine(BaseLocation, "Textures", name));
             //texture.Smooth = true;
             Textures.Add(name, texture);
 
@@ -36,7 +36,7 @@ namespace GlitchGame
 
             if (!Buffers.TryGetValue(name, out soundBuffer))
             {
-                soundBuffer = new SoundBuffer(Path.Combine(BaseLocation, name));
+                soundBuffer = new SoundBuffer(Path.Combine(BaseLocation, "Sounds", name));
                 Buffers.Add(name, soundBuffer);
             }
 

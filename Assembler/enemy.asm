@@ -170,8 +170,8 @@ radarInterruptHandler:
         jne .notTarget
         cmp byte [r1], r5           
         jae .continue           ; farther than we have
-        mov r6, r2
-        mov r7, byte [r1]
+        mov r4, r2
+        mov r5, byte [r1]
         jmp .continue
     .notTarget:
     .continue:

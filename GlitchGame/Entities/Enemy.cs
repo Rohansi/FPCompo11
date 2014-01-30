@@ -21,7 +21,7 @@ namespace GlitchGame.Entities
             Energy = MaxEnergy;
 
             HealthRegenRate = 5;
-            EnergyRegenRate = 10;
+            EnergyRegenRate = 15;
 
             DamageTakenMultiplier = 1;
             DamageMultiplier = 1;

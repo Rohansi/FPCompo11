@@ -8,7 +8,7 @@ namespace GlitchGame.Entities
         public Drone(Vector2 position, float size)
             : base(position, size, 0, "drone")
         {
-            Weapon = new LaserGun(this);
+            Weapon = new NerfGun(this);
 
             MaxHealth = 150;
             Health = MaxHealth;

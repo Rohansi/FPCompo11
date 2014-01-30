@@ -16,7 +16,7 @@ namespace GlitchGame.Entities.Projectiles
         {
             base.Hit(ship);
 
-            ship.Energy -= 10 * Size;
+            ship.Energy -= 10.0f * EnergyDamageMultiplier(ship);
 
             var r = Program.Random.NextDouble();
 

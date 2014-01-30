@@ -16,33 +16,11 @@ namespace GlitchGame.Entities.Projectiles
         {
             base.Hit(ship);
 
-            ship.Health -= 2.5f * Size * ship.DamageTakenMultiplier;
-            ship.Energy -= 5 * Size;
+            ship.Health -= 2.5f * HealthDamageMultiplier(ship);
+            ship.Energy -= 5.0f * EnergyDamageMultiplier(ship);
 
             var d = Program.Random.NextDouble() <= 0.75 ? 1f : -1f;
-            var r = Program.Random.NextDouble();
-
-            if (r <= 0.25f) // 25% chance to do nothing
-            {
-                return;
-            }
-
-            if (r <= 0.50f) // 25% chance to change damage
-            {
-                ship.DamageMultiplier -= 0.05f * Size * d;
-                return;
-            }
-
-            if (r <= 0.75f) // 25% chance to change speed
-            {
-                ship.SpeedMultiplier -= 0.05f * Size * d;
-                return;
-            }
-
-            if (r <= 1.00f) // 25% chance to change regen
-            {
-                ship.HealthRegenRate -= 0.05f * Size * d;
-            }
+            ship.NerfMultiplier -= 0.05f * Size * d;
         }
     }
 }

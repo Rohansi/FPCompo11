@@ -14,19 +14,7 @@ namespace GlitchGame.Entities.Projectiles
         {
             base.Hit(ship);
 
-            ship.Health -= 10 * Size * ship.DamageTakenMultiplier;
-
-            var r = Program.Random.NextDouble();
-
-            if (r <= 0.95f) // 95% chance to do nothing
-            {
-                return;
-            }
-
-            if (r <= 1.00f) // 5% chance to damage hull
-            {
-                ship.DamageTakenMultiplier += 0.01f * Size;
-            }
+            ship.Health -= 10.0f * HealthDamageMultiplier(ship);
         }
     }
 }

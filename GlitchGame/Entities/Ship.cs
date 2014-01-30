@@ -26,6 +26,7 @@ namespace GlitchGame.Entities
         public Weapon Weapon { get; protected set; }
 
         public int Team { get; private set; }
+
         public float MaxHealth { get; protected set; }
         public float Health;
         public float MaxEnergy { get; protected set; }
@@ -36,6 +37,7 @@ namespace GlitchGame.Entities
         public float DamageTakenMultiplier; // armor
         public float DamageMultiplier;
         public float SpeedMultiplier;
+        public float NerfMultiplier;
 
         protected float Thruster;
         protected float AngularThruster;
@@ -56,6 +58,11 @@ namespace GlitchGame.Entities
 
             Size = size;
             Team = team;
+
+            DamageTakenMultiplier = 1;
+            DamageMultiplier = 1;
+            SpeedMultiplier = 1;
+            NerfMultiplier = 1;
 
             _forward = new Sprite(Assets.LoadTexture("ship_forward.png"));
             _forward.Origin = new Vector2f(_forward.Texture.Size.X / 2f, 0) - new Vector2f(0, 65);
@@ -83,20 +90,20 @@ namespace GlitchGame.Entities
                 return;
             }
 
-            Health = Util.Clamp(Health + HealthRegenRate * Program.FrameTime, 0, MaxHealth);
-            Energy = Util.Clamp(Energy + EnergyRegenRate * Program.FrameTime, 0, MaxEnergy);
+            var a = Math.Abs(1 - NerfMultiplier);
+            var s = Math.Sign(1 - NerfMultiplier);
+            NerfMultiplier += Util.Clamp(a, -0.05f, 0.05f) * s * Program.FrameTime;
+            NerfMultiplier = Util.Clamp(NerfMultiplier, 0.5f, 1.5f);
 
-            HealthRegenRate = Math.Max(HealthRegenRate, 0);
-            DamageMultiplier = Util.Clamp(DamageMultiplier, 0.05f, 2.00f);
-            DamageTakenMultiplier = Util.Clamp(DamageTakenMultiplier, 0.50f, 1.50f);
-            SpeedMultiplier = Math.Max(SpeedMultiplier, 0.90f);
+            Health = Util.Clamp(Health + HealthRegenRate * NerfMultiplier * Program.FrameTime, 0, MaxHealth);
+            Energy = Util.Clamp(Energy + EnergyRegenRate * NerfMultiplier * Program.FrameTime, 0, MaxEnergy);
 
             if (Weapon != null && Shooting)
                 Weapon.TryShoot();
 
             // TODO: see if we can make large ships turn slower
-            var linearSpeed = 7.5f * Body.Mass * SpeedMultiplier;
-            var angularSpeed = 2.5f * Body.Inertia * SpeedMultiplier;
+            var linearSpeed = 7.5f * Body.Mass * SpeedMultiplier * NerfMultiplier;
+            var angularSpeed = 2.5f * Body.Inertia * SpeedMultiplier * NerfMultiplier;
             Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, Util.Clamp(Thruster, -1.0f, 0.5f) * linearSpeed)));
             Body.ApplyTorque(AngularThruster * angularSpeed);
         }

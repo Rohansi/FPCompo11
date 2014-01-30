@@ -9,6 +9,8 @@ namespace GlitchGame.Entities.Projectiles
         private const float MaxLifeTime = 15;
 
         private float _lifeTime;
+        private float _healthDamageMultiplier;
+        private float _energyDamageMultiplier;
 
         public override int Depth { get { return 0; } }
 
@@ -23,6 +25,9 @@ namespace GlitchGame.Entities.Projectiles
             Sprite = new Sprite(Assets.LoadTexture(texture)).Center();
             Size = size;
             Scale = new Vector2f(size, size);
+
+            _healthDamageMultiplier = Size * Parent.DamageMultiplier * Parent.NerfMultiplier;
+            _energyDamageMultiplier = Size * Parent.NerfMultiplier;
 
             _lifeTime = 0;
         }
@@ -50,6 +55,16 @@ namespace GlitchGame.Entities.Projectiles
             Position = Body.Position.ToSfml() * Program.PixelsPerMeter;
             Rotation = Util.Direction(Body.LinearVelocity) * Program.DegreesPerRadian + 90;
             target.Draw(Sprite, new RenderStates(Transform));
+        }
+
+        protected float HealthDamageMultiplier(Ship ship)
+        {
+            return _healthDamageMultiplier * ship.DamageTakenMultiplier * ship.NerfMultiplier;
+        }
+
+        protected float EnergyDamageMultiplier(Ship ship)
+        {
+            return _energyDamageMultiplier * ship.NerfMultiplier;
         }
     }
 }

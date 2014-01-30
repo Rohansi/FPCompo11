@@ -1,4 +1,6 @@
 ﻿using System;
+using FarseerPhysics.Common;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using GlitchGame.Devices;
 using GlitchGame.Weapons;
@@ -21,7 +23,6 @@ namespace GlitchGame.Entities
         public override RadarValue Radar { get { return RadarValue.Count; } }
 
         public Sprite Sprite { get; protected set; }
-        public Body Body { get; protected set; }
         public float Size { get; protected set; }
         public Weapon Weapon { get; protected set; }
 
@@ -43,7 +44,8 @@ namespace GlitchGame.Entities
         protected float AngularThruster;
         protected bool Shooting;
 
-        protected Ship(Vector2 position, float size, int team)
+        protected Ship(State state, Vector2 position, float size, int team)
+            : base(state)
         {
             Sprite = new Sprite(Assets.LoadTexture(string.Format(SpriteFormat, "ship", 0))).Center();
 
@@ -52,9 +54,23 @@ namespace GlitchGame.Entities
 
             Scale = new Vector2f(size, size);
 
-            Body = Util.CreateShip(size);
+            #region Body Initialize
+            Body = new Body(State.World);
+            Body.BodyType = BodyType.Dynamic;
+            Body.LinearDamping = 0.5f;
+            Body.AngularDamping = 1.0f;
+
+            // tip
+            var rect1 = new PolygonShape(PolygonTools.CreateRectangle(0.23f * size, 0.55f * size, new Vector2(0, -0.45f) * size, 0), 1);
+
+            // tail
+            var rect2 = new PolygonShape(PolygonTools.CreateRectangle(0.725f * size, 0.45f * size, new Vector2(0, 0.55f) * size, 0), 3);
+
+            Body.CreateFixture(rect1);
+            Body.CreateFixture(rect2);
             Body.UserData = this;
             Body.Position = position;
+            #endregion
 
             Size = size;
             Team = team;
@@ -75,11 +91,6 @@ namespace GlitchGame.Entities
 
             _right = new Sprite(Assets.LoadTexture("ship_right.png"));
             _right.Origin = new Vector2f(_right.Texture.Size.X, _right.Texture.Size.Y / 2f) - new Vector2f(-15, -37);
-        }
-
-        public override void Destroyed()
-        {
-            Program.World.RemoveBody(Body);
         }
 
         public override void Update()

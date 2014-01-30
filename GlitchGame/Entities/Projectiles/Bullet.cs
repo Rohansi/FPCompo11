@@ -1,4 +1,7 @@
-﻿using GlitchGame.Devices;
+﻿using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using GlitchGame.Devices;
 using Microsoft.Xna.Framework;
 using SFML.Window;
 
@@ -13,25 +16,45 @@ namespace GlitchGame.Entities.Projectiles
         {
             Sprite.Origin = new Vector2f(Sprite.Texture.Size.X / 2f, 0);
 
-            Body = Util.CreateBullet(Parent.Body, offset, parent.Size, (a, b, contact) =>
+            #region Body Initialize
+            Body = new Body(State.World);
+            Body.BodyType = BodyType.Dynamic;
+            Body.IsBullet = true;
+
+            var shape = new CircleShape((0.15f / 4) * parent.Size, 0);
+            Body.CreateFixture(shape);
+            Body.Position = parent.Body.Position + parent.Body.GetWorldVector(offset);
+            Body.Rotation = parent.Rotation;
+
+            Body.OnCollision += (a, b, contact) =>
             {
-                if (b.Body.UserData is Bullet)
+                if (!Collision(a, b, contact))
                     return false;
-
-                var ship = b.Body.UserData as Ship;
-
-                if (ship == Parent)
-                    return false;
-
-                if (ship != null && !Dead)
-                    Hit(ship);
 
                 Dead = true;
-                return true;
-            });
+                return false;
+            };
 
-            Body.LinearVelocity = Parent.Body.LinearVelocity + Body.GetWorldVector(speed);
+            Body.LinearVelocity = Parent.Body.LinearVelocity + Parent.Body.GetWorldVector(speed);
             Body.UserData = this;
+            #endregion
+        }
+
+        private bool Collision(Fixture a, Fixture b, Contact contact)
+        {
+            if (b.Body.UserData is Bullet)
+                return false;
+
+            var ship = b.Body.UserData as Ship;
+
+            if (ship == Parent)
+                return false;
+
+            if (ship != null && !Dead)
+                Hit(ship);
+
+            Dead = true;
+            return true;
         }
     }
 }

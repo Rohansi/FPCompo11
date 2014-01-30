@@ -100,12 +100,12 @@ namespace GlitchGame.Weapons
             _left = !_left;
 
             var pos = Parent.Body.Position + Parent.Body.GetWorldVector(side * Parent.Size);
-            var drone = new Drone(pos, Parent.Size / 8);
+            var drone = new Drone(Parent.State, pos, Parent.Size / 8);
 
             drone.Body.LinearVelocity = Parent.Body.LinearVelocity + Parent.Body.GetWorldVector(new Vector2(0, -LaunchSpeed));
             drone.Body.Rotation = Parent.Body.Rotation;
 
-            Program.Entities.AddLast(drone);
+            Parent.State.Entities.AddLast(drone);
             _drones.Add(drone);
             _amount--;
 

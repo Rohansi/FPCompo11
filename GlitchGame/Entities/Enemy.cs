@@ -5,8 +5,8 @@ namespace GlitchGame.Entities
 {
     public sealed class Enemy : Computer
     {
-        public Enemy(Vector2 position)
-            : base(position, 1, 1, "enemy")
+        public Enemy(State state, Vector2 position)
+            : base(state, position, 1, 1, "enemy")
         {
             var r = Program.Random.NextDouble();
 

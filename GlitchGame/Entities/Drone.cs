@@ -5,8 +5,8 @@ namespace GlitchGame.Entities
 {
     public sealed class Drone : Computer
     {
-        public Drone(Vector2 position, float size)
-            : base(position, size, 0, "drone")
+        public Drone(State state, Vector2 position, float size)
+            : base(state, position, size, 0, "drone")
         {
             Weapon = new NerfGun(this);
 

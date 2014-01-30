@@ -17,8 +17,8 @@ namespace GlitchGame.Entities
             get { return new ReadOnlyCollection<Weapon>(_weapons); }
         } 
 
-        public Player(Vector2 position)
-            : base(position, 2, 0)
+        public Player(State state, Vector2 position)
+            : base(state, position, 2, 0)
         {
             _weapons = new List<Weapon>
             {

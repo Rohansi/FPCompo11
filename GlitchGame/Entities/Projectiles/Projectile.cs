@@ -16,10 +16,10 @@ namespace GlitchGame.Entities.Projectiles
 
         public Ship Parent { get; protected set; }
         public Sprite Sprite { get; protected set; }
-        public Body Body { get; protected set; }
         public float Size { get; protected set; }
 
         protected Projectile(Ship parent, string texture, float size)
+            : base(Program.State)
         {
             Parent = parent;
             Sprite = new Sprite(Assets.LoadTexture(texture)).Center();
@@ -30,11 +30,6 @@ namespace GlitchGame.Entities.Projectiles
             _energyDamageMultiplier = Size * Parent.NerfMultiplier;
 
             _lifeTime = 0;
-        }
-
-        public override void Destroyed()
-        {
-            Program.World.RemoveBody(Body);
         }
 
         public override void Update()

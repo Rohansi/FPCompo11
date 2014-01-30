@@ -78,7 +78,7 @@ namespace GlitchGame.Devices
                 float min = 100;
                 var point = start + Util.RadarLengthDir(dir, MaxDistance);
 
-                Program.World.RayCast((f, p, n, fr) =>
+                _parent.State.World.RayCast((f, p, n, fr) =>
                 {
                     if (f.Body == _parent.Body)
                         return -1;

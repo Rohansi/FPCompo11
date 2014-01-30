@@ -27,16 +27,16 @@ namespace GlitchGame.Weapons
             const float diff = 0.075f;
 
             var dir = Direction(up);
-            Program.Entities.AddLast(new Laser(Parent, (new Vector2(-0.0f, 0) + Left) * Parent.Size, dir * Speed));
+            Parent.State.Entities.AddLast(new Laser(Parent, (new Vector2(-0.0f, 0) + Left) * Parent.Size, dir * Speed));
 
             dir = Direction(up + diff);
-            Program.Entities.AddLast(new Laser(Parent, (new Vector2(-0.2f, 0) + Left) * Parent.Size, dir * Speed));
+            Parent.State.Entities.AddLast(new Laser(Parent, (new Vector2(-0.2f, 0) + Left) * Parent.Size, dir * Speed));
 
             dir = Direction(up);
-            Program.Entities.AddLast(new Laser(Parent, (new Vector2(0.0f, 0) + Right) * Parent.Size, dir * Speed));
+            Parent.State.Entities.AddLast(new Laser(Parent, (new Vector2(0.0f, 0) + Right) * Parent.Size, dir * Speed));
 
             dir = Direction(up - diff);
-            Program.Entities.AddLast(new Laser(Parent, (new Vector2(0.2f, 0) + Right) * Parent.Size, dir * Speed));
+            Parent.State.Entities.AddLast(new Laser(Parent, (new Vector2(0.2f, 0) + Right) * Parent.Size, dir * Speed));
 
             Assets.PlaySound("shoot_laser.wav", Parent.Position);
 

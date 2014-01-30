@@ -1,4 +1,5 @@
 ﻿using System;
+using GlitchGame.States;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -14,6 +15,8 @@ namespace GlitchGame
         public const float BarWidth = 300;
         public const float BarHeight = 20;
 
+        private GameBase _state;
+
         private Sprite _selected;
 
         private RectangleShape _statusBack;
@@ -24,8 +27,10 @@ namespace GlitchGame
         private RectangleShape _energy;
         private Text _energyText;
 
-        public Hud()
+        public Hud(GameBase state)
         {
+            _state = state;
+
             _selected = new Sprite(Assets.LoadTexture("wep_selected.png")).Center();
 
             _statusBack = new RectangleShape(new Vector2f(BarWidth + Padding * 2, BarHeight * 2 + Padding * 3));
@@ -54,13 +59,14 @@ namespace GlitchGame
         public void Draw(RenderTarget target, RenderStates states)
         {
             var bounds = Program.HudCamera.Bounds;
+            var player = _state.Player;
 
             var iconPos = new Vector2f(Padding + IconSizeHalf, bounds.Height - IconSizeHalf - Padding);
-            foreach (var wep in Program.Player.Weapons)
+            foreach (var wep in player.Weapons)
             {
                 wep.Draw(target, iconPos);
 
-                if (wep == Program.Player.Weapon)
+                if (wep == player.Weapon)
                 {
                     _selected.Position = iconPos;
                     target.Draw(_selected);
@@ -69,7 +75,6 @@ namespace GlitchGame
                 iconPos += new Vector2f(IconSize + Padding, 0);
             }
 
-            var player = Program.Player;
             var healthPercentage = Util.Clamp(player.Health / player.MaxHealth, 0, 1);
             _health.Size = new Vector2f(healthPercentage * BarWidth, BarHeight);
 

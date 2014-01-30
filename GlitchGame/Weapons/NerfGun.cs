@@ -27,7 +27,7 @@ namespace GlitchGame.Weapons
             var side = _left ? Left : Right;
             _left = !_left;
 
-            Program.Entities.AddLast(new NerfBall(Parent, side * Parent.Size, new Vector2(0, -Speed)));
+            Parent.State.Entities.AddLast(new NerfBall(Parent, side * Parent.Size, new Vector2(0, -Speed)));
             Assets.PlaySound("shoot_nerf.wav", Parent.Position);
 
             return true;

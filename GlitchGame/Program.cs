@@ -147,7 +147,7 @@ namespace GlitchGame
                 if (!space.HasValue)
                     continue;
 
-                Entities.AddLast(new Computer(space.Value));
+                Entities.AddLast(new Enemy(space.Value));
             }
             #endregion
 

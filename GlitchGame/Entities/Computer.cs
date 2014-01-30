@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace GlitchGame.Entities
 {
-    public sealed class Computer : Ship
+    public abstract class Computer : Ship
     {
         private VirtualMachine _vm;
         private bool _programDead;
@@ -19,10 +19,9 @@ namespace GlitchGame.Entities
 
         public override int Depth { get { return 2; } }
 
-        public Computer(Vector2 position)
-            : base(position, "ship.png", 1, 1)
+        protected Computer(Vector2 position, string texture, float size, int team)
+            : base(position, texture, size, team)
         {
-            #region VM Setup
             _vm = new VirtualMachine(4096);
 
             var code = File.ReadAllBytes("Data/bios.bin");
@@ -63,27 +62,6 @@ namespace GlitchGame.Entities
 
             _guns = new Guns();
             _vm.Attach(_guns);
-
-            #endregion
-
-            var r = Program.Random.NextDouble();
-
-            if (r <= 0.75f)
-                Weapon = new LaserGun(this);
-            else
-                Weapon = new NerfGun(this);
-
-            MaxHealth = 1000;
-            Health = MaxHealth;
-            MaxEnergy = 500;
-            Energy = MaxEnergy;
-
-            HealthRegenRate = 5;
-            EnergyRegenRate = 10;
-
-            DamageTakenMultiplier = 1;
-            DamageMultiplier = 1;
-            SpeedMultiplier = 1;
         }
 
         public override void Update()

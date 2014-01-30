@@ -1,6 +1,7 @@
 ﻿using GlitchGame.Entities;
 using Microsoft.Xna.Framework;
 using SFML.Graphics;
+using SFML.Window;
 
 namespace GlitchGame.Weapons
 {
@@ -9,8 +10,6 @@ namespace GlitchGame.Weapons
         protected static readonly Vector2 Left = new Vector2(-0.485f, 0);
         protected static readonly Vector2 Right = new Vector2(0.485f, 0);
         protected static readonly Vector2 Center = new Vector2(0, -0.5f);
-
-        public Sprite Icon { get; protected set; }
 
         public abstract float MaxCooldown { get; }
         public float Cooldown { get; protected set; }
@@ -32,12 +31,14 @@ namespace GlitchGame.Weapons
             if (Parent.Energy < EnergyCost)
                 return;
 
+            if (!Shoot())
+                return;
+
             Cooldown += MaxCooldown;
             Parent.Energy -= EnergyCost;
-            Shoot();
         }
 
-        public void Update()
+        public virtual void Update()
         {
             if (Cooldown > 0)
                 Cooldown -= Program.FrameTime;
@@ -49,8 +50,10 @@ namespace GlitchGame.Weapons
         }
 
         /// <summary>
-        /// Called when projectiles need to be made
+        /// Called when projectiles need to be made. Returns true if energy should be used.
         /// </summary>
-        public abstract void Shoot();
+        public abstract bool Shoot();
+
+        public abstract void Draw(RenderTarget target, Vector2f position);
     }
 }

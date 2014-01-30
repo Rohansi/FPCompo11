@@ -6,11 +6,13 @@ namespace GlitchGame
 {
     public class Hud : Drawable
     {
-        private const float Padding = 4;
-        private const float IconSize = 64;
-        private const float IconSizeHalf = IconSize / 2f;
-        private const float BarWidth = 300;
-        private const float BarHeight = 20;
+        public const float Padding = 4;
+        public const float IconSize = 64;
+        public const float IconSizeHalf = IconSize / 2f;
+        public const float IconBorder = 2;
+        public const float IconBorderTwice = IconBorder * 2;
+        public const float BarWidth = 300;
+        public const float BarHeight = 20;
 
         private Sprite _selected;
 
@@ -56,8 +58,7 @@ namespace GlitchGame
             var iconPos = new Vector2f(Padding + IconSizeHalf, bounds.Height - IconSizeHalf - Padding);
             foreach (var wep in Program.Player.Weapons)
             {
-                wep.Icon.Position = iconPos;
-                target.Draw(wep.Icon);
+                wep.Draw(target, iconPos);
 
                 if (wep == Program.Player.Weapon)
                 {

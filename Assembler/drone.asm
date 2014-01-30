@@ -57,10 +57,10 @@ targetDir:
     dd RADAR_INVALID
 
 friendType:
-	dd RADAR_ALLY
+    dd RADAR_ALLY
 
 friendDir:
-	dd RADAR_INVALID
+    dd RADAR_INVALID
 
 ;
 ; Ship code
@@ -76,15 +76,15 @@ entryPoint:
     int DEV_RADAR
 
 main:
-	cmp [targetDir], RADAR_INVALID
-	je .noTarget
-	mov r6, [targetDir]
-	jmp .logic
+    cmp [targetDir], RADAR_INVALID
+    je .noTarget
+    mov r6, [targetDir]
+    jmp .logic
 .noTarget:
-	cmp [friendDir], RADAR_INVALID
-	je .noFriend
-	mov r6, [friendDir]
-	jmp .logic
+    cmp [friendDir], RADAR_INVALID
+    je .noFriend
+    mov r6, [friendDir]
+    jmp .logic
 .noFriend:
     xor r7, r7
     xor r8, r8
@@ -141,7 +141,7 @@ main:
     int DEV_GUNS
 
     jmp main
- 
+
 ; Returns the direction to spin to reach a target angle the fastest
 ; r0 - current heading
 ; r1 - target heading
@@ -168,49 +168,49 @@ closestDirection:
     jz .default
     mov r2, -1
 .default:
- 
+
     pop r4
     pop r3
     pop r0
     ret
     
 radarInterruptHandler:
-	mov r0, radarData 			; ptr to type
-	mov r1, r0 + 1 				; ptr to dist
-	xor r2, r2					; ray number
-	mov r4, RADAR_INVALID		; friend dir
-	mov r5, RADAR_INVALID		; friend dist
-	mov r6, RADAR_INVALID		; target dir
-	mov r7, RADAR_INVALID		; target dist
+    mov r0, radarData           ; ptr to type
+    mov r1, r0 + 1              ; ptr to dist
+    xor r2, r2                  ; ray number
+    mov r4, RADAR_INVALID       ; friend dir
+    mov r5, RADAR_INVALID       ; friend dist
+    mov r6, RADAR_INVALID       ; target dir
+    mov r7, RADAR_INVALID       ; target dist
 
     .loop:
-    	cmp byte [r0], [friendType]
-    	jne .notFriend
-    	cmp byte [r1], r5
-    	jae .continue			; farther than we have
-    	mov r4, r2
-    	mov r5, byte [r1]
-    	jmp .continue
+        cmp byte [r0], [friendType]
+        jne .notFriend
+        cmp byte [r1], r5
+        jae .continue           ; farther than we have
+        mov r4, r2
+        mov r5, byte [r1]
+        jmp .continue
     .notFriend:
-    	cmp byte [r0], [targetType]
-    	jne .notTarget
-    	cmp byte [r1], r5			
-    	jae .continue			; farther than we have
-    	mov r6, r2
-    	mov r7, byte [r1]
-    	jmp .continue
+        cmp byte [r0], [targetType]
+        jne .notTarget
+        cmp byte [r1], r5           
+        jae .continue           ; farther than we have
+        mov r6, r2
+        mov r7, byte [r1]
+        jmp .continue
     .notTarget:
     .continue:
-    	add r0, 2
-    	add r1, 2
-    	inc r2
-    	cmp r2, RADAR_RAYCOUNT
-    	jb .loop
+        add r0, 2
+        add r1, 2
+        inc r2
+        cmp r2, RADAR_RAYCOUNT
+        jb .loop
 
     mov [friendDir], r4
     mov [targetDir], r6
     iret
-    
+
 ; interrupt table
 interruptTable:
     dd 0                       ; 0
@@ -236,18 +236,18 @@ radarData:
 
 ;while (true)
 ;{
-;	int moveDir;
+;   int moveDir;
 ;
 ;   if (targetDir != RADAR_INVALID) {
-;		moveDir = targetDir;
-;	} else if (friendDir != RADAR_INVALID) {
-;		moveDir = friendDir;
+;       moveDir = targetDir;
+;   } else if (friendDir != RADAR_INVALID) {
+;       moveDir = friendDir;
 ;   } else {
 ;       setThrustSpeed(0);
 ;       setTurnSpeed(0);
 ;       setShooting(false);
 ;       continue;
-;	}
+;   }
 ;
 ;   int heading = getHeading();
 ;   if (heading != moveDir) {

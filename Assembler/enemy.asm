@@ -125,7 +125,7 @@ main:
     int DEV_GUNS
 
     jmp main
- 
+
 ; Returns the direction to spin to reach a target angle the fastest
 ; r0 - current heading
 ; r1 - target heading
@@ -157,33 +157,33 @@ closestDirection:
     pop r3
     pop r0
     ret
-    
+
 radarInterruptHandler:
-    mov r0, radarData           ; array start
-    xor r1, r1                  ; i
-    mov r7, RADAR_INVALID * 2   ; closest i
-    mov r8, RADAR_INVALID       ; closest dist
+    mov r0, radarData           ; ptr to type
+    mov r1, r0 + 1              ; ptr to dist
+    xor r2, r2                  ; ray number
+    mov r4, RADAR_INVALID       ; target dir
+    mov r5, RADAR_INVALID       ; target dist
 
     .loop:
-        mov r4, byte [r0 + r1]
+        cmp byte [r0], [targetType]
+        jne .notTarget
+        cmp byte [r1], r5           
+        jae .continue           ; farther than we have
+        mov r6, r2
+        mov r7, byte [r1]
+        jmp .continue
+    .notTarget:
+    .continue:
+        add r0, 2
         add r1, 2
-        cmp r4, [targetType]
-        jne .skip               ; not a ship
-        dec r1
-        mov r4, byte [r0 + r1]
-        inc r1
-        cmp r4, r8
-        jae .skip               ; farther than we have
-        mov r7, r1              ; save i
-        mov r8, r4              ; save dist
-    .skip:
-        cmp r1, RADAR_RAYCOUNT * 2
+        inc r2
+        cmp r2, RADAR_RAYCOUNT
         jb .loop
 
-    div r7, 2
-    mov [targetDir], r7
+    mov [targetDir], r4
     iret
-    
+
 ; interrupt table
 interruptTable:
     dd 0                       ; 0
@@ -202,7 +202,7 @@ interruptTable:
     dd 0                       ; 13
     dd 0                       ; 14
     dd 0                       ; 15
-    
+
 ; space for the radar data
 radarData:
     rw RADAR_RAYCOUNT

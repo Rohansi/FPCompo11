@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using GlitchGame.Devices;
 using LoonyVM;
 using Microsoft.Xna.Framework;
@@ -18,12 +20,12 @@ namespace GlitchGame.Entities
 
         public override int Depth { get { return 2; } }
 
-        protected Computer(Vector2 position, float size, int team)
+        protected Computer(Vector2 position, float size, int team, string codeFile)
             : base(position, size, team)
         {
             _vm = new VirtualMachine(4096);
 
-            var code = File.ReadAllBytes("Data/bios.bin");
+            var code = File.ReadAllBytes(string.Format("Data/{0}.bin", codeFile));
             for (var i = 0; i < code.Length; i++)
             {
                 _vm.Memory[i] = code[i];

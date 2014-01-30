@@ -6,11 +6,11 @@ namespace GlitchGame.Entities
     public sealed class Drone : Computer
     {
         public Drone(Vector2 position, float size)
-            : base(position, size, 0)
+            : base(position, size, 0, "drone")
         {
             Weapon = new LaserGun(this);
 
-            MaxHealth = 250;
+            MaxHealth = 150;
             Health = MaxHealth;
             MaxEnergy = 500;
             Energy = MaxEnergy;

@@ -17,7 +17,7 @@ namespace GlitchGame.Entities.Projectiles
             base.Hit(ship);
 
             ship.Health -= 2.5f * HealthDamageMultiplier(ship);
-            ship.Energy -= 5.0f * EnergyDamageMultiplier(ship);
+            ship.Energy -= 7.5f * EnergyDamageMultiplier(ship);
 
             var d = Program.Random.NextDouble() <= 0.75 ? 1f : -1f;
             ship.NerfMultiplier -= 0.05f * Size * d;

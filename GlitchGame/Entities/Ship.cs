@@ -70,6 +70,7 @@ namespace GlitchGame.Entities
             Body.CreateFixture(rect2);
             Body.UserData = this;
             Body.Position = position;
+            Body.Rotation = (float)Program.Random.NextDouble() * Util.Pi2;
             #endregion
 
             Size = size;

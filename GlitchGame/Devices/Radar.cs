@@ -16,7 +16,7 @@ namespace GlitchGame.Devices
 
     public class Radar : IDevice
     {
-        private const float MaxDistance = 25;
+        private const float MaxDistance = 20;
         private const int UpdateEvery = Program.InstructionsPerSecond / 10;
 
         private Ship _parent;
@@ -42,7 +42,7 @@ namespace GlitchGame.Devices
         {
             _radarPointer = 0;
             _radarData = new short[Program.RadarRays];
-            _timer = UpdateEvery;
+            _timer = Program.Random.Next(UpdateEvery); // helps with stutter with lots of radars
 
             _parent = parent;
         }

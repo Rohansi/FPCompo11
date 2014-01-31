@@ -109,6 +109,8 @@ namespace GlitchGame.Weapons
             _drones.Add(drone);
             _amount--;
 
+            Assets.PlaySound("shoot_drone.wav", Parent.Position);
+
             return true;
         }
     }

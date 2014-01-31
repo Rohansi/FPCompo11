@@ -8,7 +8,12 @@ namespace GlitchGame.Entities
         public Drone(State state, Vector2 position, float size)
             : base(state, position, size, 0, "drone")
         {
-            Weapon = new NerfGun(this);
+            var r = Program.Random.NextDouble();
+
+            if (r <= 0.75f)
+                Weapon = new NerfGun(this);
+            else
+                Weapon = new LaserGun(this);
 
             MaxHealth = 150;
             Health = MaxHealth;

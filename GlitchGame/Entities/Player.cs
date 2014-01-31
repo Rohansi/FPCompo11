@@ -39,7 +39,7 @@ namespace GlitchGame.Entities
             HealthRegenRate = 10;
             EnergyRegenRate = 30;
 
-            DamageTakenMultiplier = 0.5f;
+            DamageTakenMultiplier = 0.75f;
             DamageMultiplier = 1;
             SpeedMultiplier = 1;
         }

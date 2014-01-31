@@ -57,11 +57,11 @@ namespace GlitchGame.States
             #region Asteroids
             var area = Math.PI * (radius * radius);
             var asteroids = (int)((area / 4) * asteroidDensity);
+            var asteroidSize = new Vector2(2, 2);
 
             for (var i = 0; i < asteroids; i++)
             {
-                var size = new Vector2(2, 2);
-                var space = FindOpenSpace(new Vector2(0), radius, size);
+                var space = FindOpenSpace(new Vector2(0), radius, asteroidSize);
 
                 if (!space.HasValue)
                     continue;

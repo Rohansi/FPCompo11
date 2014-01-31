@@ -46,8 +46,8 @@ namespace GlitchGame
         public static void PlaySound(string name, Vector2f position)
         {
             const float maxDist = 2000;
-            const float maxVol = 15;
-            const float pitchVariation = 0.15f;
+            const float maxVol = 25;
+            const float pitchVariation = 0.25f;
 
             Sounds.RemoveAll(snd => snd.Status != SoundStatus.Playing);
 
@@ -57,6 +57,7 @@ namespace GlitchGame
             if (volume <= 0)
                 return;
 
+            // TODO: limit per sound
             if (Sounds.Count >= 10)
                 return;
 

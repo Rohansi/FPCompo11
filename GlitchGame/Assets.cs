@@ -24,7 +24,7 @@ namespace GlitchGame
                 return texture;
 
             texture = new Texture(Path.Combine(BaseLocation, "Textures", name));
-            //texture.Smooth = true;
+            texture.Smooth = true;
             Textures.Add(name, texture);
 
             return texture;

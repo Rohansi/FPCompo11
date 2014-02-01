@@ -61,6 +61,16 @@ macro .endw
   restore __WHILE
 }
 
+macro .breakw
+{
+  jmp __ENDW
+}
+
+macro .continuew
+{
+  jmp __WHILE
+}
+
 macro .repeat
 {
   local ..repeat

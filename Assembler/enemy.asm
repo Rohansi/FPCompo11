@@ -65,66 +65,66 @@ entryPoint:
     mov r7, radarData
     int DEV_RADAR
 
-main:
-    cmp [targetDir], RADAR_INVALID
-    jne .logic
+    .while 1
+        .if [targetDir] <> RADAR_INVALID
+            mov r6, [targetDir]
+        .else
+            xor r7, r7
+            xor r8, r8
+            int DEV_ENGINES
+            int DEV_GUNS
+            inc r7
+            int DEV_ENGINES
+            .continuew
+        .endif
 
-    ; no target, turn off everything
-    xor r7, r7
-    xor r8, r8
-    int DEV_ENGINES
-    int DEV_GUNS
-    inc r7
-    int DEV_ENGINES
-    jmp main
-    
-.logic:
-    mov r7, 2
-    int DEV_NAVIGATION
-    mov r0, r7
-    push r0     ; r0 = heading
+        mov r7, 2
+        int DEV_NAVIGATION
+        mov r0, r7
+        push r0     ; r0 = heading
 
-.checkTurn:
-    cmp r0, [targetDir]
-    je .facingTarget
-    mov r1, [targetDir]
-    call closestDirection
-    mov r8, [turnSpeed]
-    mul r8, r2
-    jmp .setTurn
-.facingTarget:
-    xor r8, r8
-.setTurn:
-    mov r7, 1
-    int DEV_ENGINES
+        .if r0 <> r6
+            mov r1, r6
+            call closestDirection
+            mov r7, 1
+            mov r8, [turnSpeed]
+            mul r8, r2
+            int DEV_ENGINES
+        .else
+            mov r7, 1
+            xor r8, r8
+            int DEV_ENGINES
+        .endif
 
-    pop r0
-    mov r5, r0
-    sub r5, [targetDir]
-    abs r5
-    mul r0, 2
+        pop r0
+        mov r5, r0
+        sub r5, r6
+        abs r5      ; r5 = targetDiff
+        mul r0, 2
 
-.checkThrust:
-    xor r8, r8
-    cmp r5, [noThrustDiff]
-    jae .setThrust
-.shouldThrust:
-    mov r8, [thrustSpeed]
-    cmp byte [r0 + radarData + 1], [reverseDist]
-    ja .setThrust
-    neg r8
-.setThrust:
-    xor r7, r7
-    int DEV_ENGINES
+        .if r5 >= [noThrustDiff]
+            xor r7, r7
+            xor r8, r8
+            int DEV_ENGINES
+        .elseif byte [r0 + radarData + 1] <= [reverseDist]
+            xor r7, r7
+            mov r8, [thrustSpeed]
+            neg r8
+            int DEV_ENGINES
+        .else
+            xor r7, r7
+            mov r8, [thrustSpeed]
+            int DEV_ENGINES
+        .endif
 
-.checkShoot:
-    cmp byte [r0 + radarData + 0], [targetType]
-    jne .noShoot
-    inc r7
-.noShoot:
-    int DEV_GUNS
-
-    jmp main
+        .if byte [r0 + radarData + 0] = [targetType]
+            mov r7, 1
+            int DEV_GUNS
+        .else
+            xor r7, r7
+            int DEV_GUNS
+        .endif
+    .endw
 
 ; Returns the direction to spin to reach a target angle the fastest
 ; r0 - current heading

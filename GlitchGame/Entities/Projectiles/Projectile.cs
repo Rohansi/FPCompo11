@@ -1,5 +1,4 @@
-﻿using FarseerPhysics.Dynamics;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.Window;
 
 namespace GlitchGame.Entities.Projectiles
@@ -9,8 +8,8 @@ namespace GlitchGame.Entities.Projectiles
         private const float MaxLifeTime = 15;
 
         private float _lifeTime;
-        private float _healthDamageMultiplier;
-        private float _energyDamageMultiplier;
+        private readonly float _healthDamageMultiplier;
+        private readonly float _energyDamageMultiplier;
 
         public override int Depth { get { return 0; } }
 

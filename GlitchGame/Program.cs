@@ -30,7 +30,7 @@ namespace GlitchGame
 
         public static void Main()
         {
-            Window = new RenderWindow(new VideoMode(1280, 720), "", Styles.Default, new ContextSettings(0, 0, 16));
+            Window = new RenderWindow(new VideoMode(1280, 720), "", Styles.Default, new ContextSettings(0, 0, 4));
             Window.SetFramerateLimit(FrameRate);
             Window.Closed += (sender, eventArgs) => Window.Close();
 

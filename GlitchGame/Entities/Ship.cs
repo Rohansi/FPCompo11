@@ -50,7 +50,7 @@ namespace GlitchGame.Entities
             Sprite = new Sprite(Assets.LoadTexture(string.Format(SpriteFormat, "ship", 0))).Center();
 
             if (team != 0)
-                Sprite.Color = new Color(255, 180, 200);
+                Sprite.Color = new Color(255, 200, 220);
 
             Scale = new Vector2f(size, size);
 

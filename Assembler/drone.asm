@@ -79,6 +79,18 @@ entryPoint:
         .if [targetDir] <> RADAR_INVALID
             mov r6, [targetDir]
         .elseif [friendDir] <> RADAR_INVALID
+
+            ; stop moving if near a friend
+            .if byte [r6 + radarData + 1] <= [reverseDist]
+                xor r7, r7
+                xor r8, r8
+                int DEV_ENGINES
+                int DEV_GUNS
+                inc r7
+                int DEV_ENGINES
+                .continuew
+            .endif
+
             mov r6, [friendDir]
         .else
             xor r7, r7
@@ -190,7 +202,7 @@ radarInterruptHandler:
     .notFriend:
         cmp byte [r0], [targetType]
         jne .notTarget
-        cmp byte [r1], r5           
+        cmp byte [r1], r7
         jae .continue           ; farther than we have
         mov r6, r2
         mov r7, byte [r1]

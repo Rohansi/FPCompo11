@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using GlitchGame.Devices;
@@ -15,6 +14,8 @@ namespace GlitchGame.Entities
         private int _programOffset;
         private int _programLen;
         private List<Variable> _variables;
+        private Navigation _navigation;
+        private Radar _radar;
         private Engines _engines;
         private Guns _guns;
 
@@ -51,18 +52,19 @@ namespace GlitchGame.Entities
             _programOffset = ptr;
             _programDead = false;
 
-            _vm.Attach(new Navigation(Body));
-            _vm.Attach(new Radar(this));
+            _navigation = new Navigation(Body);
+            _vm.Attach(_navigation);
 
-#if DEBUG
-            _vm.Attach(new Debug());
-#endif
+            _radar = new Radar(this);
+            _vm.Attach(_radar);
 
             _engines = new Engines();
             _vm.Attach(_engines);
 
             _guns = new Guns();
             _vm.Attach(_guns);
+
+            _vm.Attach(new Debug());
         }
 
         public override void Update()

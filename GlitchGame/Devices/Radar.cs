@@ -1,6 +1,7 @@
 ﻿using System;
 using GlitchGame.Entities;
 using LoonyVM;
+using SFML.Graphics;
 
 namespace GlitchGame.Devices
 {
@@ -106,6 +107,45 @@ namespace GlitchGame.Devices
 
                 _radarData[i] = (short)(distance << 8 | type);
             }
+        }
+
+        public void Draw(RenderTarget target)
+        {
+            const float step = Util.Pi2 / Program.RadarRays;
+            var vertices = new VertexArray(PrimitiveType.Lines, Program.RadarRays * 2);
+            var center = _parent.Position;
+            float angle = 0;
+
+            for (uint i = 0; i < vertices.VertexCount; i += 2)
+            {
+                var dist = (_radarData[i / 2] >> 8) / 126f;
+                var type = (RadarValue)(_radarData[i / 2] & 0xFF);
+
+                Color color = Color.White;
+
+                switch (type)
+                {
+                    case RadarValue.Ally:
+                        color = Color.Green;
+                        break;
+                    case RadarValue.Enemy:
+                        color = Color.Red;
+                        break;
+                    case RadarValue.Asteroid:
+                        color = Color.Yellow;
+                        break;
+                }
+
+                if (dist <= 1)
+                {
+                    vertices[i + 0] = new Vertex(center, color);
+                    vertices[i + 1] = new Vertex(center + Util.RadarLengthDir(angle, dist * MaxDistance * Program.PixelsPerMeter).ToSfml(), color);
+                }
+
+                angle += step;
+            }
+
+            target.Draw(vertices);
         }
     }
 }

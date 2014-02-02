@@ -79,6 +79,8 @@ entryPoint:
         .if [targetDir] <> RADAR_INVALID
             mov r6, [targetDir]
         .elseif [friendDir] <> RADAR_INVALID
+            mov r6, [friendDir]
+            mul r6, 2
 
             ; stop moving if near a friend
             .if byte [r6 + radarData + 1] <= [reverseDist]

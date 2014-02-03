@@ -1,6 +1,6 @@
 include 'glitch.inc'
 
-jmp entryPoint
+invoke entryPoint
 rb 8 - ($-$$)
 
 ;
@@ -57,6 +57,9 @@ targetDir:
 ;
 
 entryPoint:
+    push bp
+    mov bp, sp
+
     ; enables interrupts
     ivt interruptTable
     sti
@@ -84,11 +87,10 @@ entryPoint:
         push r0     ; r0 = heading
 
         .if r0 <> r6
-            mov r1, r6
-            call closestDirection
+            invoke closestDirection, r0, r6
             mov r7, 1
             mov r8, [turnSpeed]
-            mul r8, r2
+            mul r8, r0
             int DEV_ENGINES
         .else
             mov r7, 1
@@ -125,38 +127,43 @@ entryPoint:
             int DEV_GUNS
         .endif
     .endw
+.return:
+    pop bp
+    ret
 
 ; Returns the direction to spin to reach a target angle the fastest
-; r0 - current heading
-; r1 - target heading
-; r2 - return value
+; int closestDirection(int heading, int target)
 closestDirection:
-    push r0
-    push r3 ; temp
-    push r4 ; temp
-    
-    mov r2, 1
-    xor r3, r3
-    xor r4, r4
-    sub r0, r1
-    cmp r0, 0
+    push bp
+    mov bp, sp
+    push r1
+    push r2
+    push r3
+
+    mov r0, 1
+    mov r1, [bp + 8]    ; heading
+    xor r2, r2          ; temp1
+    xor r3, r3          ; temp2
+    sub r1, [bp + 12]
+    cmp r1, 0
     jbe .below0
-    inc r3
+    inc r2
 .below0:
-    abs r0
-    cmp r0, RADAR_RAYCOUNT / 2
-    jbe .below100
-    inc r4
-.below100:
-    xor r3, r4
-    jz .default
-    mov r2, -1
-.default:
- 
-    pop r4
+    abs r1
+    cmp r1, RADAR_RAYCOUNT / 2
+    jbe .belowHalf
+    inc r3
+.belowHalf:
+    xor r2, r3
+    jz .return
+    mov r0, -1
+
+.return:
     pop r3
-    pop r0
-    ret
+    pop r2
+    pop r1
+    pop bp
+    retn 8
 
 radarInterruptHandler:
     mov r0, radarData           ; ptr to type
@@ -168,7 +175,7 @@ radarInterruptHandler:
     .loop:
         cmp byte [r0], [targetType]
         jne .notTarget
-        cmp byte [r1], r5           
+        cmp byte [r1], r5
         jae .continue           ; farther than we have
         mov r4, r2
         mov r5, byte [r1]

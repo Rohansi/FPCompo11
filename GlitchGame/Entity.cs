@@ -11,7 +11,7 @@ namespace GlitchGame
         public Body Body { get; protected set; }
         
         public abstract int Depth { get; }
-        public abstract RadarValue Radar { get; }
+        public abstract RadarValue RadarType { get; }
         public bool Dead { get; protected set; }
 
         protected Entity(State state)

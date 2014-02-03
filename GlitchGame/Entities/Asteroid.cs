@@ -12,7 +12,7 @@ namespace GlitchGame.Entities
         public static readonly List<float> Radiuses = new List<float> { 0.215f, 0.35f, 0.5f, 0.95f };
 
         public override int Depth { get { return 1; } }
-        public override RadarValue Radar { get { return RadarValue.Asteroid; } }
+        public override RadarValue RadarType { get { return RadarValue.Asteroid; } }
 
         private Sprite _sprite;
 

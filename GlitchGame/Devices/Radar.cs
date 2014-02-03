@@ -20,7 +20,7 @@ namespace GlitchGame.Devices
         private const float MaxDistance = 20;
         private const int UpdateEvery = Program.InstructionsPerSecond / 10;
 
-        private Ship _parent;
+        private readonly Computer _parent;
         private int _radarPointer;
         private short[] _radarData;
         private int _timer;
@@ -39,7 +39,7 @@ namespace GlitchGame.Devices
             }
         }
 
-        public Radar(Ship parent)
+        public Radar(Computer parent)
         {
             _radarPointer = 0;
             _radarData = new short[Program.RadarRays];
@@ -98,7 +98,7 @@ namespace GlitchGame.Devices
                     }
                     else
                     {
-                        type = (byte)entity.Radar;
+                        type = (byte)entity.RadarType;
                     }
                     
                     distance = (byte)(fr * 126);

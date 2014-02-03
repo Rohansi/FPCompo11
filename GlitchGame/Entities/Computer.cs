@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using GlitchGame.Devices;
 using LoonyVM;
@@ -9,95 +8,98 @@ namespace GlitchGame.Entities
 {
     public abstract class Computer : Ship
     {
-        private VirtualMachine _vm;
+        public readonly VirtualMachine Vm;
+        public readonly ShipCode Code;
+        public readonly Navigation Navigation;
+        public readonly Radar Radar;
+        public readonly Engines Engines;
+        public readonly Guns Guns;
+
         private bool _programDead;
         private int _programOffset;
         private int _programLen;
         private List<Variable> _variables;
-        private Navigation _navigation;
-        private Radar _radar;
-        private Engines _engines;
-        private Guns _guns;
 
         public override int Depth { get { return 2; } }
 
         protected Computer(State state, Vector2 position, float size, int team, string codeFile)
             : base(state, position, size, team)
         {
-            _vm = new VirtualMachine(4096);
+            Vm = new VirtualMachine(4096);
 
-            var code = File.ReadAllBytes(string.Format("Data/{0}.bin", codeFile));
-            for (var i = 0; i < code.Length; i++)
+            Code = Assets.LoadProgram(string.Format("{0}.bin", codeFile));
+            for (var i = 0; i < Code.Length; i++)
             {
-                _vm.Memory[i] = code[i];
+                Vm.Memory[i] = Code[i];
             }
 
             _variables = new List<Variable>();
             var ptr = 8;
-            var varCount = _vm.Memory.ReadInt(ptr);
+            var varCount = Vm.Memory.ReadInt(ptr);
             ptr += sizeof(int);
 
             for (var i = 0; i < varCount; i++)
             {
-                var varType = _vm.Memory.ReadSByte(ptr);
+                var varType = Vm.Memory.ReadSByte(ptr);
                 ptr += sizeof(sbyte);
 
-                var varAddr = _vm.Memory.ReadInt(ptr);
+                var varAddr = Vm.Memory.ReadInt(ptr);
                 ptr += sizeof(int);
 
                 _variables.Add(new Variable((VariableType)varType, varAddr));
             }
 
-            _programLen = code.Length;
+            _programLen = Code.Length;
             _programOffset = ptr;
             _programDead = false;
 
-            _navigation = new Navigation(Body);
-            _vm.Attach(_navigation);
+            Navigation = new Navigation(Body);
+            Vm.Attach(Navigation);
 
-            _radar = new Radar(this);
-            _vm.Attach(_radar);
+            Radar = new Radar(this);
+            Vm.Attach(Radar);
 
-            _engines = new Engines();
-            _vm.Attach(_engines);
+            Engines = new Engines();
+            Vm.Attach(Engines);
 
-            _guns = new Guns();
-            _vm.Attach(_guns);
+            Guns = new Guns();
+            Vm.Attach(Guns);
 
-            _vm.Attach(new Debug());
+            Vm.Attach(new Debug(this));
         }
 
         public override void Update()
         {
+            if (_programDead)
+                return;
+
             /*var instr = _vm.GetType().GetField("_instruction", BindingFlags.NonPublic | BindingFlags.Instance);
             var inter = _vm.GetType().GetField("_interrupted", BindingFlags.NonPublic | BindingFlags.Instance);*/
 
-            if (!_programDead)
+            try
             {
-                try
+                for (var i = 0; i < Program.InstructionsPerFrame; i++)
                 {
-                    for (var i = 0; i < Program.InstructionsPerFrame; i++)
-                    {
-                        _vm.Step();
+                    Vm.Step();
 
-                        /*var instrValue = (Instruction)instr.GetValue(_vm);
-                        var interValue = (bool)inter.GetValue(_vm);
+                    /*var instrValue = (Instruction)instr.GetValue(_vm);
+                    var interValue = (bool)inter.GetValue(_vm);
 
-                        //if (!interValue)
-                            Console.WriteLine(instrValue);*/
-                    }
+                    //if (!interValue)
+                        Console.WriteLine(instrValue);*/
                 }
-                catch (VirtualMachineException)
-                {
-                    _programDead = true;
-                }
+            }
+            catch (VirtualMachineException)
+            {
+                _programDead = true;
+                return;
             }
 
             Weapon.Update();
 
-            Shooting = _guns.Shooting;
-            Thruster = _engines.Thruster;
-            AngularThruster = _engines.AngularThruster;
+            Shooting = Guns.Shooting;
+            Thruster = Engines.Thruster;
+            AngularThruster = Engines.AngularThruster;
 
             base.Update();
         }
@@ -126,7 +128,7 @@ namespace GlitchGame.Entities
                         return;
                 }
 
-                _vm.Memory.WriteInt(variable.Address, newValue);
+                Vm.Memory.WriteInt(variable.Address, newValue);
                 return;
             }
 
@@ -135,7 +137,7 @@ namespace GlitchGame.Entities
                 var reg = Program.Random.Next(10);
                 var bit = Program.Random.Next(32);
 
-                _vm.Registers[reg] ^= 1 << bit;
+                Vm.Registers[reg] ^= 1 << bit;
             }
 
             if (r <= 1.00f) // 20% chance to corrupt random memory
@@ -143,7 +145,7 @@ namespace GlitchGame.Entities
                 var addr = Program.Random.Next(_programOffset, _programLen - _programOffset);
                 var bit = Program.Random.Next(8);
 
-                _vm.Memory[addr] ^= (byte)(1 << bit);
+                Vm.Memory[addr] ^= (byte)(1 << bit);
             }
         }
 

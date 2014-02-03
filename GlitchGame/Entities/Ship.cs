@@ -20,7 +20,7 @@ namespace GlitchGame.Entities
         private Sprite _left;
         private Sprite _right;
 
-        public override RadarValue Radar { get { return RadarValue.Count; } }
+        public override RadarValue RadarType { get { return RadarValue.Count; } }
 
         public Sprite Sprite { get; protected set; }
         public float Size { get; protected set; }

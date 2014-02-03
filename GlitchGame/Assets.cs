@@ -13,7 +13,8 @@ namespace GlitchGame
         private static readonly Dictionary<string, SoundBuffer> Buffers = new Dictionary<string, SoundBuffer>();
         private static readonly List<Sound> Sounds = new List<Sound>();
         private static readonly Dictionary<string, int> SoundCounters = new Dictionary<string, int>();
-         
+        private static readonly Dictionary<string, ShipCode> Programs = new Dictionary<string, ShipCode>(); 
+
         public static string BaseLocation = "Data";
 
         public static Texture LoadTexture(string name)
@@ -84,6 +85,19 @@ namespace GlitchGame
             {
                 SoundCounters[k] = 0;
             }
+        }
+
+        public static ShipCode LoadProgram(string name)
+        {
+            ShipCode program;
+
+            if (Programs.TryGetValue(name, out program))
+                return program;
+
+            program = new ShipCode(Path.Combine(BaseLocation, name));
+            Programs.Add(name, program);
+
+            return program;
         }
     }
 }

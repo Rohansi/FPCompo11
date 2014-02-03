@@ -89,6 +89,7 @@
     <Compile Include="Entities\Projectiles\Bullet.cs" />
     <Compile Include="Entities\Projectiles\DisruptoBall.cs" />
     <Compile Include="Entities\Projectiles\Laser.cs" />
+    <Compile Include="Entities\Projectiles\Missile.cs" />
     <Compile Include="Entities\Projectiles\NerfBall.cs" />
     <Compile Include="Entities\Projectiles\Projectile.cs" />
     <Compile Include="Entities\Ship.cs" />
@@ -145,6 +146,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\Textures\laser.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Textures\missile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\Textures\nerfball.png">

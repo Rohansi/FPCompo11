@@ -24,7 +24,7 @@ namespace GlitchGame.Entities.Projectiles
             var shape = new CircleShape((0.15f / 4) * parent.Size, 0);
             Body.CreateFixture(shape);
             Body.Position = parent.Body.Position + parent.Body.GetWorldVector(offset);
-            Body.Rotation = parent.Rotation;
+            Body.Rotation = parent.Body.Rotation;
 
             Body.OnCollision += (a, b, contact) =>
             {

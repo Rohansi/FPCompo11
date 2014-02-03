@@ -72,9 +72,14 @@ namespace GlitchGame
             return (float)Math.Sqrt(((p2.X - p1.X) * (p2.X - p1.X)) + ((p2.Y - p1.Y) * (p2.Y - p1.Y)));
         }
 
+        public static float Direction(Vector2 vec1, Vector2 vec2)
+        {
+            return (float)Math.Atan2(vec2.Y - vec1.Y, vec2.X - vec1.X);
+        }
+
         public static float Direction(Vector2 vec)
         {
-            return (float)Math.Atan2(vec.Y, vec.X);
+            return Direction(new Vector2(0), vec);
         }
 
         public static Vector2f LengthDir(float dir, float len)
@@ -87,9 +92,17 @@ namespace GlitchGame
             return new Vector2((float)Math.Cos(dir) * len, (float)Math.Sin(dir) * len);
         }
 
+        public static float NormalizeRotation(float radians)
+        {
+            radians %= Pi2;
+            if (radians < 0)
+                radians += Pi2;
+            return radians;
+        }
+
         public static short ToMachineRotation(float radians)
         {
-            var value = (radians % (2 * Math.PI)) * ((Program.RadarRays / 2) / Math.PI);
+            var value = (radians % Pi2) * ((Program.RadarRays / 2) / Math.PI);
             if (value < 0)
                 value += Program.RadarRays;
             return (short)value;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FarseerPhysics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 using GlitchGame.Entities;
@@ -107,6 +108,12 @@ namespace GlitchGame.States
             {
                 e.Draw(target);
             }
+
+#if DEBUG
+            var debugView = new SFMLDebugView(World);
+            debugView.AppendFlags(DebugViewFlags.Shape);
+            debugView.Draw(target);
+#endif
         }
 
         public override void DrawHud(RenderTarget target)

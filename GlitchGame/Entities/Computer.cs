@@ -65,6 +65,7 @@ namespace GlitchGame.Entities
             Guns = new Guns();
             Vm.Attach(Guns);
 
+            Vm.Attach(new Timer());
             Vm.Attach(new Debug(this));
         }
 

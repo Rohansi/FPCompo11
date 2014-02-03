@@ -81,6 +81,7 @@
     <Compile Include="Devices\Guns.cs" />
     <Compile Include="Devices\Navigation.cs" />
     <Compile Include="Devices\Radar.cs" />
+    <Compile Include="Devices\Timer.cs" />
     <Compile Include="Entities\Asteroid.cs" />
     <Compile Include="Entities\Computer.cs" />
     <Compile Include="Entities\Drone.cs" />

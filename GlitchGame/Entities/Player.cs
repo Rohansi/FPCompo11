@@ -24,7 +24,7 @@ namespace GlitchGame.Entities
             {
                 new LaserGun(this),
                 new DualLaserGun(this),
-                //new NerfGun(this),
+                new MissileLauncher(this),
                 new Disruptor(this),
                 new DroneLauncher(this)
             };

@@ -4,6 +4,8 @@ namespace GlitchGame.Entities.Projectiles
 {
     public class Laser : Bullet
     {
+        public override bool DirectionalRotation { get { return false; } }
+
         public Laser(Ship parent, Vector2 offset, Vector2 speed)
             : base(parent, offset, speed, "laser.png")
         {

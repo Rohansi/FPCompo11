@@ -5,6 +5,8 @@ namespace GlitchGame.Entities.Projectiles
 {
     public class NerfBall : Bullet
     {
+        public override bool DirectionalRotation { get { return false; } }
+
         public NerfBall(Ship parent, Vector2 offset, Vector2 speed)
             : base(parent, offset, speed, "nerfball.png")
         {

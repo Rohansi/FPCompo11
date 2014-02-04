@@ -5,6 +5,8 @@ namespace GlitchGame.Entities.Projectiles
 {
     public class DisruptoBall : Bullet
     {
+        public override bool DirectionalRotation { get { return false; } }
+
         public DisruptoBall(Ship parent, Vector2 offset, Vector2 speed)
             : base(parent, offset, speed, "disruptoball.png")
         {

@@ -17,6 +17,8 @@ namespace GlitchGame.Entities.Projectiles
         public Sprite Sprite { get; protected set; }
         public float Size { get; protected set; }
 
+        public abstract bool DirectionalRotation { get; }
+
         protected Projectile(Ship parent, string texture, float size)
             : base(Program.State)
         {
@@ -47,7 +49,12 @@ namespace GlitchGame.Entities.Projectiles
         public override void Draw(RenderTarget target)
         {
             Position = Body.Position.ToSfml() * Program.PixelsPerMeter;
-            Rotation = Util.Direction(Body.LinearVelocity) * Program.DegreesPerRadian + 90;
+
+            if (DirectionalRotation)
+                Rotation = Util.Direction(Body.LinearVelocity) * Program.DegreesPerRadian + 90;
+            else
+                Rotation = Body.Rotation * Program.DegreesPerRadian;
+
             target.Draw(Sprite, new RenderStates(Transform));
         }
 

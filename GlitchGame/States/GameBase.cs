@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using FarseerPhysics;
-using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 using GlitchGame.Entities;
 using Microsoft.Xna.Framework;
@@ -140,50 +139,6 @@ namespace GlitchGame.States
             {
                 Player.SwitchWeapon((currentWeapon + weapons.Count + 1) % weapons.Count);
             }
-        }
-
-        public IEnumerable<Entity> EntitiesInRegion(FloatRect rect)
-        {
-            var min = new Vector2(rect.Left, rect.Top) / Program.PixelsPerMeter;
-            var aabb = new AABB(min, min + (new Vector2(rect.Width, rect.Height) / Program.PixelsPerMeter));
-            var result = new List<Entity>(256);
-
-            World.QueryAABB(f =>
-            {
-                result.Add((Entity)f.Body.UserData);
-                return true;
-            }, ref aabb);
-
-            return result.Distinct().OrderBy(e => e.Depth + e.DepthBias);
-        }
-
-        public Vector2? FindOpenSpace(Vector2 center, float radius, Vector2 size)
-        {
-            const int maxRetry = 25;
-
-            int i = 0;
-            Vector2 position;
-            bool empty;
-
-            do
-            {
-                position = center + Util.LengthDir((float)Program.Random.NextDouble() * Util.Pi2, (float)Math.Sqrt(Program.Random.NextDouble()) * radius).ToFarseer();
-                empty = true;
-
-                var aabb = new AABB(position, size.X, size.Y);
-                World.QueryAABB(f =>
-                {
-                    empty = false;
-                    return false;
-                }, ref aabb);
-
-                i++;
-            } while (i <= maxRetry && !empty);
-
-            if (!empty)
-                return null;
-
-            return position;
         }
     }
 }

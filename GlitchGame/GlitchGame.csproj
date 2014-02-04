@@ -108,6 +108,7 @@
     <Compile Include="Weapons\DroneLauncher.cs" />
     <Compile Include="Weapons\LaserGun.cs" />
     <Compile Include="Weapons\DualLaserGun.cs" />
+    <Compile Include="Weapons\MissileLauncher.cs" />
     <Compile Include="Weapons\NerfGun.cs" />
     <Compile Include="Weapons\Weapon.cs" />
   </ItemGroup>

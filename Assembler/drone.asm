@@ -193,8 +193,7 @@ closestDirection:
     
 radarInterruptHandler:
     mov r0, radarData           ; ptr to type
-    mov r1, r0 + 1              ; ptr to dist
-    xor r2, r2                  ; ray number
+    xor r1, r1                  ; ray number
     mov r4, RADAR_INVALID       ; friend dir
     mov r5, RADAR_INVALID       ; friend dist
     mov r6, RADAR_INVALID       ; target dir
@@ -203,25 +202,23 @@ radarInterruptHandler:
     .loop:
         cmp byte [r0], [friendType]
         jne .notFriend
-        cmp byte [r1], r5
+        cmp byte [r0 + 1], r5
         jae .continue           ; farther than we have
-        mov r4, r2
-        mov r5, byte [r1]
+        mov r4, r1
+        mov r5, byte [r0 + 1]
         jmp .continue
     .notFriend:
         cmp byte [r0], [targetType]
         jne .notTarget
-        cmp byte [r1], r7
+        cmp byte [r0 + 1], r7
         jae .continue           ; farther than we have
-        mov r6, r2
-        mov r7, byte [r1]
-        jmp .continue
+        mov r6, r1
+        mov r7, byte [r0 + 1]
     .notTarget:
     .continue:
         add r0, 2
-        add r1, 2
-        inc r2
-        cmp r2, RADAR_RAYCOUNT
+        inc r1
+        cmp r1, RADAR_RAYCOUNT
         jb .loop
 
     mov [friendDir], r4

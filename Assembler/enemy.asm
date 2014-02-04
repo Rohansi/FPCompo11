@@ -166,26 +166,23 @@ closestDirection:
     retn 8
 
 radarInterruptHandler:
-    mov r0, radarData           ; ptr to type
-    mov r1, r0 + 1              ; ptr to dist
-    xor r2, r2                  ; ray number
+    mov r0, radarData           ; ptr to ray
+    xor r1, r1                  ; ray number
     mov r4, RADAR_INVALID       ; target dir
     mov r5, RADAR_INVALID       ; target dist
 
     .loop:
         cmp byte [r0], [targetType]
         jne .notTarget
-        cmp byte [r1], r5
+        cmp byte [r0 + 1], r5
         jae .continue           ; farther than we have
-        mov r4, r2
-        mov r5, byte [r1]
-        jmp .continue
+        mov r4, r1
+        mov r5, byte [r0 + 1]
     .notTarget:
     .continue:
         add r0, 2
-        add r1, 2
-        inc r2
-        cmp r2, RADAR_RAYCOUNT
+        inc r1
+        cmp r1, RADAR_RAYCOUNT
         jb .loop
 
     mov [targetDir], r4

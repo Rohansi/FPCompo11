@@ -24,6 +24,9 @@ namespace GlitchGame.Entities
 
             _sprite = new Sprite(Assets.LoadTexture(string.Format("asteroid{0}.png", type))).Center();
 
+            var c = (byte)Program.Random.Next(180, 255);
+            _sprite.Color = new Color(c, c, c);
+
             #region Body Initialize
             Body = new Body(State.World);
             Body.BodyType = BodyType.Dynamic;

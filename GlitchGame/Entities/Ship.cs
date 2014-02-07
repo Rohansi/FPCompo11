@@ -55,19 +55,8 @@ namespace GlitchGame.Entities
             Scale = new Vector2f(size, size);
 
             #region Body Initialize
-            Body = new Body(State.World);
-            Body.BodyType = BodyType.Dynamic;
-            Body.LinearDamping = 0.5f;
-            Body.AngularDamping = 1.0f;
+            InitializeBody(state.World, size);
 
-            // tip
-            var rect1 = new PolygonShape(PolygonTools.CreateRectangle(0.23f * size, 0.55f * size, new Vector2(0, -0.45f) * size, 0), 1);
-
-            // tail
-            var rect2 = new PolygonShape(PolygonTools.CreateRectangle(0.725f * size, 0.45f * size, new Vector2(0, 0.55f) * size, 0), 3);
-
-            Body.CreateFixture(rect1);
-            Body.CreateFixture(rect2);
             Body.UserData = this;
             Body.Position = position;
             Body.Rotation = (float)Program.Random.NextDouble() * Util.Pi2;
@@ -92,6 +81,23 @@ namespace GlitchGame.Entities
 
             _right = new Sprite(Assets.LoadTexture("ship_right.png"));
             _right.Origin = new Vector2f(_right.Texture.Size.X, _right.Texture.Size.Y / 2f) - new Vector2f(-15, -37);
+        }
+
+        public virtual void InitializeBody(World world, float size)
+        {
+            Body = new Body(State.World);
+            Body.BodyType = BodyType.Dynamic;
+            Body.LinearDamping = 0.5f;
+            Body.AngularDamping = 1.0f;
+
+            // tip
+            var rect1 = new PolygonShape(PolygonTools.CreateRectangle(0.23f * size, 0.55f * size, new Vector2(0, -0.45f) * size, 0), 1);
+
+            // tail
+            var rect2 = new PolygonShape(PolygonTools.CreateRectangle(0.725f * size, 0.45f * size, new Vector2(0, 0.55f) * size, 0), 3);
+
+            Body.CreateFixture(rect1);
+            Body.CreateFixture(rect2);
         }
 
         public override void Update()

@@ -1,48 +1,29 @@
 
 ; int getSpeedX()
 getSpeedX:
-    push r7
-    push r8
-
-    xor r7, r7
+    push r1
+    xor r0, r0
     int DEV_NAVIGATION
-    mov r0, r7
-
-    pop r8
-    pop r7
+    pop r1
     ret
 
 ; int getSpeedY()
 getSpeedY:
-    push r7
-    push r8
-
-    xor r7, r7
+    push r1
+    xor r0, r0
     int DEV_NAVIGATION
-    mov r0, r8
-
-    pop r8
-    pop r7
+    mov r0, r1
+    pop r1
     ret
 
 ; int getSpeedTurn()
 getSpeedTurn:
-    push r7
-
-    mov r7, 1
+    mov r0, 1
     int DEV_NAVIGATION
-    mov r0, r7
-
-    pop r7
     ret
 
 ; int getHeading()
 getHeading:
-    push r7
-
-    mov r7, 2
+    mov r0, 2
     int DEV_NAVIGATION
-    mov r0, r7
-
-    pop r7
     ret

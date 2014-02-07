@@ -1,7 +1,7 @@
 
 ; Returns the optimal spin direction from heading to target
-; int spinDirection(int heading, int target)
-spinDirection:
+; int getSpinDirection(int heading, int target)
+getSpinDirection:
     push bp
     mov bp, sp
     push r1
@@ -34,8 +34,8 @@ spinDirection:
     retn 8
 
 ; Return approximate direction from coord1 to coord2
-; int direction(int x1, int y1, int x2, int y2)
-direction:
+; int getDirection(int x1, int y1, int x2, int y2)
+getDirection:
     push bp
     mov sp, bp
     push r1 ; xdiff

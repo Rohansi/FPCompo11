@@ -17,14 +17,14 @@ namespace GlitchGame.Devices
 
         public void HandleInterrupt(VirtualMachine machine)
         {
-            switch (machine.Registers[7])
+            switch (machine.Registers[0])
             {
                 case 0: // set thruster speed
-                    Thruster = Util.Clamp(machine.Registers[8] / 100f, -1, 1) * -1;
+                    Thruster = Util.Clamp(machine.Registers[1] / 100f, -1, 1) * -1;
                     break;
 
                 case 1: // set angular thrusters
-                    AngularThruster = Util.Clamp(machine.Registers[8] / 100f, -1, 1);
+                    AngularThruster = Util.Clamp(machine.Registers[1] / 100f, -1, 1);
                     break;
             }
         }

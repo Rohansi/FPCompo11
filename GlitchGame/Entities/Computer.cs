@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using GlitchGame.Devices;
 using LoonyVM;
@@ -73,8 +74,8 @@ namespace GlitchGame.Entities
         {
             if (!_programDead)
             {
-                /*var instr = _vm.GetType().GetField("_instruction", BindingFlags.NonPublic | BindingFlags.Instance);
-                var inter = _vm.GetType().GetField("_interrupted", BindingFlags.NonPublic | BindingFlags.Instance);*/
+                /*var instr = Vm.GetType().GetField("_instruction", BindingFlags.NonPublic | BindingFlags.Instance);
+                var inter = Vm.GetType().GetField("_interrupted", BindingFlags.NonPublic | BindingFlags.Instance);*/
 
                 try
                 {
@@ -82,8 +83,8 @@ namespace GlitchGame.Entities
                     {
                         Vm.Step();
 
-                        /*var instrValue = (Instruction)instr.GetValue(_vm);
-                        var interValue = (bool)inter.GetValue(_vm);
+                        /*var instrValue = (Instruction)instr.GetValue(Vm);
+                        var interValue = (bool)inter.GetValue(Vm);
 
                         //if (!interValue)
                             Console.WriteLine(instrValue);*/

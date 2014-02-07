@@ -62,7 +62,7 @@ namespace GlitchGame.Devices
 
         public void HandleInterrupt(VirtualMachine machine)
         {
-            _radarPointer = machine.Registers[7];
+            _radarPointer = machine.Registers[0];
         }
 
         private void RayCast()

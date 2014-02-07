@@ -11,7 +11,7 @@ namespace GlitchGame.Devices
 
         public void HandleInterrupt(VirtualMachine machine)
         {
-            Shooting = machine.Registers[7] != 0;
+            Shooting = machine.Registers[0] != 0;
         }
 
         public void HandleInterruptRequest(VirtualMachine machine)

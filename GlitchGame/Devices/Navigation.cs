@@ -23,17 +23,17 @@ namespace GlitchGame.Devices
 
         public void HandleInterrupt(VirtualMachine machine)
         {
-            switch (machine.Registers[7])
+            switch (machine.Registers[0])
             {
                 case 0: // get speed
-                    machine.Registers[7] = (int)(_body.LinearVelocity.X * Program.PixelsPerMeter);
-                    machine.Registers[8] = (int)(_body.LinearVelocity.Y * Program.PixelsPerMeter);
+                    machine.Registers[0] = (int)(_body.LinearVelocity.X * Program.PixelsPerMeter);
+                    machine.Registers[1] = (int)(_body.LinearVelocity.Y * Program.PixelsPerMeter);
                     break;
                 case 1: // get angular speed
-                    machine.Registers[7] = (int)(_body.AngularVelocity % Program.RadarRays);
+                    machine.Registers[0] = (int)(_body.AngularVelocity % Program.RadarRays);
                     break;
                 case 2: // get heading
-                    machine.Registers[7] = Util.ToMachineRotation(_body.Rotation - ((float)Math.PI / 2));
+                    machine.Registers[0] = Util.ToMachineRotation(_body.Rotation - ((float)Math.PI / 2));
                     break;
             }
         }

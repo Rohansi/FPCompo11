@@ -4,50 +4,36 @@ invoke entryPoint
 rb 8 - ($-$$)
 
 ;
-; Variable locations to corrupt
+; Corruptable variables
 ;
 
-variableCount:
-    dd 5
+corruptableVariables:
+    corruptableCount:
+        dd 5
 
-varTurnSpeed:
-    db VAR_SPEED
-    dd turnSpeed
+    turnSpeed:
+        dd 65
+        db VAR_SPEED
 
-varThrustSpeed:
-    db VAR_SPEED
-    dd thrustSpeed
+    thrustSpeed:
+        dd 75
+        db VAR_SPEED
 
-varReverseDist:
-    db VAR_GENERAL
-    dd reverseDist
+    reverseDist:
+        dd 25
+        db VAR_GENERAL
 
-varNoThrustDiff:
-    db VAR_GENERAL
-    dd noThrustDiff
+    noThrustDiff:
+        dd 15
+        db VAR_GENERAL
 
-varTargetType:
-    db VAR_RADARVALUE
-    dd targetType
+    targetType:
+        dd RADAR_ENEMY
+        db VAR_RADARVALUE
 
 ;
-; Variable declarations
+; Additional variables
 ;
-
-turnSpeed:
-    dd 65
-
-thrustSpeed:
-    dd 75
-
-reverseDist:
-    dd 25
-
-noThrustDiff:
-    dd 15
-
-targetType:
-    dd RADAR_ENEMY
 
 targetDir:
     dd RADAR_INVALID
@@ -87,7 +73,7 @@ entryPoint:
         push r0     ; r0 = heading
 
         .if r0 <> r6
-            invoke closestDirection, r0, r6
+            invoke spinDirection, r0, r6
             mov r7, 1
             mov r8, [turnSpeed]
             mul r8, r0
@@ -131,40 +117,6 @@ entryPoint:
     pop bp
     ret
 
-; Returns the direction to spin to reach a target angle the fastest
-; int closestDirection(int heading, int target)
-closestDirection:
-    push bp
-    mov bp, sp
-    push r1
-    push r2
-    push r3
-
-    mov r0, 1
-    mov r1, [bp + 8]    ; heading
-    xor r2, r2          ; temp1
-    xor r3, r3          ; temp2
-    sub r1, [bp + 12]
-    cmp r1, 0
-    jbe .below0
-    inc r2
-.below0:
-    abs r1
-    cmp r1, RADAR_RAYCOUNT / 2
-    jbe .belowHalf
-    inc r3
-.belowHalf:
-    xor r2, r3
-    jz .return
-    mov r0, -1
-
-.return:
-    pop r3
-    pop r2
-    pop r1
-    pop bp
-    retn 8
-
 radarInterruptHandler:
     mov r0, radarData           ; ptr to ray
     xor r1, r1                  ; ray number
@@ -187,6 +139,8 @@ radarInterruptHandler:
 
     mov [targetDir], r4
     iret
+
+include 'lib/direction.asm'
 
 ; interrupt table
 interruptTable:
@@ -222,7 +176,7 @@ radarData:
 ;   
 ;   var heading = getHeading();
 ;   if (heading != targetDir) {
-;       var direction = closestDirection(heading, targetDir);
+;       var direction = spinDirection(heading, targetDir);
 ;       setTurnSpeed(turnSpeed * direction);
 ;   } else {
 ;       setTurnSpeed(0);

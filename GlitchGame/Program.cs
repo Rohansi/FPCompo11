@@ -12,7 +12,7 @@ namespace GlitchGame
         public const float PixelsPerMeter = 64;
         public const float DegreesPerRadian = 180f / (float)Math.PI;
         public const int RadarRays = 126; // dont change
-        public const int InstructionsPerSecond = 10000;
+        public const int InstructionsPerSecond = 25000;
         public const int InstructionsPerFrame = (int)(FrameTime * InstructionsPerSecond);
 
         private const float Zoom = 2;

@@ -4,60 +4,42 @@ invoke entryPoint
 rb 8 - ($-$$)
 
 ;
-; Variable locations to corrupt
+; Corruptable variables
 ;
+corruptableVariables:
+    corruptableCount:
+        dd 6
 
-variableCount:
-    dd 6
+    turnSpeed:
+        dd 85
+        db VAR_SPEED
 
-varTurnSpeed:
-    db VAR_SPEED
-    dd turnSpeed
+    thrustSpeed:
+        dd 75
+        db VAR_SPEED
 
-varThrustSpeed:
-    db VAR_SPEED
-    dd thrustSpeed
+    reverseDist:
+        dd 20
+        db VAR_GENERAL
 
-varReverseDist:
-    db VAR_GENERAL
-    dd reverseDist
+    noThrustDiff:
+        dd 15
+        db VAR_GENERAL
 
-varNoThrustDiff:
-    db VAR_GENERAL
-    dd noThrustDiff
+    targetType:
+        dd RADAR_ENEMY
+        db VAR_RADARVALUE
 
-varTargetType:
-    db VAR_RADARVALUE
-    dd targetType
-
-varFriendType:
-    db VAR_RADARVALUE
-    dd friendType
+    friendType:
+        dd RADAR_ALLY
+        db VAR_RADARVALUE
 
 ;
-; Variable declarations
+; Additional variables
 ;
-
-turnSpeed:
-    dd 85
-
-thrustSpeed:
-    dd 75
-
-reverseDist:
-    dd 20
-
-noThrustDiff:
-    dd 15
-
-targetType:
-    dd RADAR_ENEMY
 
 targetDir:
     dd RADAR_INVALID
-
-friendType:
-    dd RADAR_ALLY
 
 friendDir:
     dd RADAR_INVALID
@@ -113,7 +95,7 @@ entryPoint:
         push r0     ; r0 = heading
 
         .if r0 <> r6
-            invoke closestDirection, r0, r6
+            invoke spinDirection, r0, r6
             mov r7, 1
             mov r8, [turnSpeed]
             mul r8, r0
@@ -156,40 +138,6 @@ entryPoint:
 .return:
     pop bp
     ret
-
-; Returns the direction to spin to reach a target angle the fastest
-; int closestDirection(int heading, int target)
-closestDirection:
-    push bp
-    mov bp, sp
-    push r1
-    push r2
-    push r3
-
-    mov r0, 1
-    mov r1, [bp + 8]    ; heading
-    xor r2, r2          ; temp1
-    xor r3, r3          ; temp2
-    sub r1, [bp + 12]
-    cmp r1, 0
-    jbe .below0
-    inc r2
-.below0:
-    abs r1
-    cmp r1, RADAR_RAYCOUNT / 2
-    jbe .belowHalf
-    inc r3
-.belowHalf:
-    xor r2, r3
-    jz .return
-    mov r0, -1
-
-.return:
-    pop r3
-    pop r2
-    pop r1
-    pop bp
-    retn 8
     
 radarInterruptHandler:
     mov r0, radarData           ; ptr to type
@@ -224,6 +172,8 @@ radarInterruptHandler:
     mov [friendDir], r4
     mov [targetDir], r6
     iret
+
+include 'lib/direction.asm'
 
 ; interrupt table
 interruptTable:
@@ -265,7 +215,7 @@ radarData:
 ;
 ;   int heading = getHeading();
 ;   if (heading != moveDir) {
-;       int direction = closestDirection(heading, moveDir);
+;       int direction = spinDirection(heading, moveDir);
 ;       setTurnSpeed(turnSpeed * direction);
 ;   } else {
 ;       setTurnSpeed(0);

@@ -40,11 +40,11 @@ namespace GlitchGame.Entities
 
             for (var i = 0; i < varCount; i++)
             {
+                var varAddr = ptr;
+                ptr += sizeof(int);
+
                 var varType = Vm.Memory.ReadSByte(ptr);
                 ptr += sizeof(sbyte);
-
-                var varAddr = Vm.Memory.ReadInt(ptr);
-                ptr += sizeof(int);
 
                 _variables.Add(new Variable((VariableType)varType, varAddr));
             }
@@ -71,29 +71,29 @@ namespace GlitchGame.Entities
 
         public override void Update()
         {
-            if (_programDead)
-                return;
-
-            /*var instr = _vm.GetType().GetField("_instruction", BindingFlags.NonPublic | BindingFlags.Instance);
-            var inter = _vm.GetType().GetField("_interrupted", BindingFlags.NonPublic | BindingFlags.Instance);*/
-
-            try
+            if (!_programDead)
             {
-                for (var i = 0; i < Program.InstructionsPerFrame; i++)
+                /*var instr = _vm.GetType().GetField("_instruction", BindingFlags.NonPublic | BindingFlags.Instance);
+                var inter = _vm.GetType().GetField("_interrupted", BindingFlags.NonPublic | BindingFlags.Instance);*/
+
+                try
                 {
-                    Vm.Step();
+                    for (var i = 0; i < Program.InstructionsPerFrame; i++)
+                    {
+                        Vm.Step();
 
-                    /*var instrValue = (Instruction)instr.GetValue(_vm);
-                    var interValue = (bool)inter.GetValue(_vm);
+                        /*var instrValue = (Instruction)instr.GetValue(_vm);
+                        var interValue = (bool)inter.GetValue(_vm);
 
-                    //if (!interValue)
-                        Console.WriteLine(instrValue);*/
+                        //if (!interValue)
+                            Console.WriteLine(instrValue);*/
+                    }
                 }
-            }
-            catch (VirtualMachineException)
-            {
-                _programDead = true;
-                return;
+                catch (VirtualMachineException)
+                {
+                    _programDead = true;
+                    return;
+                }
             }
 
             Weapon.Update();

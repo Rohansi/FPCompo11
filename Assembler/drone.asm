@@ -86,7 +86,7 @@ entryPoint:
         push r0     ; r0 = heading
 
         .if r0 <> r6
-            invoke getSpinDirection, r0, r6
+            invoke getTurnDirection, r0, r6
             mov r1, [turnSpeed]
             mul r1, r0
             invoke setTurnSpeed, r1
@@ -200,7 +200,7 @@ radarData:
 ;
 ;   int heading = getHeading();
 ;   if (heading != moveDir) {
-;       int direction = getSpinDirection(heading, moveDir);
+;       int direction = getTurnDirection(heading, moveDir);
 ;       setTurnSpeed(turnSpeed * direction);
 ;   } else {
 ;       setTurnSpeed(0);

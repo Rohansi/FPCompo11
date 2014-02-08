@@ -25,14 +25,18 @@ namespace GlitchGame.Devices
         {
             switch (machine.Registers[0])
             {
-                case 0: // get speed
+                case 0: // get coordinates
+                    machine.Registers[0] = (int)(_body.Position.X * Program.PixelsPerMeter);
+                    machine.Registers[1] = (int)(_body.Position.Y * Program.PixelsPerMeter);
+                    break;
+                case 1: // get speed
                     machine.Registers[0] = (int)(_body.LinearVelocity.X * Program.PixelsPerMeter);
                     machine.Registers[1] = (int)(_body.LinearVelocity.Y * Program.PixelsPerMeter);
                     break;
-                case 1: // get angular speed
-                    machine.Registers[0] = (int)(_body.AngularVelocity % Program.RadarRays);
+                case 2: // get angular speed
+                    machine.Registers[0] = (int)(_body.AngularVelocity * ((Program.RadarRays / 2) / Math.PI));
                     break;
-                case 2: // get heading
+                case 3: // get heading
                     machine.Registers[0] = Util.ToMachineRotation(_body.Rotation - ((float)Math.PI / 2));
                     break;
             }

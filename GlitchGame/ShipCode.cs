@@ -167,9 +167,10 @@ namespace GlitchGame
 
         public Line? FindLine(int address)
         {
-            foreach (var l in _lines)
+            for (var i = _lines.Count - 1; i >= 0; i--)
             {
-                if (l.Address >= address)
+                var l = _lines[i];
+                if (address >= l.Address)
                     return l;
             }
 

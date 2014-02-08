@@ -24,7 +24,7 @@ namespace GlitchGame.Entities
             {
                 new LaserGun(this),
                 new DualLaserGun(this),
-                new MissileLauncher(this),
+                //new MissileLauncher(this),
                 new Disruptor(this),
                 new DroneLauncher(this)
             };
@@ -39,7 +39,7 @@ namespace GlitchGame.Entities
             HealthRegenRate = 10;
             EnergyRegenRate = 25;
 
-            DamageTakenMultiplier = 0.75f;
+            DamageTakenMultiplier = 1;
             DamageMultiplier = 1;
             SpeedMultiplier = 1;
         }

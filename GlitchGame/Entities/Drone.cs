@@ -10,7 +10,7 @@ namespace GlitchGame.Entities
         {
             var r = Program.Random.NextDouble();
 
-            if (r <= 0.75f)
+            if (r <= 0.50f)
                 Weapon = new NerfGun(this);
             else
                 Weapon = new LaserGun(this);

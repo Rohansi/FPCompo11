@@ -58,7 +58,7 @@ namespace GlitchGame.Devices
             var addr = machine.IP;
             var bp = machine.Registers[10];
 
-            while (bp != 0)
+            while (addr != 0 && bp != 0)
             {
                 try
                 {

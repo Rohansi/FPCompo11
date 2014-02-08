@@ -169,7 +169,7 @@ namespace GlitchGame
         {
             foreach (var l in _lines)
             {
-                if (l.Address == address)
+                if (l.Address >= address)
                     return l;
             }
 

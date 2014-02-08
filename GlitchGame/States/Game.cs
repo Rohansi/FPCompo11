@@ -15,6 +15,8 @@ namespace GlitchGame.States
         private int _wave;
         private float _timer;
 
+        private DebugView _debug;
+
         public Game()
             : base(35, 0.075f)
         {
@@ -23,6 +25,22 @@ namespace GlitchGame.States
             _text = new Text("", Program.Font, 32);
             _wave = 1;
             _timer = 5;
+
+            _debug = new DebugView();
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+
+            _debug.Attach(this);
+        }
+
+        public override void Leave()
+        {
+            base.Leave();
+
+            _debug.Detatch();
         }
 
         public override void Update()
@@ -54,11 +72,14 @@ namespace GlitchGame.States
         {
             base.DrawHud(target);
 
-            if (_timer < -1)
-                return;
-
             var bounds = Program.HudCamera.Bounds;
             _text.Position = new Vector2f(bounds.Width / 2, bounds.Height / 5);
+
+            _debug.Position = new Vector2f(bounds.Width, bounds.Height);
+            target.Draw(_debug);
+
+            if (_timer < -1)
+                return;
 
             if (_timer >= 0)
                 _text.DisplayedString = string.Format("Wave {0} in {1} ...", _wave, (int)Math.Ceiling(_timer));

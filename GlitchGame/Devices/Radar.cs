@@ -1,7 +1,7 @@
 ﻿using System;
 using GlitchGame.Entities;
+using GlitchGame.Entities.Projectiles;
 using LoonyVM;
-using SFML.Graphics;
 
 namespace GlitchGame.Devices
 {
@@ -22,8 +22,9 @@ namespace GlitchGame.Devices
 
         private readonly Computer _parent;
         private int _radarPointer;
-        private short[] _radarData;
         private int _timer;
+
+        public short[] RadarData;
 
         public byte Id { get { return 11; } }
 
@@ -42,7 +43,7 @@ namespace GlitchGame.Devices
         public Radar(Computer parent)
         {
             _radarPointer = 0;
-            _radarData = new short[Program.RadarRays];
+            RadarData = new short[Program.RadarRays];
             _timer = Program.Random.Next(UpdateEvery); // helps with stutter with lots of radars
 
             _parent = parent;
@@ -54,9 +55,9 @@ namespace GlitchGame.Devices
 
             RayCast();
 
-            for (var i = 0; i < _radarData.Length; i++)
+            for (var i = 0; i < RadarData.Length; i++)
             {
-                machine.Memory.WriteShort(_radarPointer + (i * 2), _radarData[i]);
+                machine.Memory.WriteShort(_radarPointer + (i * 2), RadarData[i]);
             }
         }
 
@@ -90,6 +91,9 @@ namespace GlitchGame.Devices
                     min = fr;
 
                     var entity = (Entity)f.Body.UserData;
+                    if (entity is Bullet)
+                        return 1;
+
                     var ship = entity as Ship;
 
                     if (ship != null)
@@ -105,47 +109,8 @@ namespace GlitchGame.Devices
                     return fr;
                 }, start, point);
 
-                _radarData[i] = (short)(distance << 8 | type);
+                RadarData[i] = (short)(distance << 8 | type);
             }
-        }
-
-        public void Draw(RenderTarget target)
-        {
-            const float step = Util.Pi2 / Program.RadarRays;
-            var vertices = new VertexArray(PrimitiveType.Lines, Program.RadarRays * 2);
-            var center = _parent.Position;
-            float angle = 0;
-
-            for (uint i = 0; i < vertices.VertexCount; i += 2)
-            {
-                var dist = (_radarData[i / 2] >> 8) / 126f;
-                var type = (RadarValue)(_radarData[i / 2] & 0xFF);
-
-                Color color = Color.White;
-
-                switch (type)
-                {
-                    case RadarValue.Ally:
-                        color = Color.Green;
-                        break;
-                    case RadarValue.Enemy:
-                        color = Color.Red;
-                        break;
-                    case RadarValue.Asteroid:
-                        color = Color.Yellow;
-                        break;
-                }
-
-                if (dist <= 1)
-                {
-                    vertices[i + 0] = new Vertex(center, color);
-                    vertices[i + 1] = new Vertex(center + Util.RadarLengthDir(angle, dist * MaxDistance * Program.PixelsPerMeter).ToSfml(), color);
-                }
-
-                angle += step;
-            }
-
-            target.Draw(vertices);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace GlitchGame.Entities
         {
             var r = Program.Random.NextDouble();
 
-            if (r <= 0.75f)
+            if (r <= 0.80f)
                 Weapon = new LaserGun(this);
             else
                 Weapon = new NerfGun(this);
@@ -21,7 +21,7 @@ namespace GlitchGame.Entities
             Energy = MaxEnergy;
 
             HealthRegenRate = 5;
-            EnergyRegenRate = 15;
+            EnergyRegenRate = 20;
 
             DamageTakenMultiplier = 1;
             DamageMultiplier = 1;

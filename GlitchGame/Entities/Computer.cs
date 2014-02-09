@@ -15,6 +15,7 @@ namespace GlitchGame.Entities
         public readonly Radar Radar;
         public readonly Engines Engines;
         public readonly Guns Guns;
+        public readonly Broadcast Broadcast;
 
         private bool _programDead;
         private int _programOffset;
@@ -65,6 +66,9 @@ namespace GlitchGame.Entities
 
             Guns = new Guns();
             Vm.Attach(Guns);
+
+            Broadcast = new Broadcast(this);
+            Vm.Attach(Broadcast);
 
             Vm.Attach(new Timer());
             Vm.Attach(new Debug(this));

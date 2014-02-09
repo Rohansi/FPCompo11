@@ -72,6 +72,11 @@ namespace GlitchGame
             return (float)Math.Sqrt(((p2.X - p1.X) * (p2.X - p1.X)) + ((p2.Y - p1.Y) * (p2.Y - p1.Y)));
         }
 
+        public static float Distance(Vector2 p1, Vector2 p2)
+        {
+            return (float)Math.Sqrt(((p2.X - p1.X) * (p2.X - p1.X)) + ((p2.Y - p1.Y) * (p2.Y - p1.Y)));
+        }
+
         public static float Direction(Vector2 vec1, Vector2 vec2)
         {
             return (float)Math.Atan2(vec2.Y - vec1.Y, vec2.X - vec1.X);

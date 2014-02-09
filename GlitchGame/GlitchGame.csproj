@@ -80,6 +80,7 @@
     <Compile Include="Background.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="DebugView.cs" />
+    <Compile Include="Devices\Broadcast.cs" />
     <Compile Include="Devices\Debug.cs" />
     <Compile Include="Devices\Engines.cs" />
     <Compile Include="Devices\Guns.cs" />

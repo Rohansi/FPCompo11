@@ -99,7 +99,7 @@ namespace GlitchGame.States
             {
                 var space = FindOpenSpace(new Vector2(0), Radius, size);
 
-                if (!space.HasValue || Util.Distance(space.Value.ToSfml(), Player.Body.Position.ToSfml()) < 25)
+                if (!space.HasValue || Util.Distance(space.Value, Player.Body.Position) < 25)
                 {
                     i--;
                     failed++;

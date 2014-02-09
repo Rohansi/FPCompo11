@@ -1,6 +1,4 @@
 ﻿using System;
-using System.CodeDom;
-using System.Linq;
 using GlitchGame.Entities;
 using LoonyVM;
 
@@ -8,7 +6,7 @@ namespace GlitchGame.Devices
 {
     public class Debug : IDevice
     {
-        public byte Id { get { return 14; } }
+        public byte Id { get { return 3; } }
         public bool InterruptRequest { get { return false; } }
 
         private readonly Computer _parent;

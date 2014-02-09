@@ -4,6 +4,7 @@ using System.Reflection;
 using GlitchGame.Devices;
 using LoonyVM;
 using Microsoft.Xna.Framework;
+using SFML.Graphics;
 
 namespace GlitchGame.Entities
 {
@@ -16,6 +17,7 @@ namespace GlitchGame.Entities
         public readonly Engines Engines;
         public readonly Guns Guns;
         public readonly Broadcast Broadcast;
+        public readonly Debug Debug;
 
         private bool _programDead;
         private int _programOffset;
@@ -55,6 +57,8 @@ namespace GlitchGame.Entities
             _programOffset = ptr;
             _programDead = false;
 
+            Vm.Attach(new Timer());
+
             Navigation = new Navigation(Body);
             Vm.Attach(Navigation);
 
@@ -70,8 +74,8 @@ namespace GlitchGame.Entities
             Broadcast = new Broadcast(this);
             Vm.Attach(Broadcast);
 
-            Vm.Attach(new Timer());
-            Vm.Attach(new Debug(this));
+            Debug = new Debug(this);
+            Vm.Attach(Debug);
         }
 
         public override void Update()
@@ -108,6 +112,13 @@ namespace GlitchGame.Entities
             AngularThruster = Engines.AngularThruster;
 
             base.Update();
+        }
+
+        public override void Draw(RenderTarget target)
+        {
+            base.Draw(target);
+
+            Debug.Draw(target);
         }
 
         public void Corrupt()

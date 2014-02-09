@@ -7,36 +7,35 @@ rb 8 - ($-$$)
 ; Corruptable variables
 ;
 
-corruptableVariables:
-    corruptableCount:
-        dd 5
+corruptableCount:
+    dd 5
 
-    turnSpeed:
-        dd 65
-        db VAR_SPEED
+turnSpeed:
+    dd 65
+    db VAR_SPEED
 
-    thrustSpeed:
-        dd 75
-        db VAR_SPEED
+thrustSpeed:
+    dd 75
+    db VAR_SPEED
 
-    reverseDist:
-        dd 25
-        db VAR_GENERAL
+reverseDist:
+    dd 250
+    db VAR_GENERAL
 
-    noThrustDiff:
-        dd 15
-        db VAR_GENERAL
+noThrustDiff:
+    dd 15
+    db VAR_GENERAL
 
-    targetType:
-        dd RADAR_ENEMY
-        db VAR_RADARVALUE
+targetType:
+    dd RADAR_ENEMY
+    db VAR_RADARVALUE
 
 ;
 ; Additional variables
 ;
 
 targetDir:
-    dd RADAR_INVALID
+    dd RADAR_INVALIDRAY
 
 helpResponding:
     dd 0
@@ -66,17 +65,17 @@ entryPoint:
     int DEV_BROADCAST
 
     .while 1
-        .if [targetDir] <> RADAR_INVALID
+        .if [targetDir] <> RADAR_INVALIDRAY
             mov r6, [targetDir]
             mov [helpResponding], 0
-            invoke sendForHelp
+            invoke callForHelp
         .elseif [helpResponding] <> 0
             xor r0, r0
             int DEV_NAVIGATION
             push r0
 
             invoke getDistance, r0, r1, [helpX], [helpY]
-            .if r0 <= 400
+            .if r0 <= 800
                 mov [helpResponding], 0
                 pop r0
                 .continuew
@@ -108,11 +107,11 @@ entryPoint:
         mov r5, r0
         sub r5, r6
         abs r5      ; r5 = targetDiff
-        mul r0, 2
+        mul r0, 3
 
         .if r5 >= [noThrustDiff]
             invoke setThrustSpeed, 0
-        .elseif byte [r0 + radarData + 1] <= [reverseDist]
+        .elseif word [r0 + radarData + 1] <= [reverseDist]
             mov r1, [thrustSpeed]
             neg r1
             invoke setThrustSpeed, r1
@@ -130,25 +129,47 @@ entryPoint:
     pop bp
     ret
 
-sendForHelp:
+callForHelp:
     push bp
     mov bp, sp
     push r0
     push r1
     push r2
+    push r3
+    push r4
 
     xor r0, r0
     int DEV_NAVIGATION
+    mov r2, r1
+    mov r1, r0
 
-    mov r2, packetOutData
-    mov [r2 + 0], r0
-    mov [r2 + 4], r1
+    mov r3, packetOutData
+
+    mov r4, [targetDir]
+    mul r4, 3
+    add r4, radarData
+
+    cmp byte [r4], [targetType]
+    jne .return
+
+    invoke sin, [targetDir]
+    mul r0, word [r4 + 1]
+    div r0, 100
+    mov [r3 + 0], r1 + r0
+
+    invoke cos, [targetDir]
+    neg r0
+    mul r0, word [r4 + 1]
+    div r0, 100
+    mov [r3 + 4], r2 + r0
 
     mov r0, 2
     mov r1, packetOutData
     int DEV_BROADCAST
 
 .return:
+    pop r4
+    pop r3
     pop r2
     pop r1
     pop r0
@@ -158,19 +179,19 @@ sendForHelp:
 radarIrqHandler:
     mov r0, radarData           ; ptr to ray
     xor r1, r1                  ; ray number
-    mov r4, RADAR_INVALID       ; target dir
-    mov r5, RADAR_INVALID       ; target dist
+    mov r4, RADAR_INVALIDTYPE   ; target dir
+    mov r5, RADAR_INVALIDDIST   ; target dist
 
     .loop:
         cmp byte [r0], [targetType]
         jne .notTarget
-        cmp byte [r0 + 1], r5
+        cmp word [r0 + 1], r5
         jae .continue           ; farther than we have
         mov r4, r1
-        mov r5, byte [r0 + 1]
+        mov r5, word [r0 + 1]
     .notTarget:
     .continue:
-        add r0, 2
+        add r0, 3
         inc r1
         cmp r1, RADAR_RAYCOUNT
         jb .loop
@@ -179,16 +200,27 @@ radarIrqHandler:
     iret
 
 broadcastIrqHandler:
+    mov r6, packetData
+
     .if [helpResponding] <> 0
-        iret
+        xor r0, r0
+        int DEV_NAVIGATION
+        mov r2, r1
+        mov r1, r0
+
+        invoke getDistance, r1, r2, [helpX], [helpY]
+        mov r3, r0
+
+        invoke getDistance, r1, r2, [r6 + 0], [r6 + 4]
+
+        .if r0 >= r3 
+            iret
+        .endif
     .endif
 
     mov [helpResponding], 1
-
-    mov r0, packetData
-    mov [helpX], [r0 + 0]
-    mov [helpY], [r0 + 4]
-
+    mov [helpX], [r6 + 0]
+    mov [helpY], [r6 + 4]
     iret
 
 include 'lib/navigation.asm'
@@ -196,6 +228,7 @@ include 'lib/radar.asm'
 include 'lib/engines.asm'
 include 'lib/guns.asm'
 include 'lib/direction.asm'
+include 'lib/math.asm'
 
 ; interrupt table
 interruptTable:
@@ -218,13 +251,15 @@ interruptTable:
 
 ; space for the radar data
 radarData:
-    rw RADAR_RAYCOUNT
+    rb 3 * RADAR_RAYCOUNT
 
 packetData:
     rb 32
 
 packetOutData:
     rb 32
+
+db 255
 
 ;while (true)
 ;{

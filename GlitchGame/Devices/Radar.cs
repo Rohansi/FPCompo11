@@ -5,28 +5,42 @@ using LoonyVM;
 
 namespace GlitchGame.Devices
 {
-    public enum RadarValue
+    public enum RadarValue : sbyte
     {
         Asteroid,
         Bullet,
         Ally,
         Enemy,
 
-        Count
+        Count,
+        Invalid = 127
+    }
+
+    public struct RadarRay
+    {
+        public readonly RadarValue Type;
+        public readonly short Distance;
+
+        public RadarRay(RadarValue type, short distance)
+        {
+            Type = type;
+            Distance = distance;
+        }
     }
 
     public class Radar : IDevice
     {
-        private const float MaxDistance = 20;
+        public byte Id { get { return 11; } }
+
+        public const float MaxDistanceM = 20;
+        public const float MaxDistanceP = MaxDistanceM * Program.PixelsPerMeter;
         private const int UpdateEvery = Program.InstructionsPerSecond / 10;
 
         private readonly Computer _parent;
         private int _radarPointer;
         private int _timer;
 
-        public short[] RadarData;
-
-        public byte Id { get { return 11; } }
+        public RadarRay[] RadarData;
 
         public bool InterruptRequest
         {
@@ -43,7 +57,7 @@ namespace GlitchGame.Devices
         public Radar(Computer parent)
         {
             _radarPointer = 0;
-            RadarData = new short[Program.RadarRays];
+            RadarData = new RadarRay[Program.RadarRays];
             _timer = Program.Random.Next(UpdateEvery); // helps with stutter with lots of radars
 
             _parent = parent;
@@ -57,7 +71,8 @@ namespace GlitchGame.Devices
 
             for (var i = 0; i < RadarData.Length; i++)
             {
-                machine.Memory.WriteShort(_radarPointer + (i * 2), RadarData[i]);
+                machine.Memory.WriteSByte(_radarPointer + (i * 3) + 0, (sbyte)RadarData[i].Type);
+                machine.Memory.WriteShort(_radarPointer + (i * 3) + 1, RadarData[i].Distance);
             }
         }
 
@@ -74,11 +89,11 @@ namespace GlitchGame.Devices
             var i = 0;
             for (var dir = 0f; dir <= 2 * Math.PI; dir += step, i++)
             {
-                byte type = 127;
-                byte distance = 127;
+                var type = RadarValue.Invalid;
+                var dist = short.MaxValue;
 
                 float min = 100;
-                var point = start + Util.RadarLengthDir(dir, MaxDistance);
+                var point = start + Util.RadarLengthDir(dir, MaxDistanceM);
 
                 _parent.State.World.RayCast((f, p, n, fr) =>
                 {
@@ -98,18 +113,18 @@ namespace GlitchGame.Devices
 
                     if (ship != null)
                     {
-                        type = (byte)(ship.Team == _parent.Team ? RadarValue.Ally : RadarValue.Enemy);
+                        type = ship.Team == _parent.Team ? RadarValue.Ally : RadarValue.Enemy;
                     }
                     else
                     {
-                        type = (byte)entity.RadarType;
+                        type = entity.RadarType;
                     }
                     
-                    distance = (byte)(fr * 126);
+                    dist = (short)(fr * MaxDistanceP);
                     return fr;
                 }, start, point);
 
-                RadarData[i] = (short)(distance << 8 | type);
+                RadarData[i] = new RadarRay(type, dist);
             }
         }
     }

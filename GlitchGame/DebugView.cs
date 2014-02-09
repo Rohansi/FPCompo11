@@ -82,8 +82,8 @@ namespace GlitchGame
             for (uint i = 0; i < Program.RadarRays; i++)
             {
                 var dir = i * ((float)Math.PI / (Program.RadarRays / 2));
-                var dist = (radarData[i] >> 8) / 126f;
-                var type = (RadarValue)(radarData[i] & 0xFF);
+                var dist = Util.Clamp(radarData[i].Distance / Radar.MaxDistanceP, 0, 1);
+                var type = radarData[i].Type;
 
                 var point = center + Util.RadarLengthDir(dir, 64 * dist).ToSfml();
                 _radar[i] = new Vertex(point, RadarColor(type));

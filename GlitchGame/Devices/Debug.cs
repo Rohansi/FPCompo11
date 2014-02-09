@@ -1,6 +1,7 @@
 ﻿using System;
 using GlitchGame.Entities;
 using LoonyVM;
+using SFML.Graphics;
 
 namespace GlitchGame.Devices
 {
@@ -84,6 +85,11 @@ namespace GlitchGame.Devices
                     break;
                 }
             }
+        }
+
+        public void Draw(RenderTarget target)
+        {
+            
         }
     }
 }

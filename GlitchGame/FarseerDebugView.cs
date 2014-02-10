@@ -11,7 +11,7 @@ using Transform = FarseerPhysics.Common.Transform;
 
 namespace GlitchGame
 {
-    public class SFMLDebugView : DebugViewBase
+    public class FarseerDebugView : DebugViewBase
     {
         public Color DefaultShapeColor = new Color(229, 178, 178);
         public Color InactiveShapeColor = new Color(128, 128, 76);
@@ -21,7 +21,7 @@ namespace GlitchGame
 
         private RenderTarget _target;
 
-        public SFMLDebugView(World world) : base(world)
+        public FarseerDebugView(World world) : base(world)
         {
             
         }

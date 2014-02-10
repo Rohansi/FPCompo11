@@ -98,6 +98,18 @@
     <Compile Include="Entities\Projectiles\NerfBall.cs" />
     <Compile Include="Entities\Projectiles\Projectile.cs" />
     <Compile Include="Entities\Ship.cs" />
+    <Compile Include="GUI\Container.cs" />
+    <Compile Include="GUI\GuiSettings.cs" />
+    <Compile Include="GUI\GuiSystem.cs" />
+    <Compile Include="GUI\IContainer.cs" />
+    <Compile Include="GUI\Widget.cs" />
+    <Compile Include="GUI\Widgets\Button.cs" />
+    <Compile Include="GUI\Widgets\Label.cs" />
+    <Compile Include="GUI\Widgets\ListBox.cs" />
+    <Compile Include="GUI\Widgets\MenuBar.cs" />
+    <Compile Include="GUI\Widgets\Scrollbar.cs" />
+    <Compile Include="GUI\Widgets\TextBox.cs" />
+    <Compile Include="GUI\Widgets\Window.cs" />
     <Compile Include="Hud.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="ShipCode.cs" />
@@ -108,7 +120,7 @@
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SFMLDebugView.cs" />
+    <Compile Include="FarseerDebugView.cs" />
     <Compile Include="Weapons\Disruptor.cs" />
     <Compile Include="Weapons\DroneLauncher.cs" />
     <Compile Include="Weapons\LaserGun.cs" />

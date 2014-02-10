@@ -75,19 +75,18 @@ namespace GlitchGame.States
             var bounds = Program.HudCamera.Bounds;
             _text.Position = new Vector2f(bounds.Width / 2, bounds.Height / 5);
 
-            _debug.Position = new Vector2f(bounds.Width, bounds.Height);
+            if (_timer >= -1)
+            {
+                if (_timer >= 0)
+                    _text.DisplayedString = string.Format("Wave {0} in {1} ...", _wave, (int)Math.Ceiling(_timer));
+                else
+                    _text.DisplayedString = "Fight!";
+
+                _text.Center();
+                target.Draw(_text);
+            }
+
             target.Draw(_debug);
-
-            if (_timer < -1)
-                return;
-
-            if (_timer >= 0)
-                _text.DisplayedString = string.Format("Wave {0} in {1} ...", _wave, (int)Math.Ceiling(_timer));
-            else
-                _text.DisplayedString = "Fight!";
-
-            _text.Center();
-            target.Draw(_text);
         }
 
         private void Spawn(int n)

@@ -36,43 +36,41 @@ namespace GlitchGame.GUI.Widgets
             _children.Draw(renderer.Region(1, 1, Width - 2, Height - 2));
         }
 
-        public override void KeyPressed(Keyboard.Key key, string text)
+        public override bool KeyPressed(Keyboard.Key key, string text)
         {
-            _children.KeyPressed(key, text);
+            return _children.KeyPressed(key, text);
         }
 
-        public override void MousePressed(int x, int y, Mouse.Button button, bool pressed)
+        public override bool MousePressed(int x, int y, Mouse.Button button, bool pressed)
         {
-            if (button == Mouse.Button.Left)
+            if (button == Mouse.Button.Left && y == 0)
             {
-                if (y == 0)
-                {
-                    if (x == 3)
-                    {
-                        var close = true;
-                        if (Closing != null)
-                            close = Closing();
-
-                        if (close)
-                        {
-                            Visible = false;
-
-                            if (Closed != null)
-                                Closed();
-                        }
-                    }
-                    else
-                    {
-                        _dragging = pressed;
-                        _dragOffset = x;
-                    }
-                }
-
                 if (_dragging && !pressed)
                     _dragging = false;
+
+                if (x == 3)
+                {
+                    var close = true;
+                    if (Closing != null)
+                        close = Closing();
+
+                    if (close)
+                    {
+                        Visible = false;
+
+                        if (Closed != null)
+                            Closed();
+                    }
+
+                    return true;
+                }
+
+                _dragging = pressed;
+                _dragOffset = x;
             }
 
             _children.MousePressed(x - 1, y - 1, button, pressed);
+            return true;
         }
 
         public override void MouseMoved(int x, int y)

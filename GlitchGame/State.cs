@@ -10,8 +10,14 @@ namespace GlitchGame
 {
     public abstract class State
     {
-        public World World;
-        public LinkedList<Entity> Entities;
+        public World World { get; protected set; }
+        public LinkedList<Entity> Entities { get; protected set; }
+
+        private Input _input;
+        public Input Input
+        {
+            get { return _input ?? (_input = new Input()); }
+        }
 
         protected State()
         {
@@ -24,6 +30,11 @@ namespace GlitchGame
         public abstract void Update();
         public abstract void Draw(RenderTarget target);
         public abstract void DrawHud(RenderTarget target);
+
+        public virtual bool ProcessEvent(InputArgs args)
+        {
+            return Input.ProcessInput(args) || Entities.Iterate().Any(e => e.Input.ProcessInput(args));
+        }
 
         public IEnumerable<Entity> EntitiesInRegion(FloatRect rect)
         {

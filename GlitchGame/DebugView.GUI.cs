@@ -84,6 +84,12 @@ namespace GlitchGame
 
             _cpuWindow.Add(_cpuScrollbar);
 
+            var test = new TextBox(72, 36, 16);
+            _cpuWindow.Add(test);
+
+            var test2 = new Button(90, 36, 7, "Goto");
+            _cpuWindow.Add(test2);
+
             desktop.Add(_cpuWindow);
             #endregion
 
@@ -96,7 +102,6 @@ namespace GlitchGame
                 return;
 
             var debugInfo = _target.Code.DebugInfo;
-            debugInfo = null;
 
             for (var i = 0; i < _cpuRegisters.Length; i++)
             {

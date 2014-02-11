@@ -1,80 +1,56 @@
-﻿using System;
-using SFML.Graphics;
-using SFML.Window;
+﻿using SFML.Window;
 
 namespace GlitchGame.GUI
 {
     public class GuiSystem : Container
     {
-        private RenderWindow _target;
-
         public GuiSystem(uint w, uint h)
             : base(w, h)
         {
             
         }
 
-        public void Attach(RenderWindow window)
+        public bool ProcessEvent(InputArgs args)
         {
-            if (_target != null)
-                throw new Exception("Must detach first");
+            var keyInputArgs = args as KeyInputArgs;
+            if (keyInputArgs != null)
+            {
+                if (!keyInputArgs.Pressed)
+                    return false;
 
-            _target = window;
+                return KeyPressed(keyInputArgs.Key, null);
+            }
 
-            _target.TextEntered += WindowTextEntered;
-            _target.KeyPressed += WindowKeyPressed;
-            _target.MouseButtonPressed += WindowMousePressed;
-            _target.MouseButtonReleased += WindowMouseReleased;
-            _target.MouseMoved += WindowMouseMoved;
+            var textInputArgs = args as TextInputArgs;
+            if (textInputArgs != null)
+            {
+                return KeyPressed(Keyboard.Key.Unknown, textInputArgs.Text);
+            }
+
+            var mouseButtonArgs = args as MouseButtonInputArgs;
+            if (mouseButtonArgs != null)
+            {
+                if (mouseButtonArgs.Pressed)
+                    RemoveFocus();
+
+                var mousePos = ConvertCoords(mouseButtonArgs.Position);
+                return MousePressed(mousePos.X, mousePos.Y, mouseButtonArgs.Button, mouseButtonArgs.Pressed);
+            }
+
+            var mouseMoveArgs = args as MouseMoveInputArgs;
+            if (mouseMoveArgs != null)
+            {
+                var mousePos = ConvertCoords(mouseMoveArgs.Position);
+                MouseMoved(mousePos.X, mousePos.Y);
+            }
+
+            return false;
         }
 
-        public void Detach()
+        private Vector2i ConvertCoords(Vector2i mouseCoords)
         {
-            if (_target == null)
-                throw new Exception("Must attach first");
-
-            _target.TextEntered += WindowTextEntered;
-            _target.KeyPressed += WindowKeyPressed;
-            _target.MouseButtonPressed += WindowMousePressed;
-            _target.MouseButtonReleased += WindowMouseReleased;
-            _target.MouseMoved += WindowMouseMoved;
-
-            _target = null;
-        }
-
-        private void WindowTextEntered(object sender, TextEventArgs args)
-        {
-            KeyPressed(Keyboard.Key.Unknown, args.Unicode);
-        }
-
-        private void WindowKeyPressed(object sender, KeyEventArgs args)
-        {
-            KeyPressed(args.Code, null);
-        }
-
-        private void WindowMousePressed(object sender, MouseButtonEventArgs args)
-        {
-            WindowMouseButtonImpl(args.X, args.Y, args.Button, true);
-        }
-
-        private void WindowMouseReleased(object sender, MouseButtonEventArgs args)
-        {
-            WindowMouseButtonImpl(args.X, args.Y, args.Button, false);
-        }
-
-        private void WindowMouseButtonImpl(int x, int y, Mouse.Button button, bool pressed)
-        {
-            if (pressed)
-                RemoveFocus();
-
-            var pos = _target.MapPixelToCoords(new Vector2i(x, y), Program.HudCamera.View);
-            MousePressed((int)pos.X / GuiSettings.CharWidth, (int)pos.Y / GuiSettings.CharHeight, button, pressed);
-        }
-
-        private void WindowMouseMoved(object sender, MouseMoveEventArgs args)
-        {
-            var pos = _target.MapPixelToCoords(new Vector2i(args.X, args.Y), Program.HudCamera.View);
-            MouseMoved((int)pos.X / GuiSettings.CharWidth, (int)pos.Y / GuiSettings.CharHeight);
+            var pos = Program.Window.MapPixelToCoords(mouseCoords, Program.HudCamera.View);
+            return new Vector2i((int)pos.X / GuiSettings.CharWidth, (int)pos.Y / GuiSettings.CharHeight);
         }
     }
 }

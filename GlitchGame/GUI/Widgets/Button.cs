@@ -42,25 +42,27 @@ namespace GlitchGame.GUI.Widgets
             }
         }
 
-        public override void MousePressed(int x, int y, Mouse.Button button, bool pressed)
+        public override bool MousePressed(int x, int y, Mouse.Button button, bool pressed)
         {
-            if (button == Mouse.Button.Left)
-            {
-                if (pressed)
-                {
-                    _holding = true;
-                }
-                else
-                {
-                    if (x >= 0 && y >= 0 && x < Width && y < Height)
-                    {
-                        if (_holding && Clicked != null)
-                            Clicked();
-                    }
+            if (button != Mouse.Button.Left)
+                return true;
 
-                    _holding = false;
-                }
+            if (pressed)
+            {
+                _holding = true;
             }
+            else
+            {
+                if (x >= 0 && y >= 0 && x < Width && y < Height)
+                {
+                    if (_holding && Clicked != null)
+                        Clicked();
+                }
+
+                _holding = false;
+            }
+
+            return true;
         }
     }
 }

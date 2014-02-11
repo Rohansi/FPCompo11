@@ -102,15 +102,15 @@ namespace GlitchGame.GUI
             }
         }
 
-        public override void KeyPressed(Keyboard.Key key, string text)
+        public override bool KeyPressed(Keyboard.Key key, string text)
         {
             if (_focus == null)
-                return;
+                return false;
 
-            _focus.KeyPressed(key, text);
+            return _focus.KeyPressed(key, text);
         }
 
-        public override void MousePressed(int x, int y, Mouse.Button button, bool pressed)
+        public override bool MousePressed(int x, int y, Mouse.Button button, bool pressed)
         {
             if (pressed)
             {
@@ -129,8 +129,7 @@ namespace GlitchGame.GUI
                     if (widget.Visible && ContainsPoint(widget, x, y))
                     {
                         widget.Focus();
-                        widget.MousePressed(x - widget.Left, y - widget.Top, button, true);
-                        return;
+                        return widget.MousePressed(x - widget.Left, y - widget.Top, button, true);
                     }
 
                     node = next;
@@ -149,6 +148,8 @@ namespace GlitchGame.GUI
                     node = next;
                 }
             }
+
+            return false;
         }
 
         public override void MouseMoved(int x, int y)

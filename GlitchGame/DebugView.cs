@@ -3,7 +3,6 @@ using System.Linq;
 using GlitchGame.Entities;
 using GlitchGame.GUI;
 using SFML.Graphics;
-using SFML.Window;
 using Texter;
 
 namespace GlitchGame
@@ -29,9 +28,6 @@ namespace GlitchGame
 
             _state = state;
             _target = null;
-
-            Program.Window.MouseButtonPressed += MousePressed;
-            _gui.Attach(Program.Window);
         }
 
         public void Detatch()
@@ -39,11 +35,25 @@ namespace GlitchGame
             if (_state == null)
                 throw new Exception("Must attach first");
 
-            _gui.Detach();
-            Program.Window.MouseButtonPressed -= MousePressed;
-
             _state = null;
             _target = null;
+        }
+
+        public bool ProcessEvent(InputArgs args)
+        {
+            if (_gui.ProcessEvent(args))
+                return true;
+
+            var mousePressedArgs = args as MouseButtonInputArgs;
+            if (mousePressedArgs != null && mousePressedArgs.Pressed)
+            {
+                var mousePos = Program.Window.MapPixelToCoords(mousePressedArgs.Position, Program.Camera.View);
+                var ents = _state.EntitiesInRegion(new FloatRect(mousePos.X - 32, mousePos.Y - 32, 64, 64));
+                _target = ents.OfType<Computer>().FirstOrDefault();
+                return true;
+            }
+
+            return false;
         }
 
         public void Draw(RenderTarget target, RenderStates states)
@@ -80,13 +90,6 @@ namespace GlitchGame
 
                 _display = new TextDisplay(width, height, "font.png", GuiSettings.CharWidth, GuiSettings.CharHeight);
             }
-        }
-
-        private void MousePressed(object sender, MouseButtonEventArgs args)
-        {
-            var pos = Program.Window.MapPixelToCoords(new Vector2i(args.X, args.Y), Program.Camera.View);
-            var ents = _state.EntitiesInRegion(new FloatRect(pos.X - 32, pos.Y - 32, 64, 64));
-            _target = ents.OfType<Computer>().FirstOrDefault();
         }
     }
 }

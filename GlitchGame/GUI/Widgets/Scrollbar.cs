@@ -51,10 +51,10 @@ namespace GlitchGame.GUI.Widgets
             renderer.Set(0, (int)x, GuiSettings.ScrollbarThumb);
         }
 
-        public override void MousePressed(int x, int y, Mouse.Button button, bool pressed)
+        public override bool MousePressed(int x, int y, Mouse.Button button, bool pressed)
         {
             if (button != Mouse.Button.Left)
-                return;
+                return true;
 
             if (pressed && x == 0)
             {
@@ -74,6 +74,8 @@ namespace GlitchGame.GUI.Widgets
 
             if (!pressed)
                 _dragging = false;
+
+            return true;
         }
 
         public override void MouseMoved(int x, int y)

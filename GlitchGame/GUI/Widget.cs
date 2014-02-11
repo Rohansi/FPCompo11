@@ -24,14 +24,14 @@ namespace GlitchGame.GUI
             
         }
 
-        public virtual void KeyPressed(Keyboard.Key key, string text)
+        public virtual bool KeyPressed(Keyboard.Key key, string text)
         {
-            
+            return false;
         }
 
-        public virtual void MousePressed(int x, int y, Mouse.Button button, bool pressed)
+        public virtual bool MousePressed(int x, int y, Mouse.Button button, bool pressed)
         {
-            
+            return false;
         }
 
         public virtual void MouseMoved(int x, int y)

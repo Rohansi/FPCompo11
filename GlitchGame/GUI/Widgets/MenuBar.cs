@@ -48,10 +48,10 @@ namespace GlitchGame.GUI.Widgets
             }
         }
 
-        public override void MousePressed(int x, int y, Mouse.Button button, bool pressed)
+        public override bool MousePressed(int x, int y, Mouse.Button button, bool pressed)
         {
             if (button != Mouse.Button.Left || !pressed)
-                return;
+                return true;
 
             var xx = 0;
             foreach (var i in Items)
@@ -65,11 +65,14 @@ namespace GlitchGame.GUI.Widgets
                         _selected = i;
                         _drop.Show(xx, 1, i.Items);
                         _drop.Focus();
+                        return true;
                     }
                 }
 
                 xx += i.Caption.Length + 2;
             }
+
+            return true;
         }
     }
 
@@ -122,10 +125,10 @@ namespace GlitchGame.GUI.Widgets
             }
         }
 
-        public override void MousePressed(int x, int y, Mouse.Button button, bool pressed)
+        public override bool MousePressed(int x, int y, Mouse.Button button, bool pressed)
         {
             if (button != Mouse.Button.Left || !pressed)
-                return;
+                return true;
 
             var yy = 1;
             foreach (var i in _items)
@@ -144,10 +147,14 @@ namespace GlitchGame.GUI.Widgets
                     {
                         Visible = false;
                     }
+
+                    return true;
                 }
 
                 yy++;
             }
+
+            return true;
         }
     }
 

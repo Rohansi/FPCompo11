@@ -43,6 +43,14 @@ namespace GlitchGame.States
             _debug.Detatch();
         }
 
+        public override bool ProcessEvent(InputArgs args)
+        {
+            if (_debug.ProcessEvent(args))
+                return true;
+
+            return base.ProcessEvent(args);
+        }
+
         public override void Update()
         {
             var hadEnemies = _enemies.Count > 0;

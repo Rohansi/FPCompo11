@@ -73,7 +73,7 @@ namespace GlitchGame.GUI.Widgets
                 renderer.Set(SelectedIndex - _view, 0, GuiSettings.TextBoxCaret);
         }
 
-        public override void KeyPressed(Keyboard.Key key, string text)
+        public override bool KeyPressed(Keyboard.Key key, string text)
         {
             _caretVisible = true;
 
@@ -92,13 +92,14 @@ namespace GlitchGame.GUI.Widgets
                             Value = Value.Remove(SelectedIndex, 1);
                         break;
                 }
-                return;
+
+                return true;
             }
 
             if (text == "\b")
             {
                 if (Value.Length == 0 || SelectedIndex - 1 < 0)
-                    return;
+                    return true;
 
                 Value = Value.Remove(SelectedIndex - 1, 1);
                 _selectedIndex -= 1;
@@ -107,7 +108,7 @@ namespace GlitchGame.GUI.Widgets
             {
                 var c = (int)text[0];
                 if (c < 32 || c > 126)
-                    return;
+                    return true;
 
                 Value = Value.Insert(SelectedIndex, text);
                 SelectedIndex += text.Length;
@@ -115,14 +116,17 @@ namespace GlitchGame.GUI.Widgets
 
             if (Changed != null)
                 Changed();
+
+            return true;
         }
 
-        public override void MousePressed(int x, int y, Mouse.Button button, bool pressed)
+        public override bool MousePressed(int x, int y, Mouse.Button button, bool pressed)
         {
             if (button != Mouse.Button.Left || !pressed)
-                return;
+                return true;
 
             SelectedIndex = _view + x;
+            return true;
         }
     }
 }

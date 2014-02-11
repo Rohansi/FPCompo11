@@ -32,11 +32,12 @@ namespace GlitchGame
         {
             Window = new RenderWindow(new VideoMode(1280, 720), "", Styles.Default, new ContextSettings(0, 0, 4));
             Window.SetFramerateLimit(FrameRate);
+
+            #region Event Handlers
             Window.Closed += (sender, eventArgs) => Window.Close();
 
             Window.GainedFocus += (sender, args) => HasFocus = true;
             Window.LostFocus += (sender, args) => HasFocus = false;
-            HasFocus = true;
 
             Window.Resized += (sender, args) =>
             {
@@ -51,6 +52,16 @@ namespace GlitchGame
                 Camera.Zoom = Zoom;
             };
 
+            Window.MouseButtonPressed += (sender, args) => DispatchEvent(new MouseButtonInputArgs(args.Button, true, args.X, args.Y));
+            Window.MouseButtonReleased += (sender, args) => DispatchEvent(new MouseButtonInputArgs(args.Button, false, args.X, args.Y));
+            Window.MouseWheelMoved += (sender, args) => DispatchEvent(new MouseWheelInputArgs(args.Delta, args.X, args.Y));
+            Window.MouseMoved += (sender, args) => DispatchEvent(new MouseMoveInputArgs(args.X, args.Y));
+            Window.TextEntered += (sender, args) => DispatchEvent(new TextInputArgs(args.Unicode));
+            Window.KeyPressed += (sender, args) => DispatchEvent(new KeyInputArgs(args.Code, true, args.Control, args.Shift));
+            Window.KeyReleased += (sender, args) => DispatchEvent(new KeyInputArgs(args.Code, false, args.Control, args.Shift));
+            #endregion
+
+            HasFocus = true;
             HudCamera = new Camera(Window.DefaultView);
             Camera = new Camera(Window.DefaultView);
             Camera.Zoom = Zoom;
@@ -61,18 +72,14 @@ namespace GlitchGame
 
             while (Window.IsOpen())
             {
-                // INPUT
                 Window.DispatchEvents();
 
-                // UPDATE
                 Assets.ResetSoundCounters();
                 State.Update();
 
-                // DRAW
                 Camera.Apply(Window);
                 State.Draw(Window);
 
-                // DRAW HUD
                 HudCamera.Apply(Window);
                 State.DrawHud(Window);
 
@@ -87,6 +94,14 @@ namespace GlitchGame
 
             State = newState;
             State.Enter();
+        }
+
+        private static void DispatchEvent(InputArgs args)
+        {
+            if (State == null)
+                return;
+
+            State.ProcessEvent(args);
         }
     }
 }

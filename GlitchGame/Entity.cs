@@ -14,6 +14,12 @@ namespace GlitchGame
         public abstract RadarValue RadarType { get; }
         public bool Dead { get; protected set; }
 
+        private Input _input;
+        public Input Input
+        {
+            get { return _input ?? (_input = new Input()); }
+        }
+
         protected Entity(State state)
         {
             DepthBias = (float)Program.Random.NextDouble();

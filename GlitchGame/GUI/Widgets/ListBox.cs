@@ -64,7 +64,7 @@ namespace GlitchGame.GUI.Widgets
             _scrollbar.Draw(renderer.Region(_scrollbar.Left, _scrollbar.Top, _scrollbar.Width, _scrollbar.Height));
         }
 
-        public override void MousePressed(int x, int y, Mouse.Button button, bool pressed)
+        public override bool MousePressed(int x, int y, Mouse.Button button, bool pressed)
         {
             if (SelectEnabled && pressed && (x > 0 && y > 0 && x < Width - 1 && y < Height - 1))
             {
@@ -78,9 +78,12 @@ namespace GlitchGame.GUI.Widgets
                     if (Changed != null)
                         Changed();
                 }
+
+                return true;
             }
 
             _scrollbar.MousePressed(x - _scrollbar.Left, y - _scrollbar.Top, button, pressed);
+            return true;
         }
 
         public override void MouseMoved(int x, int y)

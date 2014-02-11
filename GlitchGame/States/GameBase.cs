@@ -6,7 +6,6 @@ using FarseerPhysics.Dynamics;
 using GlitchGame.Entities;
 using Microsoft.Xna.Framework;
 using SFML.Graphics;
-using SFML.Window;
 
 namespace GlitchGame.States
 {
@@ -73,12 +72,12 @@ namespace GlitchGame.States
 
         public override void Enter()
         {
-            Program.Window.KeyPressed += KeyPressed;
+            
         }
 
         public override void Leave()
         {
-            Program.Window.KeyPressed -= KeyPressed;
+            
         }
 
         public override void Update()
@@ -118,27 +117,6 @@ namespace GlitchGame.States
         public override void DrawHud(RenderTarget target)
         {
             target.Draw(_hud);
-        }
-
-        private void KeyPressed(object sender, KeyEventArgs args)
-        {
-            var weapons = Player.Weapons;
-            var currentWeapon = weapons.IndexOf(Player.Weapon);
-
-            if (args.Code >= Keyboard.Key.Num1 && args.Code <= Keyboard.Key.Num9)
-            {
-                Player.SwitchWeapon((int)args.Code - (int)Keyboard.Key.Num1);
-            }
-
-            if (args.Code == Keyboard.Key.Q)
-            {
-                Player.SwitchWeapon((currentWeapon + weapons.Count - 1) % weapons.Count);
-            }
-
-            if (args.Code == Keyboard.Key.E)
-            {
-                Player.SwitchWeapon((currentWeapon + weapons.Count + 1) % weapons.Count);
-            }
         }
     }
 }

@@ -10,7 +10,8 @@ namespace GlitchGame.Entities
     {
         public override int Depth { get { return 10; } }
 
-        private List<Weapon> _weapons; 
+        private bool _keyW, _keyA, _keyS, _keyD, _keySpace;
+        private List<Weapon> _weapons;
 
         public ReadOnlyCollection<Weapon> Weapons
         {
@@ -42,6 +43,45 @@ namespace GlitchGame.Entities
             DamageTakenMultiplier = 1;
             DamageMultiplier = 1;
             SpeedMultiplier = 1;
+
+            Input.Key[Keyboard.Key.W] = args => _keyW = args.Pressed;
+            Input.Key[Keyboard.Key.A] = args => _keyA = args.Pressed;
+            Input.Key[Keyboard.Key.S] = args => _keyS = args.Pressed;
+            Input.Key[Keyboard.Key.D] = args => _keyD = args.Pressed;
+            Input.Key[Keyboard.Key.Space] = args => _keySpace = args.Pressed;
+
+            for (var i = 0; i < 9; i++)
+            {
+                var weaponIndex = i;
+                Input.Key[Keyboard.Key.Num1 + i] = args =>
+                {
+                    if (args.Pressed)
+                        SwitchWeapon(weaponIndex);
+                    return true;
+                };
+            }
+
+            Input.Key[Keyboard.Key.Q] = args =>
+            {
+                if (args.Pressed)
+                {
+                    var currentWeapon = _weapons.IndexOf(Weapon);
+                    SwitchWeapon((currentWeapon + _weapons.Count - 1) % _weapons.Count);
+                }
+
+                return true;
+            };
+
+            Input.Key[Keyboard.Key.E] = args =>
+            {
+                if (args.Pressed)
+                {
+                    var currentWeapon = _weapons.IndexOf(Weapon);
+                    SwitchWeapon((currentWeapon + _weapons.Count + 1) % _weapons.Count);
+                }
+
+                return true;
+            };
         }
 
         public void SwitchWeapon(int index)
@@ -58,23 +98,20 @@ namespace GlitchGame.Entities
             Thruster = 0;
             AngularThruster = 0;
 
-            if (Program.HasFocus)
-            {
-                if (Keyboard.IsKeyPressed(Keyboard.Key.W))
-                    Thruster -= 1;
+            if (_keyW)
+                Thruster -= 1;
 
-                if (Keyboard.IsKeyPressed(Keyboard.Key.S))
-                    Thruster += 1;
+            if (_keyS)
+                Thruster += 1;
 
-                if (Keyboard.IsKeyPressed(Keyboard.Key.A))
-                    AngularThruster -= 1;
+            if (_keyA)
+                AngularThruster -= 1;
 
-                if (Keyboard.IsKeyPressed(Keyboard.Key.D))
-                    AngularThruster += 1;
+            if (_keyD)
+                AngularThruster += 1;
 
-                if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
-                    Shooting = true;
-            }
+            if (_keySpace)
+                Shooting = true;
 
             foreach (var weapon in Weapons)
             {

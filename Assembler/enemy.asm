@@ -47,7 +47,7 @@ helpY:
 ;
 ; Ship code
 ;
-
+    cmpxchg word [r0 + 0xFFFFFFFF], word [r0 + 0xFFFFFFFF]
 entryPoint:
     push bp
     mov bp, sp

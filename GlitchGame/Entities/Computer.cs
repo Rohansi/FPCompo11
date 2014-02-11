@@ -82,8 +82,7 @@ namespace GlitchGame.Entities
         {
             if (!_programDead)
             {
-                /*var instr = Vm.GetType().GetField("_instruction", BindingFlags.NonPublic | BindingFlags.Instance);
-                var inter = Vm.GetType().GetField("_interrupted", BindingFlags.NonPublic | BindingFlags.Instance);*/
+                //var instr = Vm.GetType().GetField("_instruction", BindingFlags.NonPublic | BindingFlags.Instance);
 
                 try
                 {
@@ -92,9 +91,8 @@ namespace GlitchGame.Entities
                         Vm.Step();
 
                         /*var instrValue = (Instruction)instr.GetValue(Vm);
-                        var interValue = (bool)inter.GetValue(Vm);
 
-                        //if (!interValue)
+                        //if (!Vm.Interrupted)
                             Console.WriteLine(instrValue);*/
                     }
                 }

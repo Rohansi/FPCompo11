@@ -68,13 +68,13 @@ namespace GlitchGame.GUI
                 RemoveFocus();
 
             var pos = _target.MapPixelToCoords(new Vector2i(x, y), Program.HudCamera.View);
-            MousePressed((int)pos.X / 8, (int)pos.Y / 12, button, pressed);
+            MousePressed((int)pos.X / GuiSettings.CharWidth, (int)pos.Y / GuiSettings.CharHeight, button, pressed);
         }
 
         private void WindowMouseMoved(object sender, MouseMoveEventArgs args)
         {
             var pos = _target.MapPixelToCoords(new Vector2i(args.X, args.Y), Program.HudCamera.View);
-            MouseMoved((int)pos.X / 8, (int)pos.Y / 12);
+            MouseMoved((int)pos.X / GuiSettings.CharWidth, (int)pos.Y / GuiSettings.CharHeight);
         }
     }
 }

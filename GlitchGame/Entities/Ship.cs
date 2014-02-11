@@ -102,11 +102,11 @@ namespace GlitchGame.Entities
 
         public override void Update()
         {
-            if (Health <= 0)
+            /*if (Health <= 0)
             {
                 Dead = true;
                 return;
-            }
+            }*/
 
             var a = Math.Abs(1 - NerfMultiplier);
             var s = Math.Sign(1 - NerfMultiplier);

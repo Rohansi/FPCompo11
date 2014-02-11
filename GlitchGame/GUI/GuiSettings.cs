@@ -6,14 +6,17 @@ namespace GlitchGame.GUI
     {
         public const string SolidBox = "         ";
 
+        public const int CharWidth = 6;
+        public const int CharHeight = 12;
+
         public static readonly Character Button = new Character(0, 15, 8);
-        public static readonly Character ButtonShadowR = new Character(220, 0, 7);
-        public static readonly Character ButtonShadowB = new Character(223, 0, 7);
+        public static readonly Character ButtonShadowR = new Character(220, 0);
+        public static readonly Character ButtonShadowB = new Character(223, 0);
 
-        public static readonly Character Label = new Character(0, 0, 7);
+        public static readonly Character Label = new Character(0, 0);
 
-        public static readonly Character ListBox = new Character(0, 0, 7);
-        public static readonly Character ListBoxItem = new Character(0, 0, 7);
+        public static readonly Character ListBox = new Character(0, 0);
+        public static readonly Character ListBoxItem = new Character(0, 0);
         public static readonly Character ListBoxItemSelected = new Character(0, 7, 8);
         
         public static readonly Character Menu = new Character(0, 15, 7);

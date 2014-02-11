@@ -57,7 +57,7 @@ namespace GlitchGame.GUI.Widgets
 
                 var reg = renderer.Region(1, i + 1, Width - 2, 1);
                 Character col = (SelectEnabled && Selected == index) ? GuiSettings.ListBoxItemSelected : GuiSettings.ListBoxItem;
-                reg.Clear(col);
+                reg.Clear(col, true);
                 reg.DrawText(0, 0, Items[index].Text, col);
             }
 

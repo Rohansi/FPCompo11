@@ -23,6 +23,13 @@ namespace GlitchGame.GUI.Widgets
 
             foreach (var c in Caption)
             {
+                if (c == '\n')
+                {
+                    x = 0;
+                    y++;
+                    continue;
+                }
+
                 renderer.Set(x, y, new Character(c, GuiSettings.Label.Foreground, GuiSettings.Label.Background));
 
                 x++;

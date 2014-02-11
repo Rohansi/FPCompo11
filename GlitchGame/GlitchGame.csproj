@@ -80,6 +80,7 @@
     <Compile Include="Background.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="DebugView.cs" />
+    <Compile Include="DebugView.GUI.cs" />
     <Compile Include="Devices\Broadcast.cs" />
     <Compile Include="Devices\Debug.cs" />
     <Compile Include="Devices\Engines.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="GUI\IContainer.cs" />
     <Compile Include="GUI\Widget.cs" />
     <Compile Include="GUI\Widgets\Button.cs" />
+    <Compile Include="GUI\Widgets\HexEdit.cs" />
     <Compile Include="GUI\Widgets\Label.cs" />
     <Compile Include="GUI\Widgets\ListBox.cs" />
     <Compile Include="GUI\Widgets\MenuBar.cs" />

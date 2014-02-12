@@ -108,7 +108,7 @@ namespace GlitchGame.States
             }
 
 #if DEBUG
-            var debugView = new SFMLDebugView(World);
+            var debugView = new FarseerDebugView(World);
             debugView.AppendFlags(DebugViewFlags.Shape);
             debugView.Draw(target);
 #endif

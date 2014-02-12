@@ -34,19 +34,21 @@ namespace GlitchGame.States
         {
             base.Enter();
 
-            _debug.Attach(this);
+            if (_debug != null)
+                _debug.Attach(this);
         }
 
         public override void Leave()
         {
             base.Leave();
 
-            _debug.Detatch();
+            if (_debug != null)
+                _debug.Detatch();
         }
 
         public override bool ProcessEvent(InputArgs args)
         {
-            if (_debug.ProcessEvent(args))
+            if (_debug != null && _debug.ProcessEvent(args))
                 return true;
 
             return base.ProcessEvent(args);
@@ -95,7 +97,8 @@ namespace GlitchGame.States
                 target.Draw(_text);
             }
 
-            target.Draw(_debug);
+            if (_debug != null)
+                target.Draw(_debug);
         }
 
         private void Spawn(int n)

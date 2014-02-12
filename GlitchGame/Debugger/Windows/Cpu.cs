@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using GlitchGame.Gui;
 using GlitchGame.Gui.Widgets;
@@ -14,9 +13,7 @@ namespace GlitchGame.Debugger.Windows
         private Label[] _flags;
         private Label _disassembly;
         private Scrollbar _scrollbar;
-
         private bool _needSetup;
-        private int _disassembleOffset;
 
         public Cpu(Container parent)
         {
@@ -44,27 +41,6 @@ namespace GlitchGame.Debugger.Windows
             _scrollbar.Maximum = 1;
             _scrollbar.Step = 4;
             _scrollbar.Value = 0;
-
-            _scrollbar.Changed += () =>
-            {
-                var currentValue = _disassembleOffset;
-                var newValue = _scrollbar.Value;
-
-                var diff = (int)Math.Ceiling((newValue - currentValue) / 4f);
-
-                while (diff > 0)
-                {
-                    ScrollDown();
-                    diff--;
-                }
-
-                while (diff < 0)
-                {
-                    ScrollUp();
-                    diff++;
-                }
-            };
-
             _window.Add(_scrollbar);
 
             var test = new TextBox(72, 36, 16);
@@ -82,8 +58,6 @@ namespace GlitchGame.Debugger.Windows
         public override void Reset()
         {
             _needSetup = true;
-            _disassembleOffset = 0;
-
             _scrollbar.Value = 0;
         }
 
@@ -112,7 +86,7 @@ namespace GlitchGame.Debugger.Windows
             }
 
             var originalIp = Target.Vm.IP;
-            Target.Vm.IP = _disassembleOffset;//(_scrollbar.Value * Target.Vm.Memory.Length);
+            Target.Vm.IP = (int)_scrollbar.Value;
             var instruction = new Instruction(Target.Vm);
             var disassembly = new StringBuilder();
             var buffer = new byte[8];
@@ -202,75 +176,6 @@ namespace GlitchGame.Debugger.Windows
         public override void Hide()
         {
             _window.Visible = false;
-        }
-
-        private void ScrollDown()
-        {
-            if (_disassembleOffset >= Target.Vm.Memory.Length)
-                return;
-
-            var originalIp = Target.Vm.IP;
-            Target.Vm.IP = _disassembleOffset;
-
-            var instruction = new Instruction(Target.Vm);
-
-            var decodeFailed = false;
-            try
-            {
-                instruction.Decode();
-            }
-            catch
-            {
-                decodeFailed = true;
-            }
-
-            if (!decodeFailed && instruction.IsValid)
-                Target.Vm.IP += instruction.Length;
-            else
-                Target.Vm.IP += 4;
-
-            _disassembleOffset = Target.Vm.IP;
-            Target.Vm.IP = originalIp;
-        }
-
-        private void ScrollUp()
-        {
-            if (_disassembleOffset <= 0)
-                return;
-
-            var originalIp = Target.Vm.IP;
-            Target.Vm.IP = _disassembleOffset;
-
-            var instr = new Instruction(Target.Vm);
-            var foundValid = false;
-
-            for (var i = 12; i <= 4; i--)
-            {
-                Target.Vm.IP = _disassembleOffset - i;
-
-                var decodeFailed = false;
-                try
-                {
-                    instr.Decode();
-                }
-                catch
-                {
-                    decodeFailed = true;
-                }
-
-                if (!decodeFailed && instr.IsValid && instr.Length == i)
-                {
-                    foundValid = true;
-                    _disassembleOffset -= i;
-                    break;
-                }
-            }
-
-            if (!foundValid)
-                _disassembleOffset -= 4;
-
-            _disassembleOffset = Math.Max(_disassembleOffset, 0);
-            Target.Vm.IP = originalIp;
         }
 
         private static readonly string[] RegisterNames =

@@ -81,6 +81,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Debugger\DebugView.cs" />
     <Compile Include="Debugger\DebugWindow.cs" />
+    <Compile Include="Debugger\Widgets\Disassembly.cs" />
     <Compile Include="Debugger\Windows\Cpu.cs" />
     <Compile Include="Devices\Broadcast.cs" />
     <Compile Include="Devices\Debug.cs" />
@@ -106,7 +107,6 @@
     <Compile Include="Gui\IContainer.cs" />
     <Compile Include="Gui\Widget.cs" />
     <Compile Include="Gui\Widgets\Button.cs" />
-    <Compile Include="Gui\Widgets\HexEdit.cs" />
     <Compile Include="Gui\Widgets\Label.cs" />
     <Compile Include="Gui\Widgets\ListBox.cs" />
     <Compile Include="Gui\Widgets\MenuBar.cs" />

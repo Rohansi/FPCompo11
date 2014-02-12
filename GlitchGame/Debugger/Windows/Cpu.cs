@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text;
+﻿using GlitchGame.Debugger.Widgets;
 using GlitchGame.Gui;
 using GlitchGame.Gui.Widgets;
 using LoonyVM;
@@ -11,16 +10,14 @@ namespace GlitchGame.Debugger.Windows
         private Window _window;
         private Label[] _registers;
         private Label[] _flags;
-        private Label _disassembly;
-        private Scrollbar _scrollbar;
-        private bool _needSetup;
+        private Disassembly _disassembly;
 
         public Cpu(Container parent)
         {
             #region Widget Creation
             _window = new Window(10, 10, 100, 40, "CPU");
 
-            _disassembly = new Label(1, 1, 68, 36, "");
+            _disassembly = new Disassembly(1, 1, 69, 36);
             _window.Add(_disassembly);
 
             _registers = new Label[RegisterNames.Length];
@@ -37,12 +34,6 @@ namespace GlitchGame.Debugger.Windows
                 _window.Add(_flags[i]);
             }
 
-            _scrollbar = new Scrollbar(69, 1, 36);
-            _scrollbar.Maximum = 1;
-            _scrollbar.Step = 4;
-            _scrollbar.Value = 0;
-            _window.Add(_scrollbar);
-
             var test = new TextBox(72, 36, 16);
             _window.Add(test);
 
@@ -51,28 +42,17 @@ namespace GlitchGame.Debugger.Windows
 
             parent.Add(_window);
             #endregion
-
-            _needSetup = true;
         }
 
         public override void Reset()
         {
-            _needSetup = true;
-            _scrollbar.Value = 0;
+            _disassembly.Reset();
         }
 
         public override void Update()
         {
             if (Target == null || !_window.Visible)
                 return;
-
-            if (_needSetup)
-            {
-                _scrollbar.Maximum = Target.Vm.Memory.Length;
-                _needSetup = false;
-            }
-
-            var debugInfo = Target.Code.DebugInfo;
 
             for (var i = 0; i < _registers.Length; i++)
             {
@@ -85,73 +65,7 @@ namespace GlitchGame.Debugger.Windows
                 _flags[i].Caption = string.Format("{0} = {1}", FlagNames[i], set);
             }
 
-            var originalIp = Target.Vm.IP;
-            Target.Vm.IP = (int)_scrollbar.Value;
-            var instruction = new Instruction(Target.Vm);
-            var disassembly = new StringBuilder();
-            var buffer = new byte[8];
-
-            for (var i = 0; i < 36; i++)
-            {
-                var instrAddr = Target.Vm.IP;
-                if (instrAddr >= Target.Vm.Memory.Length)
-                    break;
-
-                ShipDebugInfo.Line? nextLine = null;
-
-                if (debugInfo != null)
-                {
-                    var symbol = debugInfo.FindSymbol(instrAddr);
-                    if (symbol.HasValue && symbol.Value.Address == instrAddr)
-                        disassembly.AppendFormat("{0:X8} < {1} >\n", instrAddr, symbol.Value.Name);
-
-                    nextLine = debugInfo.FindLineAfter(instrAddr);
-                    if (nextLine.HasValue && nextLine.Value.Address == instrAddr)
-                        nextLine = null;
-                }
-
-                var decodeFailed = false;
-                try
-                {
-                    instruction.Decode();
-                }
-                catch
-                {
-                    decodeFailed = true;
-                }
-
-                if (decodeFailed || !instruction.IsValid || (nextLine.HasValue && instrAddr + instruction.Length > nextLine.Value.Address))
-                {
-                    if (nextLine.HasValue)
-                        Target.Vm.IP = nextLine.Value.Address;
-                    else
-                        Target.Vm.IP += 4;
-
-                    var read = 0;
-                    while (instrAddr <= Target.Vm.IP)
-                    {
-                        if (instrAddr >= Target.Vm.Memory.Length)
-                            break;
-
-                        buffer[read++] = Target.Vm.Memory[instrAddr++];
-
-                        if (read == buffer.Length || instrAddr == Target.Vm.IP)
-                        {
-                            if (read > 0)
-                                disassembly.AppendFormat("{0:X8}  db {1}\n", instrAddr - read, string.Join(", ", buffer.Take(read).Select(v => string.Format("0x{0:X2}", v))));
-                            read = 0;
-                        }
-                    }
-                }
-                else
-                {
-                    disassembly.AppendFormat("{0:X8}  {1}\n", instrAddr, instruction);
-                    Target.Vm.IP += instruction.Length;
-                }
-            }
-
-            _disassembly.Caption = disassembly.ToString();
-            Target.Vm.IP = originalIp;
+            _disassembly.Update(Target);
         }
 
         public override void Show()

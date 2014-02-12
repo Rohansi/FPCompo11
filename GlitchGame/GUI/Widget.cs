@@ -1,7 +1,7 @@
 ﻿using SFML.Window;
 using Texter;
 
-namespace GlitchGame.GUI
+namespace GlitchGame.Gui
 {
     public abstract class Widget
     {

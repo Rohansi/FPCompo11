@@ -1,6 +1,6 @@
 ﻿using Texter;
 
-namespace GlitchGame.GUI.Widgets
+namespace GlitchGame.Gui.Widgets
 {
     public class Label : Widget
     {

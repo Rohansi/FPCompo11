@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GlitchGame.GUI.Widgets
+namespace GlitchGame.Gui.Widgets
 {
     public class HexEdit : Widget
     {

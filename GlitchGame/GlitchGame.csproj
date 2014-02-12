@@ -79,8 +79,9 @@
     <Compile Include="Assets.cs" />
     <Compile Include="Background.cs" />
     <Compile Include="Camera.cs" />
-    <Compile Include="DebugView.cs" />
-    <Compile Include="DebugView.GUI.cs" />
+    <Compile Include="Debugger\DebugView.cs" />
+    <Compile Include="Debugger\DebugWindow.cs" />
+    <Compile Include="Debugger\Windows\Cpu.cs" />
     <Compile Include="Devices\Broadcast.cs" />
     <Compile Include="Devices\Debug.cs" />
     <Compile Include="Devices\Engines.cs" />
@@ -99,19 +100,19 @@
     <Compile Include="Entities\Projectiles\NerfBall.cs" />
     <Compile Include="Entities\Projectiles\Projectile.cs" />
     <Compile Include="Entities\Ship.cs" />
-    <Compile Include="GUI\Container.cs" />
-    <Compile Include="GUI\GuiSettings.cs" />
-    <Compile Include="GUI\GuiSystem.cs" />
-    <Compile Include="GUI\IContainer.cs" />
-    <Compile Include="GUI\Widget.cs" />
-    <Compile Include="GUI\Widgets\Button.cs" />
-    <Compile Include="GUI\Widgets\HexEdit.cs" />
-    <Compile Include="GUI\Widgets\Label.cs" />
-    <Compile Include="GUI\Widgets\ListBox.cs" />
-    <Compile Include="GUI\Widgets\MenuBar.cs" />
-    <Compile Include="GUI\Widgets\Scrollbar.cs" />
-    <Compile Include="GUI\Widgets\TextBox.cs" />
-    <Compile Include="GUI\Widgets\Window.cs" />
+    <Compile Include="Gui\Container.cs" />
+    <Compile Include="Gui\GuiSettings.cs" />
+    <Compile Include="Gui\GuiSystem.cs" />
+    <Compile Include="Gui\IContainer.cs" />
+    <Compile Include="Gui\Widget.cs" />
+    <Compile Include="Gui\Widgets\Button.cs" />
+    <Compile Include="Gui\Widgets\HexEdit.cs" />
+    <Compile Include="Gui\Widgets\Label.cs" />
+    <Compile Include="Gui\Widgets\ListBox.cs" />
+    <Compile Include="Gui\Widgets\MenuBar.cs" />
+    <Compile Include="Gui\Widgets\Scrollbar.cs" />
+    <Compile Include="Gui\Widgets\TextBox.cs" />
+    <Compile Include="Gui\Widgets\Window.cs" />
     <Compile Include="Hud.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Input.cs" />
@@ -251,6 +252,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

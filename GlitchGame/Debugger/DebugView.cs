@@ -1,17 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using GlitchGame.Debugger.Windows;
 using GlitchGame.Entities;
-using GlitchGame.GUI;
+using GlitchGame.Gui;
+using GlitchGame.Gui.Widgets;
 using SFML.Graphics;
 using SFML.Window;
 using Texter;
 
-namespace GlitchGame
+namespace GlitchGame.Debugger
 {
-    public partial class DebugView : Drawable
+    public class DebugView : Drawable
     {
         private TextDisplay _display;
         private GuiSystem _gui;
+        private Dictionary<string, DebugWindow> _windows;
+
         private State _state;
         private Computer _target;
         private TargetMarker _targetMarker;
@@ -20,7 +25,43 @@ namespace GlitchGame
         {
             TextDisplay.DataFolder = "Data/Texter/";
 
-            Initialize();
+            _gui = new GuiSystem(1000, 250);
+
+            var desktop = new Container(1000, 250);
+            desktop.Top = 1;
+            _gui.Add(desktop);
+
+            _windows = new Dictionary<string, DebugWindow>();
+            _windows["CPU"] = new Cpu(desktop);
+
+            #region Menu
+            var menu = new MenuBar();
+
+            var title = new MenuItem("[Debugger]");
+            var exit = new MenuItem("Exit");
+            exit.Clicked += () => SetTarget(null);
+            title.Items.Add(exit);
+            menu.Items.Add(title);
+
+            var view = new MenuItem("View");
+
+            var cpu = new MenuItem("CPU");
+            cpu.Clicked += () => _windows["CPU"].Show();
+            view.Items.Add(cpu);
+
+            var stack = new MenuItem("Stack");
+            view.Items.Add(stack);
+
+            var mem = new MenuItem("Memory");
+            view.Items.Add(mem);
+
+            var sym = new MenuItem("Symbols");
+            view.Items.Add(sym);
+
+            menu.Items.Add(view);
+
+            _gui.Add(menu);
+            #endregion
 
             _targetMarker = new TargetMarker(1);
             _targetMarker.Color = new Color(180, 0, 0);
@@ -32,7 +73,7 @@ namespace GlitchGame
                 throw new Exception("Must detach first");
 
             _state = state;
-            _target = null;
+            SetTarget(null);
         }
 
         public void Detatch()
@@ -41,20 +82,24 @@ namespace GlitchGame
                 throw new Exception("Must attach first");
 
             _state = null;
-            _target = null;
+            SetTarget(null);
         }
 
         public bool ProcessEvent(InputArgs args)
         {
-            if (_gui.ProcessEvent(args))
+            if (_target != null && _gui.ProcessEvent(args))
                 return true;
 
             var mousePressedArgs = args as MouseButtonInputArgs;
             if (mousePressedArgs != null && mousePressedArgs.Pressed)
             {
                 var mousePos = Program.Window.MapPixelToCoords(mousePressedArgs.Position, Program.Camera.View);
-                var ents = _state.EntitiesInRegion(new FloatRect(mousePos.X - 32, mousePos.Y - 32, 64, 64));
-                _target = ents.OfType<Computer>().FirstOrDefault();
+                var entities = _state.EntitiesInRegion(new FloatRect(mousePos.X - 32, mousePos.Y - 32, 64, 64));
+                var newTarget = entities.OfType<Computer>().FirstOrDefault();
+
+                if (_target == null)
+                    SetTarget(newTarget);
+
                 return true;
             }
 
@@ -63,12 +108,12 @@ namespace GlitchGame
 
         public void Draw(RenderTarget target, RenderStates states)
         {
-            if (_state == null)
+            if (_state == null || _target == null)
                 return;
 
-            if (_target == null || _target.Dead)
+            if (_target.Dead)
             {
-                _target = null;
+                SetTarget(null);
                 return;
             }
 
@@ -80,13 +125,27 @@ namespace GlitchGame
             _targetMarker.Position = Program.HudCamera.Position + (targetPosition - Program.Camera.Position) / Program.Camera.Zoom;
             target.Draw(_targetMarker);
 
-            Update();
+            foreach (var w in _windows.Values)
+            {
+                w.Update();
+            }
 
             CheckResize();
             _display.Clear(new Character(background: 255));
             _gui.Draw(_display);
 
             target.Draw(_display);
+        }
+
+        private void SetTarget(Computer target)
+        {
+            _target = target;
+
+            foreach (var w in _windows.Values)
+            {
+                w.Reset();
+                w.Target = _target;
+            }
         }
 
         private void CheckResize()

@@ -1,6 +1,6 @@
 ﻿using Texter;
 
-namespace GlitchGame.GUI
+namespace GlitchGame.Gui
 {
     public static class GuiSettings
     {
@@ -20,7 +20,7 @@ namespace GlitchGame.GUI
         public static readonly Character ListBoxItemSelected = new Character(0, 7, 8);
         
         public static readonly Character Menu = new Character(0, 15, 7);
-        public static readonly Character MenuOutline = new Character(0, 0, 7);
+        public static readonly Character MenuOutline = new Character(0, 8, 7);
         public static readonly Character MenuItem = new Character(0, 0, 7);
         public static readonly Character MenuItemHighlight = new Character(0, 0, 8);
         public static readonly Character MenuArrow = new Character(16);

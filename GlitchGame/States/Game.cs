@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GlitchGame.Debugger;
 using GlitchGame.Entities;
 using Microsoft.Xna.Framework;
 using SFML.Graphics;

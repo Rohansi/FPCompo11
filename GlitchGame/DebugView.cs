@@ -3,22 +3,27 @@ using System.Linq;
 using GlitchGame.Entities;
 using GlitchGame.GUI;
 using SFML.Graphics;
+using SFML.Window;
 using Texter;
 
 namespace GlitchGame
 {
-    public partial class DebugView : Transformable, Drawable
+    public partial class DebugView : Drawable
     {
         private TextDisplay _display;
         private GuiSystem _gui;
         private State _state;
         private Computer _target;
+        private TargetMarker _targetMarker;
 
         public DebugView()
         {
             TextDisplay.DataFolder = "Data/Texter/";
 
             Initialize();
+
+            _targetMarker = new TargetMarker(1);
+            _targetMarker.Color = new Color(180, 0, 0);
         }
 
         public void Attach(State state)
@@ -58,14 +63,22 @@ namespace GlitchGame
 
         public void Draw(RenderTarget target, RenderStates states)
         {
-            /*if (_state == null)
+            if (_state == null)
                 return;
 
             if (_target == null || _target.Dead)
             {
                 _target = null;
                 return;
-            }*/
+            }
+
+            var targetPosition = _target.Body.Position.ToSfml() * Program.PixelsPerMeter;
+            var targetSize = 80 * _target.Size / Program.Camera.Zoom;
+            _targetMarker.Radius = targetSize;
+            _targetMarker.Origin = new Vector2f(targetSize, targetSize);
+            _targetMarker.Thickness = 5 * _target.Size;
+            _targetMarker.Position = Program.HudCamera.Position + (targetPosition - Program.Camera.Position) / Program.Camera.Zoom;
+            target.Draw(_targetMarker);
 
             Update();
 
@@ -73,8 +86,7 @@ namespace GlitchGame
             _display.Clear(new Character(background: 255));
             _gui.Draw(_display);
 
-            states.Transform *= Transform;
-            target.Draw(_display, states);
+            target.Draw(_display);
         }
 
         private void CheckResize()
@@ -90,6 +102,109 @@ namespace GlitchGame
 
                 _display = new TextDisplay(width, height, "font.png", GuiSettings.CharWidth, GuiSettings.CharHeight);
             }
+        }
+    }
+
+    public class TargetMarker : Transformable, Drawable
+    {
+        private bool _dirty;
+        private VertexArray _vertices;
+
+        private float _radius;
+        private float _thickness;
+        private Color _color;
+
+        public TargetMarker(float radius)
+        {
+            _dirty = true;
+            _vertices = new VertexArray(PrimitiveType.Quads, 32);
+            _radius = radius;
+        }
+
+        public float Radius
+        {
+            get { return _radius; }
+            set
+            {
+                _radius = value;
+                _dirty = true;
+            }
+        }
+
+        public float Thickness
+        {
+            get { return _thickness; }
+            set
+            {
+                _thickness = value;
+                _dirty = true;
+            }
+        }
+
+        public Color Color
+        {
+            get { return _color; }
+            set
+            {
+                _color = value;
+                _dirty = true;
+            }
+        }
+
+        public void Draw(RenderTarget target, RenderStates states)
+        {
+            if (_dirty)
+                Rebuild();
+
+            states.Transform *= Transform;
+            target.Draw(_vertices, states);
+        }
+
+        private void Rebuild()
+        {
+            var edgeWidth = (_radius * 2) / 3;
+
+            _vertices[00] = new Vertex(new Vector2f(0, 0), _color);
+            _vertices[01] = new Vertex(new Vector2f(edgeWidth, 0), _color);
+            _vertices[02] = new Vertex(new Vector2f(edgeWidth, _thickness), _color);
+            _vertices[03] = new Vertex(new Vector2f(0, _thickness), _color);
+
+            _vertices[04] = new Vertex(new Vector2f(0, 0), _color);
+            _vertices[05] = new Vertex(new Vector2f(_thickness, 0), _color);
+            _vertices[06] = new Vertex(new Vector2f(_thickness, edgeWidth), _color);
+            _vertices[07] = new Vertex(new Vector2f(0, edgeWidth), _color);
+
+            _vertices[08] = new Vertex(new Vector2f(edgeWidth * 2, 0), _color);
+            _vertices[09] = new Vertex(new Vector2f(edgeWidth * 3, 0), _color);
+            _vertices[10] = new Vertex(new Vector2f(edgeWidth * 3, _thickness), _color);
+            _vertices[11] = new Vertex(new Vector2f(edgeWidth * 2, _thickness), _color);
+
+            _vertices[12] = new Vertex(new Vector2f(edgeWidth * 3 - _thickness, 0), _color);
+            _vertices[13] = new Vertex(new Vector2f(edgeWidth * 3, 0), _color);
+            _vertices[14] = new Vertex(new Vector2f(edgeWidth * 3, edgeWidth), _color);
+            _vertices[15] = new Vertex(new Vector2f(edgeWidth * 3 - _thickness, edgeWidth), _color);
+
+            _vertices[16] = new Vertex(new Vector2f(edgeWidth * 3 - _thickness, edgeWidth * 2), _color);
+            _vertices[17] = new Vertex(new Vector2f(edgeWidth * 3, edgeWidth * 2), _color);
+            _vertices[18] = new Vertex(new Vector2f(edgeWidth * 3, edgeWidth * 3), _color);
+            _vertices[19] = new Vertex(new Vector2f(edgeWidth * 3 - _thickness, edgeWidth * 3), _color);
+
+            _vertices[20] = new Vertex(new Vector2f(edgeWidth * 2, edgeWidth * 3 - _thickness), _color);
+            _vertices[21] = new Vertex(new Vector2f(edgeWidth * 3, edgeWidth * 3 - _thickness), _color);
+            _vertices[22] = new Vertex(new Vector2f(edgeWidth * 3, edgeWidth * 3), _color);
+            _vertices[23] = new Vertex(new Vector2f(edgeWidth * 2, edgeWidth * 3), _color);
+
+            _vertices[24] = new Vertex(new Vector2f(0, edgeWidth * 2), _color);
+            _vertices[25] = new Vertex(new Vector2f(_thickness, edgeWidth * 2), _color);
+            _vertices[26] = new Vertex(new Vector2f(_thickness, edgeWidth * 3), _color);
+            _vertices[27] = new Vertex(new Vector2f(0, edgeWidth * 3), _color);
+
+            _vertices[28] = new Vertex(new Vector2f(0, edgeWidth * 3 - _thickness), _color);
+            _vertices[29] = new Vertex(new Vector2f(edgeWidth, edgeWidth * 3 - _thickness), _color);
+            _vertices[30] = new Vertex(new Vector2f(edgeWidth, edgeWidth * 3), _color);
+            _vertices[31] = new Vertex(new Vector2f(0, edgeWidth * 3), _color);
+
+            _dirty = false;
         }
     }
 }

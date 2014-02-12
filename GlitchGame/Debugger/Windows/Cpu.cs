@@ -101,26 +101,13 @@ namespace GlitchGame.Debugger.Windows
 
                 if (debugInfo != null)
                 {
-                    var symbols = debugInfo.Symbols;
-                    var lines = debugInfo.Lines;
+                    var symbol = debugInfo.FindSymbol(instrAddr);
+                    if (symbol.HasValue && symbol.Value.Address == instrAddr)
+                        disassembly.AppendFormat("{0:X8} < {1} >\n", instrAddr, symbol.Value.Name);
 
-                    for (var j = 0; j < symbols.Count; j++)
-                    {
-                        if (symbols[j].Address == instrAddr)
-                        {
-                            disassembly.AppendFormat("{0:X8} < {1} >\n", instrAddr, symbols[j].Name);
-                            break;
-                        }
-                    }
-
-                    for (var j = 0; j < lines.Count; j++)
-                    {
-                        if (lines[j].Address > instrAddr)
-                        {
-                            nextLine = lines[j];
-                            break;
-                        }
-                    }
+                    nextLine = debugInfo.FindLineAfter(instrAddr);
+                    if (nextLine.HasValue && nextLine.Value.Address == instrAddr)
+                        nextLine = null;
                 }
 
                 var decodeFailed = false;

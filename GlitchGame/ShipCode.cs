@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace GlitchGame
@@ -153,28 +152,58 @@ namespace GlitchGame
 
         public Symbol? FindSymbol(int address)
         {
-            for (var i = _symbols.Count - 1; i >= 0; i--)
-            {
-                var s = _symbols[i];
-                if (s.Name.Contains('.'))
-                    continue;
-                if (s.Address <= address)
-                    return s;
-            }
+            var idx = Search(_symbols, address, s => s.Address);
+            Symbol? result = null;
 
-            return null;
+            if (idx >= 0)
+                result = _symbols[idx];
+
+            return result;
         }
 
         public Line? FindLine(int address)
         {
-            for (var i = _lines.Count - 1; i >= 0; i--)
+            var idx = Search(_lines, address, l => l.Address);
+            Line? result = null;
+
+            if (idx >= 0)
+                result = _lines[idx];
+
+            return result;
+        }
+
+        public Line? FindLineAfter(int address)
+        {
+            var idx = Search(_lines, address, l => l.Address) + 1;
+            Line? result = null;
+
+            if (idx >= 0 && idx < _lines.Count)
+                result = _lines[idx];
+
+            return result;
+        }
+
+        private static int Search<T>(IList<T> list, int key, Func<T, int> keySelector)
+        {
+            int min = 0;
+            int max = list.Count - 1;
+
+            while (min <= max)
             {
-                var l = _lines[i];
-                if (address >= l.Address)
-                    return l;
+                int mid = (min + max) / 2;
+                int midKey = keySelector(list[mid]);
+
+                if (midKey < key)
+                    min = mid + 1;
+                else if (mid > 0 && keySelector(list[mid - 1]) >= key)
+                    max = mid - 1;
+                else if (midKey >= key)
+                    return mid;
+                else
+                    break;
             }
 
-            return null;
+            return int.MinValue;
         }
 
         private static string ReadNullTerminated(BinaryReader reader)

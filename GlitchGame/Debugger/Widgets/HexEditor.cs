@@ -28,7 +28,7 @@ namespace GlitchGame.Debugger.Widgets
             _scrollbar = new Scrollbar((int)Width - 1, 0, Height);
             _scrollbar.Minimum = 0;
             _scrollbar.Maximum = 1;
-            _scrollbar.Step = _rowSize;
+            _scrollbar.Step = 1;
 
             _rowSize = rowSize;
             _needSetup = true;
@@ -36,7 +36,7 @@ namespace GlitchGame.Debugger.Widgets
 
         public override void Draw(ITextRenderer renderer)
         {
-            renderer.DrawBox(0, 0, Width, Height, GuiSettings.SolidBox, new Character(0, 0, 7));
+            renderer.Clear(new Character(0, 0, 7), true);
 
             if (!_needSetup)
             {
@@ -46,9 +46,17 @@ namespace GlitchGame.Debugger.Widgets
                 {
                     renderer.DrawText(0, i, offset.ToString("X8"), new Character(0, 8, 7));
 
-                    // TODO: draw hex stuff
+                    var x1 = 10;
+                    var x2 = x1 + (_rowSize * 3) + 1;
+                    for (var j = 0; j < _rowSize; j++, offset++, x1 += 3, x2++)
+                    {
+                        if (offset < 0 || offset > _buffer.Length)
+                            continue;
 
-                    offset += _rowSize;
+                        var b = _buffer[offset];
+                        renderer.DrawText(x1, i, b.ToString("X2"), new Character(0, 0, 7));
+                        renderer.Set(x2, i, new Character(b, 0, 7));
+                    }
                 }
             }
 
@@ -84,7 +92,7 @@ namespace GlitchGame.Debugger.Widgets
                 _needSetup = false;
             }
 
-            _offset = (int)(_scrollbar.Value * _rowSize);
+            _offset = (int)(Math.Round(_scrollbar.Value) * _rowSize);
         }
     }
 }

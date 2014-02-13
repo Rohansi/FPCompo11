@@ -47,12 +47,12 @@ namespace GlitchGame.Debugger.Widgets
 
         public override void Draw(ITextRenderer renderer)
         {
-            renderer.DrawBox(0, 0, Width, Height, GuiSettings.SolidBox, new Character(0, 0, 7));
+            renderer.Clear(new Character(0, 0, 7), true);
 
             for (var i = 0; i < _lines.Count; i++)
             {
                 var line = _lines[i];
-                renderer.DrawText(0, i, line.Address.ToString("X8"), new Character(0, 0, 7));
+                renderer.DrawText(0, i, line.Address.ToString("X8"), new Character(0, 8, 7));
                 renderer.DrawText(9, i, line.Instruction, new Character(0, line.Color, 7));
             }
 

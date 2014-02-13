@@ -50,7 +50,7 @@ namespace GlitchGame.Gui
         private Vector2i ConvertCoords(Vector2i mouseCoords)
         {
             var pos = Program.Window.MapPixelToCoords(mouseCoords, Program.HudCamera.View);
-            return new Vector2i((int)pos.X / GuiSettings.CharWidth, (int)pos.Y / GuiSettings.CharHeight);
+            return new Vector2i((int)(pos.X / GuiSettings.CharacterWidth), (int)(pos.Y / GuiSettings.CharacterHeight));
         }
     }
 }

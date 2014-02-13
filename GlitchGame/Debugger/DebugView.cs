@@ -155,15 +155,18 @@ namespace GlitchGame.Debugger
         private void CheckResize()
         {
             var bounds = Program.HudCamera.Bounds;
-            var width = (uint)bounds.Width / GuiSettings.CharWidth + 1;
-            var height = (uint)bounds.Height / GuiSettings.CharHeight + 1;
+            var width = (uint)bounds.Width / GuiSettings.CharacterWidth + 1;
+            var height = (uint)bounds.Height / GuiSettings.CharacterHeight + 1;
 
             if (_display == null || _display.Width != width || _display.Height != height)
             {
                 if (_display != null)
                     _display.Dispose();
 
-                _display = new TextDisplay(width, height, "font.png", GuiSettings.CharWidth, GuiSettings.CharHeight);
+                _display = new TextDisplay(width, height);
+
+                GuiSettings.CharacterWidth = _display.CharacterWidth;
+                GuiSettings.CharacterHeight = _display.CharacterHeight;
             }
         }
     }

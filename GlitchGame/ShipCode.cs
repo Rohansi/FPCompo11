@@ -150,31 +150,20 @@ namespace GlitchGame
             }
         }
 
-        public Symbol? FindSymbol(int address)
+        public Symbol? FindSymbol(int address, int offset = 0)
         {
-            var idx = Search(_symbols, address, s => s.Address);
+            var idx = Search(_symbols, new Symbol(0, address), SymbolAddressComparer) + offset;
             Symbol? result = null;
 
-            if (idx >= 0)
+            if (idx >= 0 && idx < _symbols.Count)
                 result = _symbols[idx];
 
             return result;
         }
 
-        public Line? FindLine(int address)
+        public Line? FindLine(int address, int offset = 0)
         {
-            var idx = Search(_lines, address, l => l.Address);
-            Line? result = null;
-
-            if (idx >= 0)
-                result = _lines[idx];
-
-            return result;
-        }
-
-        public Line? FindLineAfter(int address)
-        {
-            var idx = Search(_lines, address, l => l.Address) + 1;
+            var idx = Search(_lines, new Line(0, 0, address), LineAddressComparer) + offset;
             Line? result = null;
 
             if (idx >= 0 && idx < _lines.Count)
@@ -183,27 +172,14 @@ namespace GlitchGame
             return result;
         }
 
-        private static int Search<T>(IList<T> list, int key, Func<T, int> keySelector)
+        private static int Search<T>(List<T> list, T key, IComparer<T> comparer)
         {
-            int min = 0;
-            int max = list.Count - 1;
+            var idx = list.BinarySearch(key, comparer);
 
-            while (min <= max)
-            {
-                int mid = (min + max) / 2;
-                int midKey = keySelector(list[mid]);
+            if (idx < 0)
+                idx = ~idx - 1;
 
-                if (midKey < key)
-                    min = mid + 1;
-                else if (mid > 0 && keySelector(list[mid - 1]) >= key)
-                    max = mid - 1;
-                else if (midKey >= key)
-                    return mid;
-                else
-                    break;
-            }
-
-            return int.MinValue;
+            return idx;
         }
 
         private static string ReadNullTerminated(BinaryReader reader)
@@ -217,6 +193,27 @@ namespace GlitchGame
             }
 
             return result.ToString();
+        }
+
+        private static readonly GenericComparer<Symbol> SymbolAddressComparer =
+            new GenericComparer<Symbol>((x, y) => x.Address - y.Address);
+
+        private static readonly GenericComparer<Line> LineAddressComparer =
+            new GenericComparer<Line>((x, y) => x.Address - y.Address);
+
+        private class GenericComparer<T> : IComparer<T>
+        {
+            private Func<T, T, int> _comparer;
+             
+            public GenericComparer(Func<T, T, int> comparer)
+            {
+                _comparer = comparer;
+            } 
+
+            public int Compare(T x, T y)
+            {
+                return _comparer(x, y);
+            }
         }
     }
 }

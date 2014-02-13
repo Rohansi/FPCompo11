@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GlitchGame.Entities;
 using GlitchGame.Gui;
@@ -27,8 +25,8 @@ namespace GlitchGame.Debugger.Widgets
             }
         }
 
-        private Scrollbar _scrollbar;
-        private List<Line> _lines; 
+        private readonly Scrollbar _scrollbar;
+        private readonly List<Line> _lines;
         private bool _needSetup;
 
         public Disassembly(int x, int y, uint w, uint h)
@@ -41,7 +39,7 @@ namespace GlitchGame.Debugger.Widgets
             _scrollbar = new Scrollbar((int)Width - 1, 0, Height);
             _scrollbar.Minimum = 0;
             _scrollbar.Maximum = 100;
-            _scrollbar.Step = 4;
+            _scrollbar.Step = 6;
 
             _lines = new List<Line>();
             _needSetup = true;
@@ -87,9 +85,17 @@ namespace GlitchGame.Debugger.Widgets
                 _needSetup = false;
             }
 
+            var debugInfo = target.Code.DebugInfo;
             var offset = (int)_scrollbar.Value;
             var originalIp = target.Vm.IP;
             target.Vm.IP = offset;
+
+            if (debugInfo != null)
+            {
+                var prevLine = debugInfo.FindLine(offset, -1);
+                if (prevLine.HasValue)
+                    target.Vm.IP = prevLine.Value.Address; // TODO: limit how far back this can go
+            }
 
             _lines.Clear();
             _lines.AddRange(Disassemble(target).SkipWhile(l => l.Address < offset).Take((int)Height));
@@ -118,7 +124,7 @@ namespace GlitchGame.Debugger.Widgets
                     if (symbol.HasValue && symbol.Value.Address == instrAddr)
                         yield return new Line(instrAddr, string.Format("< {0} >", symbol.Value.Name), 1);
 
-                    nextLine = debugInfo.FindLineAfter(instrAddr);
+                    nextLine = debugInfo.FindLine(instrAddr, 1);
                     if (nextLine.HasValue && nextLine.Value.Address == instrAddr)
                         nextLine = null;
                 }

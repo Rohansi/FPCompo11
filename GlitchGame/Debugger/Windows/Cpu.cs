@@ -1,5 +1,4 @@
 ﻿using GlitchGame.Debugger.Widgets;
-using GlitchGame.Gui;
 using GlitchGame.Gui.Widgets;
 using LoonyVM;
 
@@ -12,7 +11,8 @@ namespace GlitchGame.Debugger.Windows
         private Label[] _flags;
         private Disassembly _disassembly;
 
-        public Cpu(Container parent)
+        public Cpu(DebugView view)
+            : base(view)
         {
             #region Widget Creation
             _window = new Window(10, 10, 100, 40, "CPU");
@@ -34,13 +34,22 @@ namespace GlitchGame.Debugger.Windows
                 _window.Add(_flags[i]);
             }
 
-            var test = new TextBox(72, 36, 16);
-            _window.Add(test);
+            var gotoInput = new TextBox(72, 36, 17);
+            _window.Add(gotoInput);
 
-            var test2 = new Button(90, 36, 7, "Goto");
-            _window.Add(test2);
+            var skipInterrupt = new Label(72, 28, 25, 1, "[ ]  Skip Interrupts");
+            _window.Add(skipInterrupt);
 
-            parent.Add(_window);
+            var pauseButton = new Button(72, 30, 25, "Pause");
+            _window.Add(pauseButton);
+
+            var stepButton = new Button(72, 33, 25, "Step");
+            _window.Add(stepButton);
+
+            var gotoButton = new Button(90, 36, 7, "Goto");
+            _window.Add(gotoButton);
+
+            view.Desktop.Add(_window);
             #endregion
         }
 

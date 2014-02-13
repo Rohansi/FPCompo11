@@ -82,7 +82,9 @@
     <Compile Include="Debugger\DebugView.cs" />
     <Compile Include="Debugger\DebugWindow.cs" />
     <Compile Include="Debugger\Widgets\Disassembly.cs" />
+    <Compile Include="Debugger\Widgets\HexEditor.cs" />
     <Compile Include="Debugger\Windows\Cpu.cs" />
+    <Compile Include="Debugger\Windows\Memory.cs" />
     <Compile Include="Devices\Broadcast.cs" />
     <Compile Include="Devices\Debug.cs" />
     <Compile Include="Devices\Engines.cs" />

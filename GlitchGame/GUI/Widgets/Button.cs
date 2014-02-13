@@ -23,6 +23,8 @@ namespace GlitchGame.Gui.Widgets
 
         public override void Draw(ITextRenderer renderer)
         {
+            var captionX = (int)(Width - 1) / 2 - Caption.Length / 2;
+
             if (!_holding)
             {
                 renderer.DrawBox(0, 0, Width - 1, 1, GuiSettings.SolidBox, GuiSettings.Button);
@@ -33,12 +35,12 @@ namespace GlitchGame.Gui.Widgets
                     renderer.Set(1 + i, 1, GuiSettings.ButtonShadowB);
                 }
 
-                renderer.DrawText(1, 0, Caption, GuiSettings.Button);
+                renderer.DrawText(captionX, 0, Caption, GuiSettings.Button);
             }
             else
             {
                 renderer.DrawBox(1, 0, Width, 1, GuiSettings.SolidBox, GuiSettings.Button);
-                renderer.DrawText(2, 0, Caption, GuiSettings.Button);
+                renderer.DrawText(captionX + 1, 0, Caption, GuiSettings.Button);
             }
         }
 

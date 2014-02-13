@@ -15,11 +15,13 @@ namespace GlitchGame.Debugger
     {
         private TextDisplay _display;
         private GuiSystem _gui;
-        private Dictionary<string, DebugWindow> _windows;
 
         private State _state;
         private Computer _target;
         private TargetMarker _targetMarker;
+
+        public readonly Container Desktop;
+        public readonly Dictionary<string, DebugWindow> Windows;
 
         public DebugView()
         {
@@ -27,12 +29,13 @@ namespace GlitchGame.Debugger
 
             _gui = new GuiSystem(1000, 250);
 
-            var desktop = new Container(1000, 250);
-            desktop.Top = 1;
-            _gui.Add(desktop);
+            Desktop = new Container(1000, 250);
+            Desktop.Top = 1;
+            _gui.Add(Desktop);
 
-            _windows = new Dictionary<string, DebugWindow>();
-            _windows["CPU"] = new Cpu(desktop);
+            Windows = new Dictionary<string, DebugWindow>();
+            Windows["CPU"] = new Cpu(this);
+            Windows["Mem"] = new Memory(this);
 
             #region Menu
             var menu = new MenuBar();
@@ -46,14 +49,15 @@ namespace GlitchGame.Debugger
             var view = new MenuItem("View");
 
             var cpu = new MenuItem("CPU");
-            cpu.Clicked += () => _windows["CPU"].Show();
+            cpu.Clicked += () => Windows["CPU"].Show();
             view.Items.Add(cpu);
+
+            var mem = new MenuItem("Memory");
+            mem.Clicked += () => Windows["Mem"].Show();
+            view.Items.Add(mem);
 
             var stack = new MenuItem("Stack");
             view.Items.Add(stack);
-
-            var mem = new MenuItem("Memory");
-            view.Items.Add(mem);
 
             var sym = new MenuItem("Symbols");
             view.Items.Add(sym);
@@ -125,7 +129,7 @@ namespace GlitchGame.Debugger
             _targetMarker.Position = Program.HudCamera.Position + (targetPosition - Program.Camera.Position) / Program.Camera.Zoom;
             target.Draw(_targetMarker);
 
-            foreach (var w in _windows.Values)
+            foreach (var w in Windows.Values)
             {
                 w.Update();
             }
@@ -141,7 +145,7 @@ namespace GlitchGame.Debugger
         {
             _target = target;
 
-            foreach (var w in _windows.Values)
+            foreach (var w in Windows.Values)
             {
                 w.Reset();
                 w.Target = _target;

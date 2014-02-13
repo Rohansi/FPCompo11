@@ -6,7 +6,7 @@ namespace GlitchGame.Gui
     {
         public const string SolidBox = "         ";
 
-        public const int CharWidth = 6;
+        public const int CharWidth = 8;
         public const int CharHeight = 12;
 
         public static readonly Character Button = new Character(0, 15, 8);

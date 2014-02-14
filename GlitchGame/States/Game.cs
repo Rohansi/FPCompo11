@@ -25,7 +25,7 @@ namespace GlitchGame.States
 
             _text = new Text("", Program.Font, 32);
             _wave = 1;
-            _timer = 5;
+            _timer = 0.5f;
 
             _debug = new DebugView();
         }

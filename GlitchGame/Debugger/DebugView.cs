@@ -36,6 +36,7 @@ namespace GlitchGame.Debugger
             Windows = new Dictionary<string, DebugWindow>();
             Windows["CPU"] = new Cpu(this);
             Windows["Mem"] = new Memory(this);
+            Windows["Flap"] = new FlappyBird(this);
 
             #region Menu
             var menu = new MenuBar();

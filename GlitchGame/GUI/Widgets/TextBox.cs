@@ -76,6 +76,7 @@ namespace GlitchGame.Gui.Widgets
         public override bool KeyPressed(Keyboard.Key key, string text)
         {
             _caretVisible = true;
+            _frames = 0;
 
             if (text == null)
             {

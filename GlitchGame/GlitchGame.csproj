@@ -86,6 +86,7 @@
     <Compile Include="Debugger\Windows\Cpu.cs" />
     <Compile Include="Debugger\Windows\FlappyBird.cs" />
     <Compile Include="Debugger\Windows\Memory.cs" />
+    <Compile Include="Debugger\Windows\Options.cs" />
     <Compile Include="Devices\Broadcast.cs" />
     <Compile Include="Devices\Debug.cs" />
     <Compile Include="Devices\Engines.cs" />

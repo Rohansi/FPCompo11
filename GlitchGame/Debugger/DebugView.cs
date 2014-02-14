@@ -36,18 +36,22 @@ namespace GlitchGame.Debugger
             Windows = new Dictionary<string, DebugWindow>();
             Windows["CPU"] = new Cpu(this);
             Windows["Mem"] = new Memory(this);
-            Windows["Flap"] = new FlappyBird(this);
+            Windows["Opt"] = new Options(this);
 
-            #region Menu
             var menu = new MenuBar();
+            _gui.Add(menu);
 
+            #region Title
             var title = new MenuItem("[Debugger]");
             var exit = new MenuItem("Exit");
             exit.Clicked += () => SetTarget(null);
             title.Items.Add(exit);
             menu.Items.Add(title);
+            #endregion
 
+            #region View
             var view = new MenuItem("View");
+            menu.Items.Add(view);
 
             var cpu = new MenuItem("CPU");
             cpu.Clicked += () => Windows["CPU"].Show();
@@ -57,15 +61,14 @@ namespace GlitchGame.Debugger
             mem.Clicked += () => Windows["Mem"].Show();
             view.Items.Add(mem);
 
-            var stack = new MenuItem("Stack");
-            view.Items.Add(stack);
-
             var sym = new MenuItem("Symbols");
             view.Items.Add(sym);
+            #endregion
 
-            menu.Items.Add(view);
-
-            _gui.Add(menu);
+            #region Options
+            var options = new MenuItem("Options");
+            options.Clicked += () => Windows["Opt"].Show();
+            menu.Items.Add(options);
             #endregion
 
             _targetMarker = new TargetMarker(1);

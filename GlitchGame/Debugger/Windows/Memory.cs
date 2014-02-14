@@ -19,6 +19,8 @@ namespace GlitchGame.Debugger.Windows
         {
             #region Widget Creation
             _window = new Window(20, 20, 81, 41, "Memory");
+            _window.Visible = false;
+            view.Desktop.Add(_window);
 
             _editor = new HexEditor(1, 1, 77, 36, 16);
             _editor.SelectionChanged += () => _moved = true;
@@ -86,8 +88,6 @@ namespace GlitchGame.Debugger.Windows
             };
 
             _window.Add(_dwordText);
-
-            view.Desktop.Add(_window);
             #endregion
 
             _moved = true;

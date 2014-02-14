@@ -16,6 +16,7 @@ namespace GlitchGame.Debugger.Windows
         {
             #region Widget Creation
             _window = new Window(10, 10, 100, 40, "CPU");
+            view.Desktop.Add(_window);
 
             _disassembly = new Disassembly(1, 1, 69, 36);
             _window.Add(_disassembly);
@@ -48,8 +49,6 @@ namespace GlitchGame.Debugger.Windows
 
             var gotoButton = new Button(90, 36, 7, "Goto");
             _window.Add(gotoButton);
-
-            view.Desktop.Add(_window);
             #endregion
         }
 

@@ -38,10 +38,10 @@ namespace GlitchGame.Weapons
             Parent.Energy -= EnergyCost;
         }
 
-        public virtual void Update()
+        public virtual void Update(float dt)
         {
             if (Cooldown > 0)
-                Cooldown -= Program.FrameTime;
+                Cooldown -= dt;
         }
 
         protected Vector2 Direction(float dir)

@@ -27,9 +27,30 @@ namespace GlitchGame
 
         public abstract void Enter();
         public abstract void Leave();
-        public abstract void Update();
         public abstract void Draw(RenderTarget target);
         public abstract void DrawHud(RenderTarget target);
+
+        public virtual void Update(float dt)
+        {
+            if (Entities != null)
+            {
+                foreach (var e in Entities.Iterate())
+                {
+                    e.Update(dt);
+                }
+
+                foreach (var e in Entities.Where(e => e.Dead).ToList())
+                {
+                    e.Destroyed();
+                    Entities.Remove(e);
+                }
+            }
+
+            if (World != null)
+            {
+                World.Step(dt);
+            }
+        }
 
         public virtual bool ProcessEvent(InputArgs args)
         {

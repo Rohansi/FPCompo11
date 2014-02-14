@@ -33,9 +33,9 @@ namespace GlitchGame.Entities.Projectiles
             _lifeTime = 0;
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
-            _lifeTime += Program.FrameTime;
+            _lifeTime += dt;
 
             if (_lifeTime >= MaxLifeTime)
                 Dead = true;

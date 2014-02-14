@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using GlitchGame.States;
 using SFML.Graphics;
 using SFML.Window;
@@ -13,7 +14,6 @@ namespace GlitchGame
         public const float DegreesPerRadian = 180f / (float)Math.PI;
         public const int RadarRays = 126; // dont change
         public const int InstructionsPerSecond = 25000;
-        public const int InstructionsPerFrame = (int)(FrameTime * InstructionsPerSecond);
 
         private const float Zoom = 2;
         private const uint MinWidth = 800;
@@ -27,6 +27,8 @@ namespace GlitchGame
         public static Camera Camera { get; private set; }
         public static Font Font { get; private set; }
         public static State State { get; private set; }
+
+        public static float TimeScale = 1;
 
         public static void Main()
         {
@@ -70,18 +72,32 @@ namespace GlitchGame
 
             SetState(new Game());
 
+            var watch = Stopwatch.StartNew();
+            var accumulator = 0f;
+
             while (Window.IsOpen())
             {
+                var dt = (float)watch.Elapsed.TotalSeconds;
+                watch.Restart();
+                accumulator += dt;
+
+                dt *= TimeScale;
+
                 Window.DispatchEvents();
+                State.Update(dt);
 
-                Assets.ResetSoundCounters();
-                State.Update();
+                if (accumulator >= FrameTime)
+                {
+                    accumulator -= FrameTime;
 
-                Camera.Apply(Window);
-                State.Draw(Window);
+                    Camera.Apply(Window);
+                    State.Draw(Window);
 
-                HudCamera.Apply(Window);
-                State.DrawHud(Window);
+                    HudCamera.Apply(Window);
+                    State.DrawHud(Window);
+
+                    Assets.ResetSoundCounters();
+                }
 
                 Window.Display();
             }

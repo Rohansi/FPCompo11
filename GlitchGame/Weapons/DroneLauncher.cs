@@ -37,15 +37,15 @@ namespace GlitchGame.Weapons
             _left = false;
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
-            base.Update();
+            base.Update(dt);
 
             _drones.RemoveAll(d => d.Dead);
 
             if (_drones.Count + _amount < MaxConcurrent)
             {
-                _time += Program.FrameTime;
+                _time += dt;
             }
             else
             {
@@ -63,7 +63,7 @@ namespace GlitchGame.Weapons
         {
             _icon.Position = position;
             target.Draw(_icon);
-            
+
             if (_amount == 0)
             {
                 var darken = new RectangleShape(new Vector2f(Hud.IconSize - Hud.IconBorderTwice, Hud.IconSize - Hud.IconBorderTwice));

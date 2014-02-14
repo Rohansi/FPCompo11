@@ -54,7 +54,7 @@ namespace GlitchGame.States
             return base.ProcessEvent(args);
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
             var hadEnemies = _enemies.Count > 0;
             _enemies.RemoveAll(e => e.Dead);
@@ -74,9 +74,9 @@ namespace GlitchGame.States
                 Player.Energy = Player.MaxEnergy;
             }
 
-            _timer -= Program.FrameTime;
+            _timer -= dt;
 
-            base.Update();
+            base.Update(dt);
         }
 
         public override void DrawHud(RenderTarget target)

@@ -78,7 +78,7 @@ namespace GlitchGame.Entities
             Vm.Attach(Debug);
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
             if (!_programDead)
             {
@@ -86,7 +86,8 @@ namespace GlitchGame.Entities
 
                 try
                 {
-                    for (var i = 0; i < Program.InstructionsPerFrame; i++)
+                    var instructions = (int)Math.Ceiling(Program.InstructionsPerSecond * dt);
+                    for (var i = 0; i < instructions; i++)
                     {
                         Vm.Step();
 
@@ -103,13 +104,13 @@ namespace GlitchGame.Entities
                 }
             }
 
-            Weapon.Update();
+            Weapon.Update(dt);
 
             Shooting = Guns.Shooting;
             Thruster = Engines.Thruster;
             AngularThruster = Engines.AngularThruster;
 
-            base.Update();
+            base.Update(dt);
         }
 
         public override void Draw(RenderTarget target)

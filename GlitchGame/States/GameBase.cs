@@ -80,22 +80,11 @@ namespace GlitchGame.States
             
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
-            foreach (var e in Entities.Iterate())
-            {
-                e.Update();
-            }
+            base.Update(dt);
 
-            foreach (var e in Entities.Where(e => e.Dead).ToList())
-            {
-                e.Destroyed();
-                Entities.Remove(e);
-            }
-
-            World.Step(Program.FrameTime);
-
-            Program.Camera.Position = Player.Position;
+            Program.Camera.Position = Player.Body.Position.ToSfml() * Program.PixelsPerMeter;
         }
 
         public override void Draw(RenderTarget target)

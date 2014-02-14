@@ -105,7 +105,7 @@ namespace GlitchGame.Entities.Projectiles
             }
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
             if (_target != null)
             {
@@ -124,7 +124,7 @@ namespace GlitchGame.Entities.Projectiles
             var linearSpeed = 15f * Body.Mass;
             Body.ApplyForce(Body.GetWorldVector(new Vector2(0.0f, -linearSpeed)));
 
-            base.Update();
+            base.Update(dt);
         }
     }
 }

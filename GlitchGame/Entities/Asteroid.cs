@@ -45,7 +45,7 @@ namespace GlitchGame.Entities
             #endregion
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
 
         }

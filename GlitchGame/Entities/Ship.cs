@@ -100,7 +100,7 @@ namespace GlitchGame.Entities
             Body.CreateFixture(rect2);
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
             /*if (Health <= 0)
             {
@@ -110,11 +110,11 @@ namespace GlitchGame.Entities
 
             var a = Math.Abs(1 - NerfMultiplier);
             var s = Math.Sign(1 - NerfMultiplier);
-            NerfMultiplier += Util.Clamp(a, -0.05f, 0.05f) * s * Program.FrameTime;
+            NerfMultiplier += Util.Clamp(a, -0.05f, 0.05f) * s * dt;
             NerfMultiplier = Util.Clamp(NerfMultiplier, 0.5f, 1.5f);
 
-            Health = Util.Clamp(Health + HealthRegenRate * NerfMultiplier * Program.FrameTime, 0, MaxHealth);
-            Energy = Util.Clamp(Energy + EnergyRegenRate * NerfMultiplier * Program.FrameTime, 0, MaxEnergy);
+            Health = Util.Clamp(Health + HealthRegenRate * NerfMultiplier * dt, 0, MaxHealth);
+            Energy = Util.Clamp(Energy + EnergyRegenRate * NerfMultiplier * dt, 0, MaxEnergy);
 
             if (Weapon != null && Shooting)
                 Weapon.TryShoot();

@@ -28,7 +28,7 @@ namespace GlitchGame.Entities
             SpeedMultiplier = 1;
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
             if (Energy <= 0)
             {
@@ -36,7 +36,7 @@ namespace GlitchGame.Entities
                 return;
             }
 
-            base.Update();
+            base.Update(dt);
         }
     }
 }

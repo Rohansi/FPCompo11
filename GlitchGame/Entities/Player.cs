@@ -92,7 +92,7 @@ namespace GlitchGame.Entities
             Weapon = _weapons[index];
         }
 
-        public override void Update()
+        public override void Update(float dt)
         {
             Shooting = false;
             Thruster = 0;
@@ -115,10 +115,10 @@ namespace GlitchGame.Entities
 
             foreach (var weapon in Weapons)
             {
-                weapon.Update();
+                weapon.Update(dt);
             }
 
-            base.Update();
+            base.Update(dt);
         }
     }
 }

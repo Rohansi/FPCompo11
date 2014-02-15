@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using GlitchGame.Devices;
 using LoonyVM;
 using Microsoft.Xna.Framework;
@@ -19,16 +18,21 @@ namespace GlitchGame.Entities
         public readonly Broadcast Broadcast;
         public readonly Debug Debug;
 
+        public bool Paused { get; set; }
+        public bool Step { get; set; }
+
         private bool _programDead;
         private int _programOffset;
         private int _programLen;
         private List<Variable> _variables;
+        private List<int> _breakpoints; 
 
         public override int Depth { get { return 2; } }
 
         protected Computer(State state, Vector2 position, float size, int team, string codeFile)
             : base(state, position, size, team)
         {
+            #region Vm Setup
             Vm = new VirtualMachine(4096);
 
             Code = Assets.LoadProgram(string.Format("{0}.bin", codeFile));
@@ -76,25 +80,63 @@ namespace GlitchGame.Entities
 
             Debug = new Debug(this);
             Vm.Attach(Debug);
+            #endregion
+
+            _breakpoints = new List<int>();
         }
+
+        #region Breakpoint Methods
+        public void ResetBreakpoints()
+        {
+            _breakpoints.Clear();
+            Paused = false;
+            Step = false;
+        }
+
+        public void AddBreakpoint(int address)
+        {
+            var i = _breakpoints.BinarySearch(address);
+            if (i >= 0)
+                return;
+            _breakpoints.Insert(~i, address);
+        }
+
+        public void RemoveBreakpoint(int address)
+        {
+            var i = _breakpoints.BinarySearch(address);
+            if (i < 0)
+                return;
+            _breakpoints.RemoveAt(i);
+        }
+
+        public bool HasBreakpoint(int address)
+        {
+            return _breakpoints.BinarySearch(address) >= 0;
+        }
+        #endregion
 
         public override void Update(float dt)
         {
-            if (!_programDead)
+            if (!_programDead && (!Paused || Step))
             {
-                //var instr = Vm.GetType().GetField("_instruction", BindingFlags.NonPublic | BindingFlags.Instance);
-
                 try
                 {
                     var instructions = (int)Math.Ceiling(Program.InstructionsPerSecond * dt);
                     for (var i = 0; i < instructions; i++)
                     {
+                        if (!Step && HasBreakpoint(Vm.IP))
+                        {
+                            Paused = true;
+                            break;
+                        }
+
                         Vm.Step();
 
-                        /*var instrValue = (Instruction)instr.GetValue(Vm);
-
-                        //if (!Vm.Interrupted)
-                            Console.WriteLine(instrValue);*/
+                        if (Step)
+                        {
+                            Step = false;
+                            break;
+                        }
                     }
                 }
                 catch (VirtualMachineException)

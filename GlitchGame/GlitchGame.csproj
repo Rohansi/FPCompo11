@@ -114,6 +114,7 @@
     <Compile Include="Gui\Widgets\Label.cs" />
     <Compile Include="Gui\Widgets\ListBox.cs" />
     <Compile Include="Gui\Widgets\MenuBar.cs" />
+    <Compile Include="Gui\Widgets\NumericTextBox.cs" />
     <Compile Include="Gui\Widgets\Scrollbar.cs" />
     <Compile Include="Gui\Widgets\TextBox.cs" />
     <Compile Include="Gui\Widgets\Window.cs" />

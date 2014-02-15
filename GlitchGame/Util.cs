@@ -67,6 +67,11 @@ namespace GlitchGame
             return value > max ? max : (value < min ? min : value);
         }
 
+        public static int Clamp(int value, int min, int max)
+        {
+            return value > max ? max : (value < min ? min : value);
+        }
+
         public static float Distance(Vector2f p1, Vector2f p2)
         {
             return (float)Math.Sqrt(((p2.X - p1.X) * (p2.X - p1.X)) + ((p2.Y - p1.Y) * (p2.Y - p1.Y)));
@@ -122,6 +127,21 @@ namespace GlitchGame
                 yield return next.Value;
                 next = next.Next;
             }
+        }
+    }
+
+    public class GenericComparer<T> : IComparer<T>
+    {
+        private Func<T, T, int> _comparer;
+
+        public GenericComparer(Func<T, T, int> comparer)
+        {
+            _comparer = comparer;
+        }
+
+        public int Compare(T x, T y)
+        {
+            return _comparer(x, y);
         }
     }
 }

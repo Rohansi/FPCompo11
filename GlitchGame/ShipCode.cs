@@ -200,20 +200,5 @@ namespace GlitchGame
 
         private static readonly GenericComparer<Line> LineAddressComparer =
             new GenericComparer<Line>((x, y) => x.Address - y.Address);
-
-        private class GenericComparer<T> : IComparer<T>
-        {
-            private Func<T, T, int> _comparer;
-             
-            public GenericComparer(Func<T, T, int> comparer)
-            {
-                _comparer = comparer;
-            } 
-
-            public int Compare(T x, T y)
-            {
-                return _comparer(x, y);
-            }
-        }
     }
 }

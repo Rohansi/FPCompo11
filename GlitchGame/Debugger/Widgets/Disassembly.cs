@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using GlitchGame.Entities;
 using GlitchGame.Gui;
 using GlitchGame.Gui.Widgets;
@@ -15,19 +17,23 @@ namespace GlitchGame.Debugger.Widgets
         {
             public readonly int Address;
             public readonly string Instruction;
-            public readonly byte Color;
+            public readonly byte Foreground;
+            public readonly byte Background;
 
-            public Line(int address, string instruction, byte color)
+            public Line(int address, string instruction, byte fore, byte back = 7)
             {
                 Address = address;
                 Instruction = instruction;
-                Color = color;
+                Foreground = fore;
+                Background = back;
             }
         }
 
         private readonly Scrollbar _scrollbar;
         private readonly List<Line> _lines;
         private bool _needSetup;
+
+        public event Action<int, Mouse.Button> Clicked;
 
         public Disassembly(int x, int y, uint w, uint h)
         {
@@ -52,8 +58,9 @@ namespace GlitchGame.Debugger.Widgets
             for (var i = 0; i < _lines.Count; i++)
             {
                 var line = _lines[i];
-                renderer.DrawText(0, i, line.Address.ToString("X8"), new Character(0, 8, 7));
-                renderer.DrawText(9, i, line.Instruction, new Character(0, line.Color, 7));
+                renderer.DrawBox(0, i, Width - 1, 1, GuiSettings.SolidBox, new Character(0, 0, line.Background));
+                renderer.DrawText(0, i, line.Address.ToString("X8"), new Character(0, 8));
+                renderer.DrawText(9, i, line.Instruction, new Character(0, line.Foreground));
             }
 
             _scrollbar.Draw(renderer.Region(_scrollbar.Left, _scrollbar.Top, _scrollbar.Width, _scrollbar.Height));
@@ -61,6 +68,12 @@ namespace GlitchGame.Debugger.Widgets
 
         public override bool MousePressed(int x, int y, Mouse.Button button, bool pressed)
         {
+            if (pressed && x >= 0 && x <= Width - 2 && y >= 0 && y < _lines.Count)
+            {
+                if (Clicked != null)
+                    Clicked(_lines[y].Address, button);
+            }
+
             _scrollbar.MousePressed(x - _scrollbar.Left, y - _scrollbar.Top, button, pressed);
             return true;
         }
@@ -98,12 +111,12 @@ namespace GlitchGame.Debugger.Widgets
             }
 
             _lines.Clear();
-            _lines.AddRange(Disassemble(target).SkipWhile(l => l.Address < offset).Take((int)Height));
+            _lines.AddRange(Disassemble(target, originalIp).SkipWhile(l => l.Address < offset).Take((int)Height));
 
             target.Vm.IP = originalIp;
         }
 
-        private static IEnumerable<Line> Disassemble(Computer target)
+        private IEnumerable<Line> Disassemble(Computer target, int ip)
         {
             var machine = target.Vm;
             var debugInfo = target.Code.DebugInfo;
@@ -168,7 +181,9 @@ namespace GlitchGame.Debugger.Widgets
                 }
                 else
                 {
-                    yield return new Line(instrAddr, string.Format(" {0}", instruction), 0);
+                    var fg = instrAddr == ip ? 4 : 0;
+                    var bg = target.HasBreakpoint(instrAddr) ? 15 : 7;
+                    yield return new Line(instrAddr, string.Format(" {0}", instruction), (byte)fg, (byte)bg);
                     machine.IP += instruction.Length;
                 }
             }

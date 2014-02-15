@@ -9,10 +9,9 @@ namespace GlitchGame.Debugger.Windows
         private Window _window;
         private HexEditor _editor;
         private Label _offset;
-        private TextBox _byteText;
-        private TextBox _wordText;
-        private TextBox _dwordText;
-        private bool _moved;
+        private NumericTextBox _byteText;
+        private NumericTextBox _wordText;
+        private NumericTextBox _dwordText;
 
         public Memory(DebugView view)
             : base(view)
@@ -23,7 +22,6 @@ namespace GlitchGame.Debugger.Windows
             view.Desktop.Add(_window);
 
             _editor = new HexEditor(1, 1, 77, 36, 16);
-            _editor.SelectionChanged += () => _moved = true;
             _window.Add(_editor);
 
             _offset = new Label(1, 38, 26, 1, "");
@@ -32,17 +30,18 @@ namespace GlitchGame.Debugger.Windows
             var byteLabel = new Label(40, 38, 4, 1, "B");
             _window.Add(byteLabel);
 
-            _byteText = new TextBox(42, 38, 10);
+            _byteText = new NumericTextBox(42, 38, 10);
+            _byteText.Minimum = sbyte.MinValue;
+            _byteText.Maximum = sbyte.MaxValue;
             _byteText.Changed += () =>
             {
-                sbyte b;
-                if (_moved || _editor.Buffer == null || !sbyte.TryParse(_byteText.Value, out b))
+                if (_editor.Buffer == null)
                     return;
 
                 try
                 {
                     var byteOffset = _editor.SelectedOffset / 2;
-                    _editor.Buffer.WriteSByte(byteOffset, b);
+                    _editor.Buffer.WriteSByte(byteOffset, (sbyte)_byteText.Value);
                 }
                 catch { }
             };
@@ -52,17 +51,18 @@ namespace GlitchGame.Debugger.Windows
             var wordLabel = new Label(53, 38, 0, 1, "W");
             _window.Add(wordLabel);
 
-            _wordText = new TextBox(55, 38, 10);
+            _wordText = new NumericTextBox(55, 38, 10);
+            _wordText.Minimum = short.MinValue;
+            _wordText.Maximum = short.MaxValue;
             _wordText.Changed += () =>
             {
-                short w;
-                if (_moved || _editor.Buffer == null || !short.TryParse(_wordText.Value, out w))
+                if (_editor.Buffer == null)
                     return;
 
                 try
                 {
                     var byteOffset = _editor.SelectedOffset / 2;
-                    _editor.Buffer.WriteShort(byteOffset, w);
+                    _editor.Buffer.WriteShort(byteOffset, (short)_wordText.Value);
                 }
                 catch { }
             };
@@ -72,35 +72,33 @@ namespace GlitchGame.Debugger.Windows
             var dwordLabel = new Label(66, 38, 0, 1, "D");
             _window.Add(dwordLabel);
 
-            _dwordText = new TextBox(68, 38, 10);
+            _dwordText = new NumericTextBox(68, 38, 10);
+            _dwordText.Minimum = int.MinValue;
+            _dwordText.Maximum = int.MaxValue;
             _dwordText.Changed += () =>
             {
-                int d;
-                if (_moved || _editor.Buffer == null || !int.TryParse(_dwordText.Value, out d))
+                if (_editor.Buffer == null)
                     return;
 
                 try
                 {
                     var byteOffset = _editor.SelectedOffset / 2;
-                    _editor.Buffer.WriteInt(byteOffset, d);
+                    _editor.Buffer.WriteInt(byteOffset, _dwordText.Value);
                 }
                 catch { }
             };
 
             _window.Add(_dwordText);
             #endregion
-
-            _moved = true;
         }
 
         public override void Reset()
         {
             _editor.Buffer = null;
-            _moved = true;
 
-            _byteText.Value = "";
-            _wordText.Value = "";
-            _dwordText.Value = "";
+            _byteText.Value = 0;
+            _wordText.Value = 0;
+            _dwordText.Value = 0;
         }
 
         public override void Update()
@@ -113,39 +111,40 @@ namespace GlitchGame.Debugger.Windows
             var byteOffset = _editor.SelectedOffset / 2;
             _offset.Caption = string.Format("Offset {0}=0x{0:X}", byteOffset);
 
-            if (_moved)
+            if (!_byteText.Focussed)
             {
                 try
                 {
-                    var b = _editor.Buffer.ReadSByte(byteOffset);
-                    _byteText.Value = b.ToString("D");
+                    _byteText.Value = _editor.Buffer.ReadSByte(byteOffset);
                 }
                 catch
                 {
-                    _byteText.Value = "";
+                    _byteText.Value = 0;
                 }
+            }
 
+            if (!_wordText.Focussed)
+            {
                 try
                 {
-                    var w = _editor.Buffer.ReadShort(byteOffset);
-                    _wordText.Value = w.ToString("D");
+                    _wordText.Value = _editor.Buffer.ReadShort(byteOffset);
                 }
                 catch
                 {
-                    _wordText.Value = "";
+                    _wordText.Value = 0;
                 }
+            }
 
+            if (!_dwordText.Focussed)
+            {
                 try
                 {
-                    var d = _editor.Buffer.ReadInt(byteOffset);
-                    _dwordText.Value = d.ToString("D");
+                    _dwordText.Value = _editor.Buffer.ReadInt(byteOffset);
                 }
                 catch
                 {
-                    _dwordText.Value = "";
+                    _dwordText.Value = 0;
                 }
-
-                _moved = false;
             }
         }
 

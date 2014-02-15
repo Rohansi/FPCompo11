@@ -1,6 +1,8 @@
 ﻿using GlitchGame.Debugger.Widgets;
 using GlitchGame.Gui.Widgets;
 using LoonyVM;
+using SFML.Window;
+using Window = GlitchGame.Gui.Widgets.Window;
 
 namespace GlitchGame.Debugger.Windows
 {
@@ -10,6 +12,7 @@ namespace GlitchGame.Debugger.Windows
         private Label[] _registers;
         private Label[] _flags;
         private Disassembly _disassembly;
+        private Button _pause;
 
         public Cpu(DebugView view)
             : base(view)
@@ -19,6 +22,16 @@ namespace GlitchGame.Debugger.Windows
             view.Desktop.Add(_window);
 
             _disassembly = new Disassembly(1, 1, 69, 36);
+            _disassembly.Clicked += (addr, button) =>
+            {
+                if (Target == null)
+                    return;
+
+                if (button == Mouse.Button.Left)
+                    Target.AddBreakpoint(addr);
+                else if (button == Mouse.Button.Right)
+                    Target.RemoveBreakpoint(addr);
+            };
             _window.Add(_disassembly);
 
             _registers = new Label[RegisterNames.Length];
@@ -41,10 +54,23 @@ namespace GlitchGame.Debugger.Windows
             var skipInterrupt = new Label(72, 28, 25, 1, "[ ]  Skip Interrupts");
             _window.Add(skipInterrupt);
 
-            var pauseButton = new Button(72, 30, 25, "Pause");
-            _window.Add(pauseButton);
+            _pause = new Button(72, 30, 25, "Pause");
+            _pause.Clicked += () =>
+            {
+                if (Target != null)
+                {
+                    Target.Paused = !Target.Paused;
+                    Target.Step = true;
+                }
+            };
+            _window.Add(_pause);
 
             var stepButton = new Button(72, 33, 25, "Step");
+            stepButton.Clicked += () =>
+            {
+                if (Target != null)
+                    Target.Step = true;
+            };
             _window.Add(stepButton);
 
             var gotoButton = new Button(90, 36, 7, "Goto");
@@ -55,6 +81,9 @@ namespace GlitchGame.Debugger.Windows
         public override void Reset()
         {
             _disassembly.Reset();
+
+            if (Target != null)
+                Target.ResetBreakpoints();
         }
 
         public override void Update()
@@ -74,6 +103,12 @@ namespace GlitchGame.Debugger.Windows
             }
 
             _disassembly.Update(Target);
+
+            if (Target.Paused)
+                _pause.Caption = "Continue";
+            else
+                _pause.Caption = "Pause";
+
         }
 
         public override void Show()

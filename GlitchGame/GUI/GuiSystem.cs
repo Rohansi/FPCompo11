@@ -44,6 +44,13 @@ namespace GlitchGame.Gui
                 MouseMoved(mousePos.X, mousePos.Y);
             }
 
+            var mouseWheelArgs = args as MouseWheelInputArgs;
+            if (mouseWheelArgs != null)
+            {
+                var mousePos = ConvertCoords(mouseWheelArgs.Position);
+                return MouseWheelMoved(mousePos.X, mousePos.Y, mouseWheelArgs.Delta);
+            }
+
             return false;
         }
 

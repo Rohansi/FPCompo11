@@ -166,9 +166,28 @@ namespace GlitchGame.Gui
             }
         }
 
+        public override bool MouseWheelMoved(int x, int y, int delta)
+        {
+            var node = _children.First;
+            while (node != null)
+            {
+                var widget = node.Value;
+                var next = node.Next;
+
+                if (widget.Visible && ContainsPoint(widget, x, y))
+                {
+                    return widget.MouseWheelMoved(x - widget.Left, y - widget.Top, delta);
+                }
+
+                node = next;
+            }
+
+            return false;
+        }
+
         private static bool ContainsPoint(Widget widget, int x, int y)
         {
-            return x >= widget.Left && y >= widget.Top && x <= (widget.Left + widget.Width - 1) && y <= (widget.Top + widget.Height - 1);
+            return x >= widget.Left && y >= widget.Top && x <= (widget.Left + widget.Width) && y <= (widget.Top + widget.Height);
         }
     }
 }

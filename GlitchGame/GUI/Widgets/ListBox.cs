@@ -90,5 +90,11 @@ namespace GlitchGame.Gui.Widgets
         {
             _scrollbar.MouseMoved(x - _scrollbar.Left, y - _scrollbar.Top);
         }
+
+        public override bool MouseWheelMoved(int x, int y, int delta)
+        {
+            _scrollbar.MouseWheelMoved(x, y, delta);
+            return true;
+        }
     }
 }

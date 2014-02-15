@@ -87,6 +87,11 @@ namespace GlitchGame.Gui.Widgets
             _children.MouseMoved(x - 1, y - 1);
         }
 
+        public override bool MouseWheelMoved(int x, int y, int delta)
+        {
+            return _children.MouseWheelMoved(x, y, delta);
+        }
+
         private static int Clamp(int value, int min, int max)
         {
             return value < min ? min : (value > max ? max : value);

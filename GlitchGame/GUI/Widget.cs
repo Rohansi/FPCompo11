@@ -39,6 +39,11 @@ namespace GlitchGame.Gui
             
         }
 
+        public virtual bool MouseWheelMoved(int x, int y, int delta)
+        {
+            return false;
+        }
+
         public void Focus()
         {
             if (Parent != null)

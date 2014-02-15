@@ -21,7 +21,7 @@ namespace GlitchGame.Debugger.Windows
 
             _timeScaleText = new NumericTextBox(14, 1, 13);
             _timeScaleText.Minimum = 0;
-            _timeScaleText.Maximum = 500;
+            _timeScaleText.Maximum = 200;
             _timeScaleText.Changed += () => Program.TimeScale = _timeScaleText.Value / 100f;
 
             _window.Add(_timeScaleText);

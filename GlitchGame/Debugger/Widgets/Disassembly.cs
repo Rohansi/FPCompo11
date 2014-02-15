@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.AccessControl;
 using GlitchGame.Entities;
 using GlitchGame.Gui;
 using GlitchGame.Gui.Widgets;
@@ -17,13 +16,15 @@ namespace GlitchGame.Debugger.Widgets
         {
             public readonly int Address;
             public readonly string Instruction;
+            public readonly bool Clickable;
             public readonly byte Foreground;
             public readonly byte Background;
 
-            public Line(int address, string instruction, byte fore, byte back = 7)
+            public Line(int address, string instruction, bool clickable, byte fore, byte back = 7)
             {
                 Address = address;
                 Instruction = instruction;
+                Clickable = clickable;
                 Foreground = fore;
                 Background = back;
             }
@@ -70,8 +71,9 @@ namespace GlitchGame.Debugger.Widgets
         {
             if (pressed && x >= 0 && x <= Width - 2 && y >= 0 && y < _lines.Count)
             {
-                if (Clicked != null)
-                    Clicked(_lines[y].Address, button);
+                var line = _lines[y];
+                if (line.Clickable && Clicked != null)
+                    Clicked(line.Address, button);
             }
 
             _scrollbar.MousePressed(x - _scrollbar.Left, y - _scrollbar.Top, button, pressed);
@@ -81,6 +83,12 @@ namespace GlitchGame.Debugger.Widgets
         public override void MouseMoved(int x, int y)
         {
             _scrollbar.MouseMoved(x - _scrollbar.Left, y - _scrollbar.Top);
+        }
+
+        public override bool MouseWheelMoved(int x, int y, int delta)
+        {
+            _scrollbar.MouseWheelMoved(x, y, delta);
+            return true;
         }
 
         public void Reset()
@@ -135,7 +143,7 @@ namespace GlitchGame.Debugger.Widgets
                 {
                     var symbol = debugInfo.FindSymbol(instrAddr);
                     if (symbol.HasValue && symbol.Value.Address == instrAddr)
-                        yield return new Line(instrAddr, string.Format("< {0} >", symbol.Value.Name), 1);
+                        yield return new Line(instrAddr, string.Format("< {0} >", symbol.Value.Name), false, 1);
 
                     nextLine = debugInfo.FindLine(instrAddr, 1);
                     if (nextLine.HasValue && nextLine.Value.Address == instrAddr)
@@ -172,7 +180,7 @@ namespace GlitchGame.Debugger.Widgets
                             if (read > 0)
                             {
                                 var bufferStr = string.Join(", ", buffer.Take(read).Select(v => string.Format("0x{0:X2}", v)));
-                                yield return new Line(instrAddr - read, string.Format(" db {0}", bufferStr), 8);
+                                yield return new Line(instrAddr - read, string.Format(" db {0}", bufferStr), false, 8);
                             }
 
                             read = 0;
@@ -183,7 +191,7 @@ namespace GlitchGame.Debugger.Widgets
                 {
                     var fg = instrAddr == ip ? 4 : 0;
                     var bg = target.HasBreakpoint(instrAddr) ? 15 : 7;
-                    yield return new Line(instrAddr, string.Format(" {0}", instruction), (byte)fg, (byte)bg);
+                    yield return new Line(instrAddr, string.Format(" {0}", instruction), true, (byte)fg, (byte)bg);
                     machine.IP += instruction.Length;
                 }
             }

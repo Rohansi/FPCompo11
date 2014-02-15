@@ -85,5 +85,11 @@ namespace GlitchGame.Gui.Widgets
 
             InternalValue = ((float)y) / (Height - 2);
         }
+
+        public override bool MouseWheelMoved(int x, int y, int delta)
+        {
+            Value -= Step * delta;
+            return true;
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace GlitchGame.Entities
 
         public bool Paused { get; set; }
         public bool Step { get; set; }
+        public bool SkipInterrupts { get; set; }
 
         private bool _programDead;
         private int _programOffset;
@@ -91,6 +92,7 @@ namespace GlitchGame.Entities
             _breakpoints.Clear();
             Paused = false;
             Step = false;
+            SkipInterrupts = false;
         }
 
         public void AddBreakpoint(int address)
@@ -131,6 +133,9 @@ namespace GlitchGame.Entities
                         }
 
                         Vm.Step();
+
+                        if (SkipInterrupts && Vm.Interrupted)
+                            continue;
 
                         if (Step)
                         {

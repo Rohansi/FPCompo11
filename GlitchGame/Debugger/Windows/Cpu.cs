@@ -13,6 +13,7 @@ namespace GlitchGame.Debugger.Windows
         private Label[] _flags;
         private Disassembly _disassembly;
         private Button _pause;
+        private Checkbox _skipInterrupt;
 
         public Cpu(DebugView view)
             : base(view)
@@ -51,8 +52,13 @@ namespace GlitchGame.Debugger.Windows
             var gotoInput = new TextBox(72, 36, 17);
             _window.Add(gotoInput);
 
-            var skipInterrupt = new Label(72, 28, 25, 1, "[ ]  Skip Interrupts");
-            _window.Add(skipInterrupt);
+            _skipInterrupt = new Checkbox(72, 28, 25, "Skip Interrupts");
+            _skipInterrupt.Changed += () =>
+            {
+                if (Target != null)
+                    Target.SkipInterrupts = _skipInterrupt.Checked;
+            };
+            _window.Add(_skipInterrupt);
 
             _pause = new Button(72, 30, 25, "Pause");
             _pause.Clicked += () =>
@@ -81,6 +87,7 @@ namespace GlitchGame.Debugger.Windows
         public override void Reset()
         {
             _disassembly.Reset();
+            _skipInterrupt.Checked = false;
 
             if (Target != null)
                 Target.ResetBreakpoints();
@@ -104,10 +111,7 @@ namespace GlitchGame.Debugger.Windows
 
             _disassembly.Update(Target);
 
-            if (Target.Paused)
-                _pause.Caption = "Continue";
-            else
-                _pause.Caption = "Pause";
+            _pause.Caption = Target.Paused ? "Continue" : "Pause";
 
         }
 

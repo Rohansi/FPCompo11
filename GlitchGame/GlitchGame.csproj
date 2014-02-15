@@ -111,6 +111,7 @@
     <Compile Include="Gui\IContainer.cs" />
     <Compile Include="Gui\Widget.cs" />
     <Compile Include="Gui\Widgets\Button.cs" />
+    <Compile Include="Gui\Widgets\Checkbox.cs" />
     <Compile Include="Gui\Widgets\Label.cs" />
     <Compile Include="Gui\Widgets\ListBox.cs" />
     <Compile Include="Gui\Widgets\MenuBar.cs" />

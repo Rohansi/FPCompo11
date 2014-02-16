@@ -81,6 +81,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Debugger\DebugView.cs" />
     <Compile Include="Debugger\DebugWindow.cs" />
+    <Compile Include="Debugger\WatchExpression.cs" />
     <Compile Include="Debugger\Widgets\Disassembly.cs" />
     <Compile Include="Debugger\Widgets\HexEditor.cs" />
     <Compile Include="Debugger\Widgets\SymbolList.cs" />

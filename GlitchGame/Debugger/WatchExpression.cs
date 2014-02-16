@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using GlitchGame.Entities;
 using LoonyVM;
 
 namespace GlitchGame.Debugger
 {
     public static class WatchExpression
     {
-        public static Func<VirtualMachine, int> Compile(string expression)
+        public static Func<Computer, int> Compile(string expression)
         {
             try
             {
                 var tokens = ShuntingYard(Tokenize(expression));
 
                 var stack = new Stack<Expression>();
-                var vmParam = Expression.Parameter(typeof(VirtualMachine));
-                var vmRegisters = Expression.PropertyOrField(vmParam, "Registers");
-                var vmMemory = Expression.PropertyOrField(vmParam, "Memory");
+                var computerParam = Expression.Parameter(typeof(Computer));
+                var computerVm = Expression.PropertyOrField(computerParam, "Vm");
+                var computerRegisters = Expression.PropertyOrField(computerVm, "Registers");
+                var computerMemory = Expression.PropertyOrField(computerVm, "Memory");
 
                 foreach (var t in tokens)
                 {
@@ -33,18 +36,34 @@ namespace GlitchGame.Debugger
                         Register reg;
                         if (Enum.TryParse(t.Value, true, out reg))
                         {
-                            stack.Push(Expression.ArrayIndex(vmRegisters, Expression.Constant((int)reg)));
+                            stack.Push(
+                                Expression.ArrayIndex(computerRegisters,
+                                    Expression.Constant((int)reg)));
                             continue;
                         }
 
                         string funcName;
                         if (Functions.TryGetValue(t.Value.ToLower(), out funcName))
                         {
-                            stack.Push(Expression.Convert(Expression.Call(typeof(Program), funcName, null, vmMemory, stack.Pop()), typeof(int)));
+                            stack.Push(
+                                Expression.Convert(
+                                    Expression.Call(
+                                        typeof(VmUtil),
+                                        funcName,
+                                        null,
+                                        computerMemory,
+                                        stack.Pop()),
+                                    typeof(int)));
                             continue;
                         }
 
-                        stack.Push(Expression.Call(typeof(Program), "LookupSymbol", null, vmParam, Expression.Constant(t.Value)));
+                        stack.Push(
+                            Expression.Call(
+                                typeof(WatchExpression),
+                                "LookupSymbol",
+                                null,
+                                computerParam,
+                                Expression.Constant(t.Value)));
                         continue;
                     }
 
@@ -79,7 +98,7 @@ namespace GlitchGame.Debugger
                 if (stack.Count != 1)
                     throw new WatchException("Syntax error");
 
-                return Expression.Lambda<Func<VirtualMachine, int>>(stack.Pop(), vmParam).Compile();
+                return Expression.Lambda<Func<Computer, int>>(stack.Pop(), computerParam).Compile();
             }
             catch (WatchException)
             {
@@ -96,7 +115,7 @@ namespace GlitchGame.Debugger
             public WatchException(string message)
                 : base(message)
             {
-                
+
             }
 
             public WatchException(string message, Exception innerException)
@@ -104,6 +123,19 @@ namespace GlitchGame.Debugger
             {
 
             }
+        }
+
+        public static int LookupSymbol(Computer computer, string name)
+        {
+            var debugInfo = computer.Code.DebugInfo;
+            if (debugInfo == null)
+                throw new WatchException(string.Format("Undefined symbol: {0}", name));
+
+            var symbol = debugInfo.FindSymbol(name);
+            if (!symbol.HasValue)
+                throw new WatchException(string.Format("Undefined symbol: {0}", name));
+
+            return symbol.Value.Address;
         }
 
         private enum Register

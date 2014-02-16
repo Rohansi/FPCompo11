@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace GlitchGame
@@ -88,6 +89,7 @@ namespace GlitchGame
 
         private List<Symbol> _symbols;
         private List<Line> _lines;
+        private Dictionary<string, Symbol> _symbolDict; 
 
         public ReadOnlyCollection<Symbol> Symbols
         {
@@ -148,6 +150,8 @@ namespace GlitchGame
                     _lines[i] = new Line(l, stringTable[l.FileNameOffset]);
                 }
             }
+
+            _symbolDict = _symbols.ToDictionary(s => s.Name);
         }
 
         public Symbol? FindSymbol(int address, int offset = 0)
@@ -170,6 +174,14 @@ namespace GlitchGame
                 result = _lines[idx];
 
             return result;
+        }
+
+        public Symbol? FindSymbol(string name)
+        {
+            Symbol result;
+            if (_symbolDict.TryGetValue(name, out result))
+                return result;
+            return null;
         }
 
         private static int Search<T>(List<T> list, T key, IComparer<T> comparer)
@@ -202,3 +214,4 @@ namespace GlitchGame
             new GenericComparer<Line>((x, y) => x.Address - y.Address);
     }
 }
+    

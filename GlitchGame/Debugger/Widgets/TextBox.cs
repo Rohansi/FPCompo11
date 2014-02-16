@@ -2,39 +2,35 @@
 using SFML.Window;
 using Texter;
 
-namespace GlitchGame.Gui.Widgets
+namespace GlitchGame.Debugger.Widgets
 {
-    public class NumericTextBox : Widget
+    public class TextBox : Widget
     {
         private string _value;
-        private int _intValue;
         private int _selectedIndex;
         private int _view;
         private int _frames;
         private bool _caretVisible;
 
-        public int Minimum;
-        public int Maximum;
+        public char? PasswordCharacter;
         public event Action Changed;
 
-        public NumericTextBox(int x, int y, uint w)
+        public TextBox(int x, int y, uint w)
         {
             Left = x;
             Top = y;
             Width = w;
             Height = 1;
 
-            Value = 0;
+            Value = "";
         }
 
-        public int Value
+        public string Value
         {
-            get { return _intValue; }
+            get { return _value; }
             set
             {
-                _intValue = value;
-                _value = _intValue.ToString("D");
-
+                _value = value;
                 if (Changed != null)
                     Changed();
             }
@@ -42,7 +38,7 @@ namespace GlitchGame.Gui.Widgets
 
         public int SelectedIndex
         {
-            get { return Math.Max(Math.Min(_selectedIndex, _value.Length), 0); }
+            get { return Math.Max(Math.Min(_selectedIndex, Value.Length), 0); }
             set { _selectedIndex = value; }
         }
 
@@ -54,12 +50,14 @@ namespace GlitchGame.Gui.Widgets
                 _view = SelectedIndex - (int)Width - 1;
             if (_view < 0)
                 _view = 0;
-            if (_view > _value.Length)
-                _view = _value.Length - 1;
-            if (_value.Length < Width)
+            if (_view > Value.Length)
+                _view = Value.Length - 1;
+            if (Value.Length < Width)
                 _view = 0;
 
-            var text = _value.Substring(_view);
+            var text = Value.Substring(_view);
+            if (PasswordCharacter.HasValue)
+                text = new string(PasswordCharacter.Value, text.Length);
 
             renderer.Clear(GuiSettings.TextBox);
             renderer.DrawText(0, 0, text, GuiSettings.TextBox);
@@ -88,8 +86,8 @@ namespace GlitchGame.Gui.Widgets
                         SelectedIndex += 1;
                         break;
                     case Keyboard.Key.Delete:
-                        if (_value.Length > 0 && SelectedIndex < _value.Length)
-                            _value = _value.Remove(SelectedIndex, 1);
+                        if (Value.Length > 0 && SelectedIndex < Value.Length)
+                            Value = Value.Remove(SelectedIndex, 1);
                         break;
                     default:
                         return true;
@@ -97,41 +95,27 @@ namespace GlitchGame.Gui.Widgets
             }
             else if (text == "\b")
             {
-                if (_value.Length == 0 || SelectedIndex - 1 < 0)
+                if (Value.Length == 0 || SelectedIndex - 1 < 0)
                     return true;
 
-                _value = _value.Remove(SelectedIndex - 1, 1);
+                Value = Value.Remove(SelectedIndex - 1, 1);
                 _selectedIndex -= 1;
             }
             else
             {
-                if (_value.Length > 12 || text.Length > 1)
+                if (text.Length > 1)
                     return true;
 
                 var c = text[0];
-                if (!char.IsDigit(c) && c != '-')
+                if (c < ' ' || c > '~')
                     return true;
 
-                _value = _value.Insert(SelectedIndex, text);
+                Value = Value.Insert(SelectedIndex, text);
                 SelectedIndex += text.Length;
             }
 
             _caretVisible = true;
             _frames = 0;
-
-            if (_value.Length == 0)
-            {
-                _intValue = 0;
-                return true;
-            }
-
-            long v;
-            if (!long.TryParse(_value, out v))
-                return true;
-
-            v = Math.Max(Math.Min(v, Maximum), Minimum);
-            _intValue = (int)v;
-            _value = _intValue.ToString("D");
 
             if (Changed != null)
                 Changed();

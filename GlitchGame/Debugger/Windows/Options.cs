@@ -1,5 +1,5 @@
 ﻿using System;
-using GlitchGame.Gui.Widgets;
+using GlitchGame.Debugger.Widgets;
 
 namespace GlitchGame.Debugger.Windows
 {

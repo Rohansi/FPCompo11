@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SFML.Window;
 using Texter;
 
-namespace GlitchGame.Gui.Widgets
+namespace GlitchGame.Debugger.Widgets
 {
     public class ListBoxItem
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace GlitchGame.Gui
+namespace GlitchGame.Debugger
 {
     public interface IContainer
     {

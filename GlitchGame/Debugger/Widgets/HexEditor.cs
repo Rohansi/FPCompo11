@@ -1,6 +1,4 @@
 ﻿using System;
-using GlitchGame.Gui;
-using GlitchGame.Gui.Widgets;
 using SFML.Window;
 using Texter;
 

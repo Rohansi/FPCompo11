@@ -1,6 +1,6 @@
 ﻿using Texter;
 
-namespace GlitchGame.Gui
+namespace GlitchGame.Debugger
 {
     public static class GuiSettings
     {

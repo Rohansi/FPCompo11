@@ -1,6 +1,6 @@
 ﻿using SFML.Window;
 
-namespace GlitchGame.Gui
+namespace GlitchGame.Debugger
 {
     public class GuiSystem : Container
     {

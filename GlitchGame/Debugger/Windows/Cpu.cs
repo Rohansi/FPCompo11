@@ -1,8 +1,7 @@
 ﻿using GlitchGame.Debugger.Widgets;
-using GlitchGame.Gui.Widgets;
 using LoonyVM;
 using SFML.Window;
-using Window = GlitchGame.Gui.Widgets.Window;
+using Window = GlitchGame.Debugger.Widgets.Window;
 
 namespace GlitchGame.Debugger.Windows
 {

@@ -1,5 +1,4 @@
 ﻿using GlitchGame.Debugger.Widgets;
-using GlitchGame.Gui.Widgets;
 using LoonyVM;
 
 namespace GlitchGame.Debugger.Windows

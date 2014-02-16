@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GlitchGame.Entities;
-using GlitchGame.Gui;
-using GlitchGame.Gui.Widgets;
 using LoonyVM;
 using SFML.Window;
 using Texter;

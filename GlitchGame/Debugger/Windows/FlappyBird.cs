@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GlitchGame.Gui;
 using SFML.Window;
 using Texter;
-using Window = GlitchGame.Gui.Widgets.Window;
+using Window = GlitchGame.Debugger.Widgets.Window;
 
 namespace GlitchGame.Debugger.Windows
 {

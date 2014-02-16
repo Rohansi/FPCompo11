@@ -21,7 +21,7 @@ namespace GlitchGame.Debugger
         private TargetMarker _targetMarker;
 
         public readonly Container Desktop;
-        public readonly Dictionary<string, DebugWindow> Windows;
+        public readonly List<DebugWindow> Windows;
 
         public DebugView()
         {
@@ -33,10 +33,11 @@ namespace GlitchGame.Debugger
             Desktop.Top = 1;
             _gui.Add(Desktop);
 
-            Windows = new Dictionary<string, DebugWindow>();
-            Windows["CPU"] = new Cpu(this);
-            Windows["Mem"] = new Memory(this);
-            Windows["Opt"] = new Options(this);
+            Windows = new List<DebugWindow>();
+            Windows.Add(new Cpu(this));
+            Windows.Add(new Memory(this));
+            Windows.Add(new Options(this));
+            Windows.Add(new Symbols(this));
 
             var menu = new MenuBar();
             _gui.Add(menu);
@@ -54,25 +55,31 @@ namespace GlitchGame.Debugger
             menu.Items.Add(view);
 
             var cpu = new MenuItem("CPU");
-            cpu.Clicked += () => Windows["CPU"].Show();
+            cpu.Clicked += () => Get<Cpu>().Show();
             view.Items.Add(cpu);
 
             var mem = new MenuItem("Memory");
-            mem.Clicked += () => Windows["Mem"].Show();
+            mem.Clicked += () => Get<Memory>().Show();
             view.Items.Add(mem);
 
             var sym = new MenuItem("Symbols");
+            sym.Clicked += () => Get<Symbols>().Show();
             view.Items.Add(sym);
             #endregion
 
             #region Options
             var options = new MenuItem("Options");
-            options.Clicked += () => Windows["Opt"].Show();
+            options.Clicked += () => Get<Options>().Show();
             menu.Items.Add(options);
             #endregion
 
             _targetMarker = new TargetMarker(1);
             _targetMarker.Color = new Color(180, 0, 0);
+        }
+
+        public T Get<T>() where T : DebugWindow
+        {
+            return Windows.OfType<T>().First();
         }
 
         public void Attach(State state)
@@ -133,7 +140,7 @@ namespace GlitchGame.Debugger
             _targetMarker.Position = Program.HudCamera.Position + (targetPosition - Program.Camera.Position) / Program.Camera.Zoom;
             target.Draw(_targetMarker);
 
-            foreach (var w in Windows.Values)
+            foreach (var w in Windows)
             {
                 w.Update();
             }
@@ -149,7 +156,7 @@ namespace GlitchGame.Debugger
         {
             _target = target;
 
-            foreach (var w in Windows.Values)
+            foreach (var w in Windows)
             {
                 w.Reset();
                 w.Target = _target;

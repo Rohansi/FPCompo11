@@ -124,6 +124,10 @@ namespace GlitchGame.Entities
                 try
                 {
                     var instructions = (int)Math.Ceiling(Program.InstructionsPerSecond * dt);
+
+                    if (Step)
+                        instructions++;
+
                     for (var i = 0; i < instructions; i++)
                     {
                         if (!Step && HasBreakpoint(Vm.IP))

@@ -36,6 +36,12 @@ namespace GlitchGame.Debugger.Widgets
 
         public event Action<int, Mouse.Button> Clicked;
 
+        public int Offset
+        {
+            get { return (int)Math.Round(_scrollbar.Value); }
+            set { _scrollbar.Value = Util.Clamp(value, _scrollbar.Minimum, _scrollbar.Maximum); }
+        }
+
         public Disassembly(int x, int y, uint w, uint h)
         {
             Left = x;

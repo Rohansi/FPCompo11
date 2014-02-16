@@ -14,6 +14,7 @@ namespace GlitchGame.Debugger.Windows
         private Disassembly _disassembly;
         private Button _pause;
         private Checkbox _skipInterrupt;
+        private bool _autoMove;
 
         public Cpu(DebugView view)
             : base(view)
@@ -63,19 +64,25 @@ namespace GlitchGame.Debugger.Windows
             _pause = new Button(72, 30, 25, "Pause");
             _pause.Clicked += () =>
             {
-                if (Target != null)
-                {
-                    Target.Paused = !Target.Paused;
-                    Target.Step = true;
-                }
+                if (Target == null)
+                    return;
+
+                if (!Target.Paused)
+                    _autoMove = true;
+
+                Target.Paused = !Target.Paused;
+                Target.Step = true;
             };
             _window.Add(_pause);
 
             var stepButton = new Button(72, 33, 25, "Step");
             stepButton.Clicked += () =>
             {
-                if (Target != null)
-                    Target.Step = true;
+                if (Target == null || !Target.Paused)
+                    return;
+
+                Target.Step = true;
+                _autoMove = true;
             };
             _window.Add(stepButton);
 
@@ -109,21 +116,33 @@ namespace GlitchGame.Debugger.Windows
                 _flags[i].Caption = string.Format("{0} = {1}", FlagNames[i], set);
             }
 
+            if (_autoMove)
+            {
+                _disassembly.Offset = Target.Vm.IP - 48;
+                _autoMove = false;
+            }
+
             _disassembly.Update(Target);
 
             _pause.Caption = Target.Paused ? "Continue" : "Pause";
 
         }
 
-        public override void Show()
+        public void Show()
         {
             _window.Visible = true;
             _window.Focus();
         }
 
-        public override void Hide()
+        public void Hide()
         {
             _window.Visible = false;
+        }
+
+        public void Goto(int address)
+        {
+            _disassembly.Offset = address - 16;
+            Show();
         }
 
         private static readonly string[] RegisterNames =

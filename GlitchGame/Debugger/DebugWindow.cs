@@ -21,15 +21,5 @@ namespace GlitchGame.Debugger
         /// Called before rendering the UI
         /// </summary>
         public abstract void Update();
-
-        /// <summary>
-        /// Called when the window should be shown
-        /// </summary>
-        public abstract void Show();
-
-        /// <summary>
-        /// Called when the window should be hidden
-        /// </summary>
-        public abstract void Hide();
     }
 }

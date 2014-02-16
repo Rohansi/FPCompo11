@@ -159,13 +159,13 @@ namespace GlitchGame.Debugger.Windows
             
         }
 
-        public override void Show()
+        public void Show()
         {
             _window.Visible = true;
             _window.Focus();
         }
 
-        public override void Hide()
+        public void Hide()
         {
             _window.Visible = false;
         }

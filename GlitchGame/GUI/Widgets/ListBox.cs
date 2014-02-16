@@ -56,7 +56,8 @@ namespace GlitchGame.Gui.Widgets
                     break;
 
                 var reg = renderer.Region(1, i + 1, Width - 2, 1);
-                Character col = (SelectEnabled && Selected == index) ? GuiSettings.ListBoxItemSelected : GuiSettings.ListBoxItem;
+                var col = (SelectEnabled && Selected == index) ? GuiSettings.ListBoxItemSelected : GuiSettings.ListBoxItem;
+
                 reg.Clear(col, true);
                 reg.DrawText(0, 0, Items[index].Text, col);
             }
@@ -68,7 +69,6 @@ namespace GlitchGame.Gui.Widgets
         {
             if (SelectEnabled && pressed && (x > 0 && y > 0 && x < Width - 1 && y < Height - 1))
             {
-                _scrollbar.Maximum = Math.Max(Items.Count - (Height - 2), 0);
                 var index = (int)_scrollbar.Value + (y - 1);
 
                 if (index < Items.Count)

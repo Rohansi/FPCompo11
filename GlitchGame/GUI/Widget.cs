@@ -47,7 +47,10 @@ namespace GlitchGame.Gui
         public void Focus()
         {
             if (Parent != null)
+            {
+                Parent.BringToFront(this);
                 Parent.Focus(this);
+            }
         }
 
         public void BringToFront()

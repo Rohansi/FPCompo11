@@ -148,13 +148,13 @@ namespace GlitchGame.Debugger.Windows
             }
         }
 
-        public override void Show()
+        public void Show()
         {
             _window.Visible = true;
             _window.Focus();
         }
 
-        public override void Hide()
+        public void Hide()
         {
             _window.Visible = false;
         }
@@ -162,7 +162,7 @@ namespace GlitchGame.Debugger.Windows
         public void Goto(int address)
         {
             _editor.SelectedOffset = address * 2;
-            _window.BringToFront();
+            Show();
         }
     }
 }

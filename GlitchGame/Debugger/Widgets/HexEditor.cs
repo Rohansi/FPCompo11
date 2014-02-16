@@ -162,6 +162,7 @@ namespace GlitchGame.Debugger.Widgets
         public override bool KeyPressed(Keyboard.Key key, string text)
         {
             var originalCaret = _caretVisible;
+            var originalFrames = _frames;
 
             _caretVisible = true;
             _frames = 0;
@@ -249,6 +250,7 @@ namespace GlitchGame.Debugger.Widgets
 
                 default:
                     _caretVisible = originalCaret;
+                    _frames = originalFrames;
                     break;
             }
 

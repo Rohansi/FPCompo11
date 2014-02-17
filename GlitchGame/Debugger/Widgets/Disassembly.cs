@@ -141,7 +141,7 @@ namespace GlitchGame.Debugger.Widgets
                 if (instrAddr >= machine.Memory.Length)
                     break;
 
-                ShipDebugInfo.Line? nextLine = null;
+                ShipDebug.Line? nextLine = null;
 
                 if (debugInfo != null)
                 {

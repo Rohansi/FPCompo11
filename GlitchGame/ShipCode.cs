@@ -21,7 +21,7 @@ namespace GlitchGame
             get { return _program[i]; }
         }
 
-        public readonly ShipDebugInfo DebugInfo;
+        public readonly ShipDebug DebugInfo;
 
         public ShipCode(string fileName)
         {
@@ -29,7 +29,7 @@ namespace GlitchGame
 
             try
             {
-                DebugInfo = new ShipDebugInfo(Path.ChangeExtension(fileName, ".dbg"));
+                DebugInfo = new ShipDebug(Path.ChangeExtension(fileName, ".dbg"));
             }
             catch
             {
@@ -38,7 +38,7 @@ namespace GlitchGame
         }
     }
 
-    public class ShipDebugInfo
+    public class ShipDebug
     {
         public struct Symbol
         {
@@ -101,7 +101,7 @@ namespace GlitchGame
             get { return _lines.AsReadOnly(); }
         }
 
-        public ShipDebugInfo(string fileName)
+        public ShipDebug(string fileName)
         {
             using (var file = File.OpenRead(fileName))
             using (var reader = new BinaryReader(file))

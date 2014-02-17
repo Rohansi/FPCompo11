@@ -37,6 +37,7 @@ namespace GlitchGame.Debugger
             Windows.Add(new Memory(this));
             Windows.Add(new Options(this));
             Windows.Add(new Symbols(this));
+            Windows.Add(new Watch(this));
 
             var menu = new MenuBar();
             _gui.Add(menu);
@@ -64,6 +65,10 @@ namespace GlitchGame.Debugger
             var sym = new MenuItem("Symbols");
             sym.Clicked += () => Get<Symbols>().Show();
             view.Items.Add(sym);
+
+            var wat = new MenuItem("Watch");
+            wat.Clicked += () => Get<Watch>().Show();
+            view.Items.Add(wat);
             #endregion
 
             #region Options

@@ -64,7 +64,7 @@ namespace GlitchGame.Debugger.Widgets
 
             for (var i = 0; i < Height; i++)
             {
-                var index = startIndex + i;
+                var index = startIndex + i - 1;
                 if (index >= Items.Count)
                     break;
 
@@ -91,8 +91,8 @@ namespace GlitchGame.Debugger.Widgets
                     }
                     else
                     {
-                        var item = Items[index - 1];
-                        var col = dark ? new Character(0, 0, 26) : new Character(0, 0, 7);
+                        var item = Items[index];
+                        var col = dark ? new Character(0, 0, 27) : new Character(0, 0, 7);
                         reg.Clear(col);
                         reg.DrawText(0, 0, column.Formatter(item), col);
                     }
@@ -125,6 +125,11 @@ namespace GlitchGame.Debugger.Widgets
 
             if (pressed && y == 0 && columnIndex != -1)
             {
+                var column = Columns[columnIndex];
+
+                if (!column.Sortable)
+                    return true;
+
                 if (_sortColumn == columnIndex)
                     _sortAscending = !_sortAscending;
                 else
@@ -132,7 +137,6 @@ namespace GlitchGame.Debugger.Widgets
 
                 _sortColumn = columnIndex;
 
-                var column = Columns[_sortColumn];
                 var dir = _sortAscending ? 1 : -1;
                 Items.Sort(new GenericComparer<TItem>(
                     (a, b) => column.ValueSelector(a).CompareTo(column.ValueSelector(b)) * dir));
@@ -145,7 +149,7 @@ namespace GlitchGame.Debugger.Widgets
                 var startIndex = (int)_scrollbar.Value;
                 var index = startIndex + y;
 
-                if (index >= Items.Count)
+                if (index > Items.Count)
                     return true;
 
                 var item = Items[index - 1];

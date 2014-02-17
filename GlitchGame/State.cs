@@ -19,6 +19,8 @@ namespace GlitchGame
             get { return _input ?? (_input = new Input()); }
         }
 
+        private float _accumulator;
+
         protected State()
         {
             World = new World(new Vector2(0, 0));
@@ -48,7 +50,17 @@ namespace GlitchGame
 
             if (World != null)
             {
-                World.Step(dt);
+                _accumulator += dt;
+
+                var frame = Program.FrameTime * Program.TimeScale;
+                if (frame < 0.00001f)
+                    return;
+
+                while (_accumulator >= frame)
+                {
+                    World.Step(frame);
+                    _accumulator -= frame;
+                }
             }
         }
 

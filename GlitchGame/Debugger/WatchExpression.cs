@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using GlitchGame.Entities;
@@ -87,7 +86,7 @@ namespace GlitchGame.Debugger
                             op = ExpressionType.Modulo;
                             break;
                         default:
-                            throw new WatchException("Unhandled token type");
+                            throw new WatchException("Bad token type");
                     }
 
                     var right = stack.Pop();
@@ -110,30 +109,15 @@ namespace GlitchGame.Debugger
             }
         }
 
-        public class WatchException : Exception
-        {
-            public WatchException(string message)
-                : base(message)
-            {
-
-            }
-
-            public WatchException(string message, Exception innerException)
-                : base(message, innerException)
-            {
-
-            }
-        }
-
         public static int LookupSymbol(Computer computer, string name)
         {
             var debugInfo = computer.Code.DebugInfo;
             if (debugInfo == null)
-                throw new WatchException(string.Format("Undefined symbol: {0}", name));
+                throw new WatchException(string.Format("Undefined: {0}", name));
 
             var symbol = debugInfo.FindSymbol(name);
             if (!symbol.HasValue)
-                throw new WatchException(string.Format("Undefined symbol: {0}", name));
+                throw new WatchException(string.Format("Undefined: {0}", name));
 
             return symbol.Value.Address;
         }
@@ -178,7 +162,7 @@ namespace GlitchGame.Debugger
                     }
 
                     if (operators.Count == 0)
-                        throw new WatchException("Mismatched parenthesis");
+                        throw new WatchException("Bad parens");
 
                     operators.Pop();
 
@@ -191,7 +175,7 @@ namespace GlitchGame.Debugger
             {
                 var o = operators.Pop();
                 if (o.Type == TokenType.OpenParen)
-                    throw new WatchException("Mismatched parenthesis");
+                    throw new WatchException("Bad parens");
 
                 output.Enqueue(o);
             }
@@ -230,7 +214,7 @@ namespace GlitchGame.Debugger
                 case TokenType.Modulo:
                     return 2;
                 default:
-                    throw new WatchException("Operator has no precendence");
+                    throw new WatchException("Operator precedence");
             }
         }
 
@@ -311,7 +295,7 @@ namespace GlitchGame.Debugger
                     }
 
                     if (!number.HasValue)
-                        throw new WatchException(string.Format("Invalid number: {0}", build));
+                        throw new WatchException(string.Format("Bad number: {0}", build));
 
                     prev = new Token(TokenType.Number, number.Value.ToString());
                     yield return prev;
@@ -348,7 +332,7 @@ namespace GlitchGame.Debugger
                     continue;
                 }
 
-                throw new WatchException(string.Format("Invalid token: {0}", str[pos]));
+                throw new WatchException(string.Format("Bad token: {0}", str[pos]));
             }
         }
 
@@ -363,5 +347,20 @@ namespace GlitchGame.Debugger
             { ')', TokenType.CloseParen },
         };
         #endregion
+    }
+
+    public class WatchException : Exception
+    {
+        public WatchException(string message)
+            : base(message)
+        {
+
+        }
+
+        public WatchException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+
+        }
     }
 }

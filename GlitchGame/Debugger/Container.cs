@@ -187,7 +187,7 @@ namespace GlitchGame.Debugger
 
         private static bool ContainsPoint(Widget widget, int x, int y)
         {
-            return x >= widget.Left && y >= widget.Top && x <= (widget.Left + widget.Width) && y <= (widget.Top + widget.Height);
+            return x >= widget.Left && y >= widget.Top && x < (widget.Left + widget.Width) && y < (widget.Top + widget.Height);
         }
     }
 }

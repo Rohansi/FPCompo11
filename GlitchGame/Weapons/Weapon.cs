@@ -1,4 +1,5 @@
-﻿using GlitchGame.Entities;
+﻿using System;
+using GlitchGame.Entities;
 using Microsoft.Xna.Framework;
 using SFML.Graphics;
 using SFML.Window;
@@ -40,8 +41,7 @@ namespace GlitchGame.Weapons
 
         public virtual void Update(float dt)
         {
-            if (Cooldown > 0)
-                Cooldown -= dt;
+            Cooldown = Math.Max(Cooldown - dt, 0);
         }
 
         protected Vector2 Direction(float dir)

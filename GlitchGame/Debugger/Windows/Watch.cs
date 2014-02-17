@@ -27,7 +27,7 @@ namespace GlitchGame.Debugger.Windows
         public Watch(DebugView view)
             : base(view)
         {
-            _window = new Window(30, 30, 80, 25, "Watch");
+            _window = new Window(40, 40, 80, 25, "Watch");
             _window.Visible = false;
             view.Desktop.Add(_window);
 
@@ -103,6 +103,7 @@ namespace GlitchGame.Debugger.Windows
                 try
                 {
                     item.Function = WatchExpression.Compile(item.Expression);
+                    item.Error = null;
                 }
                 catch (WatchException e)
                 {

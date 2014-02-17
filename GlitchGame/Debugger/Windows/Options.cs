@@ -12,7 +12,7 @@ namespace GlitchGame.Debugger.Windows
             : base(view)
         {
             #region Widget Creation
-            _window = new Window(25, 25, 30, 5, "Options");
+            _window = new Window(2, 2, 30, 5, "Options");
             _window.Visible = false;
             view.Desktop.Add(_window);
 

@@ -12,6 +12,7 @@ namespace GlitchGame.Debugger.Windows
         private Label[] _flags;
         private Disassembly _disassembly;
         private Button _pause;
+        private Button _step;
         private Checkbox _skipInterrupt;
         private bool _autoMove;
 
@@ -60,7 +61,18 @@ namespace GlitchGame.Debugger.Windows
             };
             _window.Add(_skipInterrupt);
 
-            _pause = new Button(72, 30, 25, "Pause");
+            _step = new Button(72, 30, 25, "Step");
+            _step.Clicked += () =>
+            {
+                if (Target == null || !Target.Paused)
+                    return;
+
+                Target.Step = true;
+                _autoMove = true;
+            };
+            _window.Add(_step);
+
+            _pause = new Button(72, 33, 25, "Pause");
             _pause.Clicked += () =>
             {
                 if (Target == null)
@@ -74,17 +86,6 @@ namespace GlitchGame.Debugger.Windows
             };
             _window.Add(_pause);
 
-            var stepButton = new Button(72, 33, 25, "Step");
-            stepButton.Clicked += () =>
-            {
-                if (Target == null || !Target.Paused)
-                    return;
-
-                Target.Step = true;
-                _autoMove = true;
-            };
-            _window.Add(stepButton);
-
             var gotoButton = new Button(90, 36, 7, "Goto");
             _window.Add(gotoButton);
             #endregion
@@ -94,6 +95,8 @@ namespace GlitchGame.Debugger.Windows
         {
             _disassembly.Reset();
             _skipInterrupt.Checked = false;
+            _step.Visible = false;
+            _skipInterrupt.Visible = false;
 
             if (Target != null)
                 Target.ResetBreakpoints();
@@ -124,6 +127,8 @@ namespace GlitchGame.Debugger.Windows
             _disassembly.Update(Target);
 
             _pause.Caption = Target.Paused ? "Continue" : "Pause";
+            _step.Visible = Target.Paused;
+            _skipInterrupt.Visible = Target.Paused;
 
         }
 

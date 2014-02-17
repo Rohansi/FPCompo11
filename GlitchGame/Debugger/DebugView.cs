@@ -10,7 +10,7 @@ using Texter;
 
 namespace GlitchGame.Debugger
 {
-    public class DebugView : Drawable
+    public sealed class DebugView : Drawable
     {
         private TextDisplay _display;
         private GuiSystem _gui;

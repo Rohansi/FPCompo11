@@ -124,7 +124,7 @@ namespace GlitchGame.Debugger
 
         private enum Register
         {
-            R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, BP, IP, SP
+            R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, BP, SP, IP
         }
 
         #region Parser

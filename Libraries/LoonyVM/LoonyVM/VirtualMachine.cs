@@ -90,7 +90,7 @@ namespace LoonyVM
 
                         Interrupt(device.Id);
                         device.HandleInterruptRequest(this);
-                        break;
+                        return;
                     }
                 }
 

@@ -20,10 +20,10 @@ namespace GlitchGame.Debugger.Windows
             : base(view)
         {
             #region Widget Creation
-            _window = new Window(10, 10, 100, 40, "CPU");
-            view.Desktop.Add(_window);
+            _window = new Window(10, 10, 100, 41, "CPU");
+            View.Desktop.Add(_window);
 
-            _disassembly = new Disassembly(1, 1, 69, 36);
+            _disassembly = new Disassembly(1, 1, 69, 37);
             _disassembly.Clicked += (addr, button) =>
             {
                 if (Target == null)
@@ -50,10 +50,7 @@ namespace GlitchGame.Debugger.Windows
                 _window.Add(_flags[i]);
             }
 
-            var gotoInput = new TextBox(72, 36, 17);
-            _window.Add(gotoInput);
-
-            _skipInterrupt = new Checkbox(72, 28, 25, "Skip Interrupts");
+            _skipInterrupt = new Checkbox(72, 29, 25, "Skip Interrupts");
             _skipInterrupt.Changed += () =>
             {
                 if (Target != null)
@@ -61,7 +58,7 @@ namespace GlitchGame.Debugger.Windows
             };
             _window.Add(_skipInterrupt);
 
-            _step = new Button(72, 30, 25, "Step");
+            _step = new Button(72, 31, 25, "Step");
             _step.Clicked += () =>
             {
                 if (Target == null || !Target.Paused)
@@ -72,7 +69,7 @@ namespace GlitchGame.Debugger.Windows
             };
             _window.Add(_step);
 
-            _pause = new Button(72, 33, 25, "Pause");
+            _pause = new Button(72, 34, 25, "Pause");
             _pause.Clicked += () =>
             {
                 if (Target == null)
@@ -86,8 +83,11 @@ namespace GlitchGame.Debugger.Windows
             };
             _window.Add(_pause);
 
-            var gotoButton = new Button(90, 36, 7, "Goto");
+            var gotoButton = new Button(90, 37, 7, "Goto");
             _window.Add(gotoButton);
+
+            var gotoInput = new TextBox(72, 37, 17);
+            _window.Add(gotoInput);
             #endregion
         }
 

@@ -27,9 +27,9 @@ namespace GlitchGame.Debugger.Windows
         public Watch(DebugView view)
             : base(view)
         {
-            _window = new Window(40, 40, 80, 25, "Watch");
+            _window = new Window(25, 25, 80, 25, "Watch");
             _window.Visible = false;
-            view.Desktop.Add(_window);
+            View.Desktop.Add(_window);
 
             _watchView = new ListView<WatchItem>(1, 1, 76, 19);
             _watchView.Columns.Add(new ListView<WatchItem>.Column("Name", 14, w => w.Name));

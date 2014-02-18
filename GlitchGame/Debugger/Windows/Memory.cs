@@ -16,9 +16,9 @@ namespace GlitchGame.Debugger.Windows
             : base(view)
         {
             #region Widget Creation
-            _window = new Window(20, 20, 81, 41, "Memory");
+            _window = new Window(15, 15, 81, 41, "Memory");
             _window.Visible = false;
-            view.Desktop.Add(_window);
+            View.Desktop.Add(_window);
 
             _editor = new HexEditor(1, 1, 77, 36, 16);
             _window.Add(_editor);

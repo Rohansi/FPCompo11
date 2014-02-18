@@ -38,6 +38,7 @@ namespace GlitchGame.Debugger
             Windows.Add(new Options(this));
             Windows.Add(new Symbols(this));
             Windows.Add(new Watch(this));
+            Windows.Add(new Profiler(this));
 
             var menu = new MenuBar();
             _gui.Add(menu);
@@ -58,17 +59,21 @@ namespace GlitchGame.Debugger
             cpu.Clicked += () => Get<Cpu>().Show();
             view.Items.Add(cpu);
 
-            var mem = new MenuItem("Memory");
-            mem.Clicked += () => Get<Memory>().Show();
-            view.Items.Add(mem);
+            var memory = new MenuItem("Memory");
+            memory.Clicked += () => Get<Memory>().Show();
+            view.Items.Add(memory);
 
-            var sym = new MenuItem("Symbols");
-            sym.Clicked += () => Get<Symbols>().Show();
-            view.Items.Add(sym);
+            var symbols = new MenuItem("Symbols");
+            symbols.Clicked += () => Get<Symbols>().Show();
+            view.Items.Add(symbols);
 
-            var wat = new MenuItem("Watch");
-            wat.Clicked += () => Get<Watch>().Show();
-            view.Items.Add(wat);
+            var watch = new MenuItem("Watch");
+            watch.Clicked += () => Get<Watch>().Show();
+            view.Items.Add(watch);
+
+            var profiler = new MenuItem("Profiler");
+            profiler.Clicked += () => Get<Profiler>().Show();
+            view.Items.Add(profiler);
             #endregion
 
             #region Options

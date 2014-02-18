@@ -6,7 +6,6 @@ VAR_SPEED           = 2
 
 DEV_SYSTEM          =  0
 DEV_TIMER           =  1
-DEV_DEBUG           =  3
 DEV_NAVIGATION      = 10
 DEV_RADAR           = 11
 DEV_ENGINES         = 12

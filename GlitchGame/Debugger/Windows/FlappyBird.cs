@@ -141,11 +141,10 @@ namespace GlitchGame.Debugger.Windows
             : base(view)
         {
             _window = new Window(25, 25, 100, 30, "Flappy Square");
+            View.Desktop.Add(_window);
 
             _game = new Game(0, 0, 98, 28);
             _window.Add(_game);
-
-            view.Desktop.Add(_window);
         }
 
         public override void Reset()

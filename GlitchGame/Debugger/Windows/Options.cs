@@ -12,9 +12,9 @@ namespace GlitchGame.Debugger.Windows
             : base(view)
         {
             #region Widget Creation
-            _window = new Window(2, 2, 30, 5, "Options");
+            _window = new Window(5, 5, 30, 5, "Options");
             _window.Visible = false;
-            view.Desktop.Add(_window);
+            View.Desktop.Add(_window);
 
             var timeScaleLabel = new Label(1, 1, 13, 1, "TimeScale %:");
             _window.Add(timeScaleLabel);

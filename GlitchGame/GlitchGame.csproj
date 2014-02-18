@@ -89,10 +89,10 @@
     <Compile Include="Debugger\Windows\FlappyBird.cs" />
     <Compile Include="Debugger\Windows\Memory.cs" />
     <Compile Include="Debugger\Windows\Options.cs" />
+    <Compile Include="Debugger\Windows\Profiler.cs" />
     <Compile Include="Debugger\Windows\Symbols.cs" />
     <Compile Include="Debugger\Windows\Watch.cs" />
     <Compile Include="Devices\Broadcast.cs" />
-    <Compile Include="Devices\Debug.cs" />
     <Compile Include="Devices\Engines.cs" />
     <Compile Include="Devices\Guns.cs" />
     <Compile Include="Devices\Navigation.cs" />

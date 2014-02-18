@@ -298,16 +298,20 @@ namespace LoonyVM
                         Origin = org;
                         break;
                     default:
-                        throw new VirtualMachineInvalidOpcode("Bad opcode id");
+                        throw new VirtualMachineException(_errorIp, "Bad opcode id");
                 }
             }
             catch (VirtualMachineException)
             {
                 throw;
             }
+            catch (VirtualMachineInvalidOpcode e)
+            {
+                throw new VirtualMachineException(_errorIp, e.Message);
+            }
             catch (Exception e)
             {
-                throw new VirtualMachineException(_errorIp, "Error: " + e, e);
+                throw new VirtualMachineException(_errorIp, e.Message, e);
             }
         }
 

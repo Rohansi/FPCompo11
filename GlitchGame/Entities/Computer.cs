@@ -19,6 +19,7 @@ namespace GlitchGame.Entities
         public bool Paused { get; set; }
         public bool Step { get; set; }
         public bool SkipInterrupts { get; set; }
+        public string Error { get; private set; }
 
         private bool _programDead;
         private int _programOffset;
@@ -143,9 +144,10 @@ namespace GlitchGame.Entities
                         }
                     }
                 }
-                catch (VirtualMachineException)
+                catch (VirtualMachineException e)
                 {
                     _programDead = true;
+                    Error = e.Message.Trim(' ', '\t', '\n', '\r');
                     return;
                 }
             }

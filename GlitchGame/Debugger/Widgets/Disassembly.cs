@@ -17,20 +17,21 @@ namespace GlitchGame.Debugger.Widgets
             public readonly bool Clickable;
             public readonly byte Foreground;
             public readonly byte Background;
+            public readonly string SourceLine;
 
-            public Line(int address, string instruction, bool clickable, byte fore, byte back = 7)
+            public Line(int address, string instruction, bool clickable, byte fore, byte back = 7, string sourceLine = null)
             {
                 Address = address;
                 Instruction = instruction;
                 Clickable = clickable;
                 Foreground = fore;
                 Background = back;
+                SourceLine = sourceLine;
             }
         }
 
         private readonly Scrollbar _scrollbar;
         private readonly List<Line> _lines;
-        private bool _needSetup;
 
         public event Action<int, Mouse.Button> Clicked;
 
@@ -53,7 +54,6 @@ namespace GlitchGame.Debugger.Widgets
             _scrollbar.Step = 6;
 
             _lines = new List<Line>();
-            _needSetup = true;
         }
 
         public override void Draw(ITextRenderer renderer)
@@ -64,6 +64,10 @@ namespace GlitchGame.Debugger.Widgets
             {
                 var line = _lines[i];
                 renderer.DrawBox(0, i, Width - 1, 1, GuiSettings.SolidBox, new Character(0, 0, line.Background));
+
+                if (line.SourceLine != null)
+                    renderer.DrawText((int)Width - 2 - line.SourceLine.Length, i, line.SourceLine, new Character(0, 25));
+
                 renderer.DrawText(0, i, line.Address.ToString("X8"), new Character(0, 8));
                 renderer.DrawText(9, i, line.Instruction, new Character(0, line.Foreground));
             }
@@ -97,18 +101,14 @@ namespace GlitchGame.Debugger.Widgets
 
         public void Reset()
         {
-            _needSetup = true;
             _scrollbar.Value = _scrollbar.Minimum;
             _lines.Clear();
         }
 
         public void Update(Computer target)
         {
-            if (_needSetup)
-            {
-                _scrollbar.Maximum = target.Vm.Memory.Length;
-                _needSetup = false;
-            }
+            _scrollbar.Maximum = target.Vm.Memory.Length - (Height * 4);
+            _scrollbar.Value = Util.Clamp(_scrollbar.Value, _scrollbar.Minimum, _scrollbar.Maximum);
 
             var debugInfo = target.Code.DebugInfo;
             var offset = (int)_scrollbar.Value;
@@ -150,8 +150,6 @@ namespace GlitchGame.Debugger.Widgets
                         yield return new Line(instrAddr, string.Format("< {0} >", symbol.Value.Name), false, 1);
 
                     nextLine = debugInfo.FindLine(instrAddr, 1);
-                    if (nextLine.HasValue && nextLine.Value.Address == instrAddr)
-                        nextLine = null;
                 }
 
                 var decodeFailed = false;
@@ -193,9 +191,18 @@ namespace GlitchGame.Debugger.Widgets
                 }
                 else
                 {
+                    string sourceLine = null;
+
+                    if (debugInfo != null)
+                    {
+                        var line = debugInfo.FindLine(instrAddr);
+                        if (line.HasValue && line.Value.Address == instrAddr)
+                            sourceLine = string.Format("{0}:{1}", line.Value.FileName, line.Value.LineNumber);
+                    }
+
                     var fg = instrAddr == ip ? 4 : 0;
                     var bg = target.HasBreakpoint(instrAddr) ? 15 : 7;
-                    yield return new Line(instrAddr, string.Format(" {0}", instruction), true, (byte)fg, (byte)bg);
+                    yield return new Line(instrAddr, string.Format(" {0}", instruction), true, (byte)fg, (byte)bg, sourceLine);
                     machine.IP += instruction.Length;
                 }
             }

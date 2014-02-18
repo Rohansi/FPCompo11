@@ -17,16 +17,16 @@ namespace LoonyVM
         }
     }
 
-    internal class VirtualMachineInvalidOpcode : VirtualMachineException
+    internal class VirtualMachineInvalidOpcode : Exception
     {
         public VirtualMachineInvalidOpcode(string message)
-            : base(0, message)
+            : base(message)
         {
 
         }
 
         public VirtualMachineInvalidOpcode(string message, Exception innerException)
-            : base(0, message, innerException)
+            : base(message, innerException)
         {
 
         }

@@ -1,4 +1,5 @@
-﻿using GlitchGame.Debugger.Widgets;
+﻿using System;
+using GlitchGame.Debugger.Widgets;
 using LoonyVM;
 using SFML.Window;
 using Window = GlitchGame.Debugger.Widgets.Window;
@@ -10,20 +11,24 @@ namespace GlitchGame.Debugger.Windows
         private Window _window;
         private Label[] _registers;
         private Label[] _flags;
+        private Label _ivt;
+        private Label _org;
         private Disassembly _disassembly;
         private Button _pause;
         private Button _step;
         private Checkbox _skipInterrupt;
+        private Label _error;
         private bool _autoMove;
+        private string _gotoError;
 
         public Cpu(DebugView view)
             : base(view)
         {
             #region Widget Creation
-            _window = new Window(10, 10, 100, 41, "CPU");
+            _window = new Window(10, 10, 110, 41, "CPU");
             View.Desktop.Add(_window);
 
-            _disassembly = new Disassembly(1, 1, 69, 37);
+            _disassembly = new Disassembly(1, 1, 79, 37);
             _disassembly.Clicked += (addr, button) =>
             {
                 if (Target == null)
@@ -36,21 +41,35 @@ namespace GlitchGame.Debugger.Windows
             };
             _window.Add(_disassembly);
 
+            var y = 1;
+
             _registers = new Label[RegisterNames.Length];
-            for (var i = 0; i < _registers.Length; i++)
+            for (var i = 0; i < _registers.Length; i++, y++)
             {
-                _registers[i] = new Label(72, 1 + i, 25, 1, "");
+                _registers[i] = new Label(82, y, 25, 1, "");
                 _window.Add(_registers[i]);
             }
 
+            y++;
+
             _flags = new Label[FlagNames.Length];
-            for (var i = 0; i < _flags.Length; i++)
+            for (var i = 0; i < _flags.Length; i++, y++)
             {
-                _flags[i] = new Label(72, 2 + _registers.Length + i, 25, 1, "");
+                _flags[i] = new Label(82, y, 25, 1, "");
                 _window.Add(_flags[i]);
             }
 
-            _skipInterrupt = new Checkbox(72, 29, 25, "Skip Interrupts");
+            y++;
+            _ivt = new Label(82, y++, 25, 1, "");
+            _window.Add(_ivt);
+
+            _org = new Label(82, y++, 25, 1, "");
+            _window.Add(_org);
+
+            _error = new Label(82, ++y, 25, 4, "");
+            _window.Add(_error);
+
+            _skipInterrupt = new Checkbox(82, 29, 25, "Skip Interrupts");
             _skipInterrupt.Changed += () =>
             {
                 if (Target != null)
@@ -58,7 +77,7 @@ namespace GlitchGame.Debugger.Windows
             };
             _window.Add(_skipInterrupt);
 
-            _step = new Button(72, 31, 25, "Step");
+            _step = new Button(82, 31, 25, "Step");
             _step.Clicked += () =>
             {
                 if (Target == null || !Target.Paused)
@@ -69,7 +88,7 @@ namespace GlitchGame.Debugger.Windows
             };
             _window.Add(_step);
 
-            _pause = new Button(72, 34, 25, "Pause");
+            _pause = new Button(82, 34, 25, "Pause");
             _pause.Clicked += () =>
             {
                 if (Target == null)
@@ -83,11 +102,27 @@ namespace GlitchGame.Debugger.Windows
             };
             _window.Add(_pause);
 
-            var gotoButton = new Button(90, 37, 7, "Goto");
-            _window.Add(gotoButton);
-
-            var gotoInput = new TextBox(72, 37, 17);
+            var gotoInput = new TextBox(82, 37, 17);
             _window.Add(gotoInput);
+
+            var gotoButton = new Button(100, 37, 7, "Goto");
+            gotoButton.Clicked += () =>
+            {
+                if (Target == null || gotoInput.Value.Length == 0)
+                    return;
+
+                try
+                {
+                    _gotoError = null;
+                    var expr = WatchExpression.Compile(gotoInput.Value);
+                    Goto(expr(Target));
+                }
+                catch (Exception e)
+                {
+                    _gotoError = string.Format("Goto: {0}", e.Message);
+                }
+            };
+            _window.Add(gotoButton);
             #endregion
         }
 
@@ -117,6 +152,16 @@ namespace GlitchGame.Debugger.Windows
                 var set = (Target.Vm.Flags & FlagValues[i]) != 0;
                 _flags[i].Caption = string.Format("{0} = {1}", FlagNames[i], set);
             }
+
+            _ivt.Caption = string.Format("IVT= {0:X8}", Target.Vm.IVT);
+            _org.Caption = string.Format("ORG= {0:X8}", Target.Vm.Origin);
+
+            if (Target.Error != null)
+                _error.Caption = Target.Error;
+            else if (_gotoError != null)
+                _error.Caption = _gotoError;
+            else
+                _error.Caption = "";
 
             if (_autoMove)
             {

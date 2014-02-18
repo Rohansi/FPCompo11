@@ -80,7 +80,6 @@ namespace GlitchGame.Debugger.Widgets
                 Left += x - _dragOffset;
                 Top += y;
 
-                Left = Clamp(Left, 0, (int)Parent.SurfaceWidth - 8);
                 Top = Clamp(Top, 0, (int)Parent.SurfaceHeight - 1);
             }
 

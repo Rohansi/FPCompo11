@@ -37,6 +37,7 @@ namespace GlitchGame.Debugger
             Windows.Add(new Memory(this));
             Windows.Add(new Options(this));
             Windows.Add(new Symbols(this));
+            Windows.Add(new Breakpoints(this));
             Windows.Add(new Watch(this));
             Windows.Add(new Profiler(this));
 
@@ -66,6 +67,10 @@ namespace GlitchGame.Debugger
             var symbols = new MenuItem("Symbols");
             symbols.Clicked += () => Get<Symbols>().Show();
             view.Items.Add(symbols);
+
+            var breakpoints = new MenuItem("Breakpoints");
+            breakpoints.Clicked += () => Get<Breakpoints>().Show();
+            view.Items.Add(breakpoints);
 
             var watch = new MenuItem("Watch");
             watch.Clicked += () => Get<Watch>().Show();

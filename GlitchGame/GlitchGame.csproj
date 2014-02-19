@@ -85,6 +85,7 @@
     <Compile Include="Debugger\Widgets\Disassembly.cs" />
     <Compile Include="Debugger\Widgets\HexEditor.cs" />
     <Compile Include="Debugger\Widgets\ListView.cs" />
+    <Compile Include="Debugger\Windows\Breakpoints.cs" />
     <Compile Include="Debugger\Windows\Cpu.cs" />
     <Compile Include="Debugger\Windows\FlappyBird.cs" />
     <Compile Include="Debugger\Windows\Memory.cs" />

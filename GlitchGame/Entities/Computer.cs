@@ -16,6 +16,7 @@ namespace GlitchGame.Entities
         public readonly Guns Guns;
         public readonly Broadcast Broadcast;
 
+        public readonly List<int> Breakpoints; 
         public bool Paused { get; set; }
         public bool Step { get; set; }
         public bool SkipInterrupts { get; set; }
@@ -25,7 +26,6 @@ namespace GlitchGame.Entities
         private int _programOffset;
         private int _programLen;
         private List<Variable> _variables;
-        private List<int> _breakpoints; 
 
         public override int Depth { get { return 2; } }
 
@@ -79,13 +79,13 @@ namespace GlitchGame.Entities
             Vm.Attach(Broadcast);
             #endregion
 
-            _breakpoints = new List<int>();
+            Breakpoints = new List<int>();
         }
 
         #region Breakpoint Methods
         public void ResetBreakpoints()
         {
-            _breakpoints.Clear();
+            Breakpoints.Clear();
             Paused = false;
             Step = false;
             SkipInterrupts = false;
@@ -93,23 +93,23 @@ namespace GlitchGame.Entities
 
         public void AddBreakpoint(int address)
         {
-            var i = _breakpoints.BinarySearch(address);
+            var i = Breakpoints.BinarySearch(address);
             if (i >= 0)
                 return;
-            _breakpoints.Insert(~i, address);
+            Breakpoints.Insert(~i, address);
         }
 
         public void RemoveBreakpoint(int address)
         {
-            var i = _breakpoints.BinarySearch(address);
+            var i = Breakpoints.BinarySearch(address);
             if (i < 0)
                 return;
-            _breakpoints.RemoveAt(i);
+            Breakpoints.RemoveAt(i);
         }
 
         public bool HasBreakpoint(int address)
         {
-            return _breakpoints.BinarySearch(address) >= 0;
+            return Breakpoints.BinarySearch(address) >= 0;
         }
         #endregion
 

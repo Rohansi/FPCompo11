@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GlitchGame.Debugger.Widgets;
 using GlitchGame.Debugger.Windows;
+using GlitchGame.Devices;
 using GlitchGame.Entities;
 using SFML.Graphics;
 using SFML.Window;
@@ -18,6 +19,7 @@ namespace GlitchGame.Debugger
         private State _state;
         private Computer _target;
         private TargetMarker _targetMarker;
+        private VertexArray _radar;
 
         public readonly Container Desktop;
         public readonly List<DebugWindow> Windows;
@@ -89,6 +91,8 @@ namespace GlitchGame.Debugger
 
             _targetMarker = new TargetMarker(1);
             _targetMarker.Color = new Color(180, 0, 0);
+
+            _radar = new VertexArray(PrimitiveType.LinesStrip, Program.RadarRays + 1);
         }
 
         public T Get<T>() where T : DebugWindow
@@ -147,12 +151,29 @@ namespace GlitchGame.Debugger
             }
 
             var targetPosition = _target.Body.Position.ToSfml() * Program.PixelsPerMeter;
+            targetPosition = Program.HudCamera.Position + (targetPosition - Program.Camera.Position) / Program.Camera.Zoom;
+
             var targetSize = 80 * _target.Size / Program.Camera.Zoom;
             _targetMarker.Radius = targetSize;
             _targetMarker.Origin = new Vector2f(targetSize, targetSize);
             _targetMarker.Thickness = 5 * _target.Size;
-            _targetMarker.Position = Program.HudCamera.Position + (targetPosition - Program.Camera.Position) / Program.Camera.Zoom;
+            _targetMarker.Position = targetPosition;
             target.Draw(_targetMarker);
+
+            var radarData = _target.Radar.RadarData;
+
+            for (uint i = 0; i < Program.RadarRays; i++)
+            {
+                var dir = i * ((float)Math.PI / (Program.RadarRays / 2));
+                var dist = Util.Clamp(radarData[i].Distance, 0, Radar.MaxDistanceP);
+                var type = radarData[i].Type;
+
+                var point = targetPosition + Util.RadarLengthDir(dir, dist / Program.Camera.Zoom).ToSfml();
+                _radar[i] = new Vertex(point, RadarColor(type));
+            }
+
+            _radar[Program.RadarRays] = _radar[0];
+            target.Draw(_radar);
 
             foreach (var w in Windows)
             {
@@ -192,6 +213,19 @@ namespace GlitchGame.Debugger
 
                 GuiSettings.CharacterWidth = _display.CharacterWidth;
                 GuiSettings.CharacterHeight = _display.CharacterHeight;
+            }
+        }
+
+        private static Color RadarColor(RadarValue value)
+        {
+            switch (value)
+            {
+                case RadarValue.Ally:
+                    return Color.Green;
+                case RadarValue.Enemy:
+                    return Color.Red;
+                default:
+                    return Color.White;
             }
         }
     }

@@ -9,12 +9,13 @@ namespace GlitchGame.Entities
     public abstract class Computer : Ship
     {
         public readonly VirtualMachine Vm;
-        public readonly ShipCode Code;
         public readonly Navigation Navigation;
         public readonly Radar Radar;
         public readonly Engines Engines;
         public readonly Guns Guns;
         public readonly Broadcast Broadcast;
+
+        public ShipCode Code { get; private set; }
 
         public readonly List<int> Breakpoints; 
         public bool Paused { get; set; }
@@ -25,41 +26,17 @@ namespace GlitchGame.Entities
         private bool _programDead;
         private int _programOffset;
         private int _programLen;
-        private List<Variable> _variables;
+        private readonly List<Variable> _variables;
 
         public override int Depth { get { return 2; } }
 
         protected Computer(State state, Vector2 position, float size, int team, string codeFile)
             : base(state, position, size, team)
         {
-            #region Vm Setup
             Vm = new VirtualMachine(4096);
 
-            Code = Assets.LoadProgram(string.Format("{0}.bin", codeFile));
-            for (var i = 0; i < Code.Length; i++)
-            {
-                Vm.Memory[i] = Code[i];
-            }
-
-            _variables = new List<Variable>();
-            var ptr = 8;
-            var varCount = Vm.Memory.ReadInt(ptr);
-            ptr += sizeof(int);
-
-            for (var i = 0; i < varCount; i++)
-            {
-                var varAddr = ptr;
-                ptr += sizeof(int);
-
-                var varType = Vm.Memory.ReadSByte(ptr);
-                ptr += sizeof(sbyte);
-
-                _variables.Add(new Variable((VariableType)varType, varAddr));
-            }
-
-            _programLen = Code.Length;
-            _programOffset = ptr;
-            _programDead = false;
+            var code = Assets.LoadCode(string.Format("{0}.bin", codeFile));
+            Load(code);
 
             Vm.Attach(new Timer());
 
@@ -77,41 +54,11 @@ namespace GlitchGame.Entities
 
             Broadcast = new Broadcast(this);
             Vm.Attach(Broadcast);
-            #endregion
 
             Breakpoints = new List<int>();
-        }
 
-        #region Breakpoint Methods
-        public void ResetBreakpoints()
-        {
-            Breakpoints.Clear();
-            Paused = false;
-            Step = false;
-            SkipInterrupts = false;
+            _variables = new List<Variable>();
         }
-
-        public void AddBreakpoint(int address)
-        {
-            var i = Breakpoints.BinarySearch(address);
-            if (i >= 0)
-                return;
-            Breakpoints.Insert(~i, address);
-        }
-
-        public void RemoveBreakpoint(int address)
-        {
-            var i = Breakpoints.BinarySearch(address);
-            if (i < 0)
-                return;
-            Breakpoints.RemoveAt(i);
-        }
-
-        public bool HasBreakpoint(int address)
-        {
-            return Breakpoints.BinarySearch(address) >= 0;
-        }
-        #endregion
 
         public override void Update(float dt)
         {
@@ -160,6 +107,68 @@ namespace GlitchGame.Entities
 
             base.Update(dt);
         }
+
+        public void Load(ShipCode code)
+        {
+            Code = code;
+
+            for (var i = 0; i < Code.Length; i++)
+            {
+                Vm.Memory[i] = Code[i];
+            }
+
+            var ptr = 8;
+            var varCount = Vm.Memory.ReadInt(ptr);
+            ptr += sizeof(int);
+
+            _variables.Clear();
+
+            for (var i = 0; i < varCount; i++)
+            {
+                var varAddr = ptr;
+                ptr += sizeof(int);
+
+                var varType = Vm.Memory.ReadSByte(ptr);
+                ptr += sizeof(sbyte);
+
+                _variables.Add(new Variable((VariableType)varType, varAddr));
+            }
+
+            _programLen = Code.Length;
+            _programOffset = ptr;
+            _programDead = false;
+        }
+
+        #region Breakpoint Methods
+        public void ResetBreakpoints()
+        {
+            Breakpoints.Clear();
+            Paused = false;
+            Step = false;
+            SkipInterrupts = false;
+        }
+
+        public void AddBreakpoint(int address)
+        {
+            var i = Breakpoints.BinarySearch(address);
+            if (i >= 0)
+                return;
+            Breakpoints.Insert(~i, address);
+        }
+
+        public void RemoveBreakpoint(int address)
+        {
+            var i = Breakpoints.BinarySearch(address);
+            if (i < 0)
+                return;
+            Breakpoints.RemoveAt(i);
+        }
+
+        public bool HasBreakpoint(int address)
+        {
+            return Breakpoints.BinarySearch(address) >= 0;
+        }
+        #endregion
 
         public void Corrupt()
         {

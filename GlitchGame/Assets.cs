@@ -87,17 +87,24 @@ namespace GlitchGame
             }
         }
 
-        public static ShipCode LoadProgram(string name)
+        public static ShipCode LoadCode(string name)
         {
-            ShipCode program;
+            ShipCode code;
 
-            if (Programs.TryGetValue(name, out program))
-                return program;
+            if (Programs.TryGetValue(name, out code))
+                return code;
 
-            program = new ShipCode(Path.Combine(BaseLocation, name));
-            Programs.Add(name, program);
+            code = new ShipCode(Path.Combine(BaseLocation, name));
+            Programs.Add(name, code);
 
-            return program;
+            return code;
+        }
+
+        public static ShipCode ReloadCode(string name)
+        {
+            var code = new ShipCode(Path.Combine(BaseLocation, name));
+            Programs[name] = code;
+            return code;
         }
     }
 }

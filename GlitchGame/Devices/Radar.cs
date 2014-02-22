@@ -97,17 +97,17 @@ namespace GlitchGame.Devices
 
                 _parent.State.World.RayCast((f, p, n, fr) =>
                 {
-                    if (f.Body == _parent.Body)
-                        return -1;
-
                     if (fr > min)
                         return 1;
 
-                    min = fr;
+                    if (f.Body == _parent.Body)
+                        return 1;
 
                     var entity = (Entity)f.Body.UserData;
                     if (entity is Bullet)
                         return 1;
+
+                    min = fr;
 
                     var ship = entity as Ship;
 

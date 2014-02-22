@@ -35,6 +35,7 @@ namespace GlitchGame.Debugger
             _gui.Add(Desktop);
 
             Windows = new List<DebugWindow>();
+            Windows.Add(new Target(this));
             Windows.Add(new Cpu(this));
             Windows.Add(new Memory(this));
             Windows.Add(new Options(this));
@@ -53,6 +54,12 @@ namespace GlitchGame.Debugger
             title.Items.Add(exit);
             menu.Items.Add(title);
             #endregion
+
+            var target = new MenuItem("Target");
+            target.Clicked += () => Get<Target>().Show();
+            menu.Items.Add(target);
+
+            // TODO: dont put everything in submenus
 
             #region View
             var view = new MenuItem("View");

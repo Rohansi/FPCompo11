@@ -7,7 +7,7 @@ namespace GlitchGame.Debugger.Windows
     public class Symbols : DebugWindow
     {
         private Window _window;
-        private ListView<ShipDebug.Symbol> _symbolList; 
+        private ListView<ShipDebug.Symbol> _symbolList;
         private bool _needUpdate;
 
         public Symbols(DebugView view)

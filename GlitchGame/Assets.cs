@@ -102,7 +102,7 @@ namespace GlitchGame
 
         public static ShipCode ReloadCode(string name)
         {
-            var code = new ShipCode(Path.Combine(BaseLocation, name));
+            var code = new ShipCode(name);
             Programs[name] = code;
             return code;
         }

@@ -11,6 +11,8 @@ namespace GlitchGame
     {
         private readonly byte[] _program;
 
+        public readonly string FileName;
+
         public int Length
         {
             get { return _program.Length; }
@@ -25,6 +27,7 @@ namespace GlitchGame
 
         public ShipCode(string fileName)
         {
+            FileName = fileName;
             _program = File.ReadAllBytes(fileName);
 
             try

@@ -8,12 +8,12 @@ namespace GlitchGame.Entities
 {
     public abstract class Computer : Ship
     {
-        public readonly VirtualMachine Vm;
-        public readonly Navigation Navigation;
-        public readonly Radar Radar;
-        public readonly Engines Engines;
-        public readonly Guns Guns;
-        public readonly Broadcast Broadcast;
+        public VirtualMachine Vm { get; private set; }
+        public Navigation Navigation { get; private set; }
+        public Radar Radar { get; private set; }
+        public Engines Engines { get; private set; }
+        public Guns Guns { get; private set; }
+        public Broadcast Broadcast { get; private set; }
 
         public ShipCode Code { get; private set; }
 
@@ -33,31 +33,12 @@ namespace GlitchGame.Entities
         protected Computer(State state, Vector2 position, float size, int team, string codeFile)
             : base(state, position, size, team)
         {
-            Vm = new VirtualMachine(4096);
-
-            var code = Assets.LoadCode(string.Format("{0}.bin", codeFile));
-            Load(code);
-
-            Vm.Attach(new Timer());
-
-            Navigation = new Navigation(Body);
-            Vm.Attach(Navigation);
-
-            Radar = new Radar(this);
-            Vm.Attach(Radar);
-
-            Engines = new Engines();
-            Vm.Attach(Engines);
-
-            Guns = new Guns();
-            Vm.Attach(Guns);
-
-            Broadcast = new Broadcast(this);
-            Vm.Attach(Broadcast);
-
             Breakpoints = new List<int>();
 
             _variables = new List<Variable>();
+
+            var code = Assets.LoadCode(string.Format("{0}.bin", codeFile));
+            Load(code);
         }
 
         public override void Update(float dt)
@@ -101,7 +82,7 @@ namespace GlitchGame.Entities
 
             Weapon.Update(dt);
 
-            Shooting = Guns.Shooting;
+            //Shooting = Guns.Shooting;
             Thruster = Engines.Thruster;
             AngularThruster = Engines.AngularThruster;
 
@@ -110,6 +91,25 @@ namespace GlitchGame.Entities
 
         public void Load(ShipCode code)
         {
+            Vm = new VirtualMachine(4096);
+
+            Vm.Attach(new Timer());
+
+            Navigation = new Navigation(Body);
+            Vm.Attach(Navigation);
+
+            Radar = new Radar(this);
+            Vm.Attach(Radar);
+
+            Engines = new Engines();
+            Vm.Attach(Engines);
+
+            Guns = new Guns();
+            Vm.Attach(Guns);
+
+            Broadcast = new Broadcast(this);
+            Vm.Attach(Broadcast);
+
             Code = code;
 
             for (var i = 0; i < Code.Length; i++)
@@ -137,6 +137,13 @@ namespace GlitchGame.Entities
             _programLen = Code.Length;
             _programOffset = ptr;
             _programDead = false;
+
+            for (var i = 0; i < Vm.Registers.Length; i++)
+            {
+                Vm.Registers[i] = 0;
+            }
+
+            Vm.SP = Vm.Memory.Length;
         }
 
         #region Breakpoint Methods

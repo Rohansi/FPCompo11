@@ -92,6 +92,7 @@
     <Compile Include="Debugger\Windows\Options.cs" />
     <Compile Include="Debugger\Windows\Profiler.cs" />
     <Compile Include="Debugger\Windows\Symbols.cs" />
+    <Compile Include="Debugger\Windows\Target.cs" />
     <Compile Include="Debugger\Windows\Watch.cs" />
     <Compile Include="Devices\Broadcast.cs" />
     <Compile Include="Devices\Engines.cs" />

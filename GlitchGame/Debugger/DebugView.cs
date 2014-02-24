@@ -55,42 +55,35 @@ namespace GlitchGame.Debugger
             menu.Items.Add(title);
             #endregion
 
+            #region View
             var target = new MenuItem("Target");
             target.Clicked += () => Get<Target>().Show();
             menu.Items.Add(target);
 
-            // TODO: dont put everything in submenus
-
-            #region View
-            var view = new MenuItem("View");
-            menu.Items.Add(view);
-
             var cpu = new MenuItem("CPU");
             cpu.Clicked += () => Get<Cpu>().Show();
-            view.Items.Add(cpu);
+            menu.Items.Add(cpu);
 
             var memory = new MenuItem("Memory");
             memory.Clicked += () => Get<Memory>().Show();
-            view.Items.Add(memory);
+            menu.Items.Add(memory);
 
             var symbols = new MenuItem("Symbols");
             symbols.Clicked += () => Get<Symbols>().Show();
-            view.Items.Add(symbols);
+            menu.Items.Add(symbols);
 
             var breakpoints = new MenuItem("Breakpoints");
             breakpoints.Clicked += () => Get<Breakpoints>().Show();
-            view.Items.Add(breakpoints);
+            menu.Items.Add(breakpoints);
 
             var watch = new MenuItem("Watch");
             watch.Clicked += () => Get<Watch>().Show();
-            view.Items.Add(watch);
+            menu.Items.Add(watch);
 
             var profiler = new MenuItem("Profiler");
             profiler.Clicked += () => Get<Profiler>().Show();
-            view.Items.Add(profiler);
-            #endregion
+            menu.Items.Add(profiler);
 
-            #region Options
             var options = new MenuItem("Options");
             options.Clicked += () => Get<Options>().Show();
             menu.Items.Add(options);

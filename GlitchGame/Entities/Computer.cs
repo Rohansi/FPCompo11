@@ -82,7 +82,7 @@ namespace GlitchGame.Entities
 
             Weapon.Update(dt);
 
-            //Shooting = Guns.Shooting;
+            Shooting = Guns.Shooting;
             Thruster = Engines.Thruster;
             AngularThruster = Engines.AngularThruster;
 

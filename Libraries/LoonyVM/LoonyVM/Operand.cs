@@ -50,7 +50,7 @@ namespace LoonyVM
                 value += _machine.Registers[OffsetRegister];
 
             if (IsPointer && resolvePointer)
-                value = _machine.ReadInt(value);
+                value = _machine.Memory.ReadInt(value);
 
             if (disableType)
                 return value;
@@ -83,7 +83,7 @@ namespace LoonyVM
 
             var val = PreserveUpper(value, Get(disableType: true), ValueType);
             var addr = Get(false, true);
-            _machine.WriteInt(addr, val);
+            _machine.Memory.WriteInt(addr, val);
         }
 
         public static int PreserveUpper(int newValue, int originalValue, int type)

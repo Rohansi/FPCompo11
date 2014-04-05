@@ -109,3 +109,5 @@ UpgradeLog*.XML
 
 # FASM debug info
 *.fas
+
+*.sln.ide/

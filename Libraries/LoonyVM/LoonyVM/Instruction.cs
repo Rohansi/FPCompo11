@@ -8,8 +8,7 @@ namespace LoonyVM
         Mov, Add, Sub, Mul, Div, Rem, Inc, Dec, Not, And, Or,
         Xor, Shl, Shr, Push, Pop, Jmp, Call, Ret, Cmp, Jz, Jnz,
         Je, Jne, Ja, Jae, Jb, Jbe, Rand, Int, Iret, Ivt, Abs, 
-        Retn, Xchg, Cmpxchg, Pusha, Popa, Sti, Cli, Neg, Sorg,
-        None
+        Retn, Xchg, Cmpxchg, Pusha, Popa, Sti, Cli, Neg, None
     }
 
     public class Instruction
@@ -82,15 +81,15 @@ namespace LoonyVM
             switch (operandType)
             {
                 case 0xD:
-                    payload = _machine.ReadSByte(_machine.IP);
+                    payload = _machine.Memory.ReadSByte(_machine.IP);
                     _machine.IP += sizeof(sbyte);
                     break;
                 case 0xE:
-                    payload = _machine.ReadShort(_machine.IP);
+                    payload = _machine.Memory.ReadShort(_machine.IP);
                     _machine.IP += sizeof(short);
                     break;
                 case 0xF:
-                    payload = _machine.ReadInt(_machine.IP);
+                    payload = _machine.Memory.ReadInt(_machine.IP);
                     _machine.IP += sizeof(int);
                     break;
             }
@@ -156,8 +155,7 @@ namespace LoonyVM
             { Opcode.Popa,    0 }, 
             { Opcode.Sti,     0 },
             { Opcode.Cli,     0 },
-            { Opcode.Neg,     1 },
-            { Opcode.Sorg,    1 }
+            { Opcode.Neg,     1 }
         };
     }
 }

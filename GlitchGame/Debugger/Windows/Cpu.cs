@@ -12,7 +12,6 @@ namespace GlitchGame.Debugger.Windows
         private Label[] _registers;
         private Label[] _flags;
         private Label _ivt;
-        private Label _org;
         private Disassembly _disassembly;
         private Button _pause;
         private Button _step;
@@ -62,9 +61,6 @@ namespace GlitchGame.Debugger.Windows
             y++;
             _ivt = new Label(82, y++, 25, 1, "");
             _window.Add(_ivt);
-
-            _org = new Label(82, y++, 25, 1, "");
-            _window.Add(_org);
 
             _error = new Label(82, ++y, 25, 4, "");
             _window.Add(_error);
@@ -154,7 +150,6 @@ namespace GlitchGame.Debugger.Windows
             }
 
             _ivt.Caption = string.Format("IVT= {0:X8}", Target.Vm.IVT);
-            _org.Caption = string.Format("ORG= {0:X8}", Target.Vm.Origin);
 
             if (Target.Error != null)
                 _error.Caption = Target.Error;

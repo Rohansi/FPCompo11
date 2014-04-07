@@ -85,6 +85,21 @@ namespace GlitchGame.Debugger
                         case TokenType.Modulo:
                             op = ExpressionType.Modulo;
                             break;
+                        case TokenType.LeftShift:
+                            op = ExpressionType.LeftShift;
+                            break;
+                        case TokenType.RightShift:
+                            op = ExpressionType.RightShift;
+                            break;
+                        case TokenType.And:
+                            op = ExpressionType.And;
+                            break;
+                        case TokenType.Or:
+                            op = ExpressionType.Or;
+                            break;
+                        case TokenType.Xor:
+                            op = ExpressionType.ExclusiveOr;
+                            break;
                         default:
                             throw new WatchException("Bad token type");
                     }
@@ -190,11 +205,17 @@ namespace GlitchGame.Debugger
 
         private static bool IsOperator(Token token)
         {
+            // TODO: replace with dictionary
             return token.Type == TokenType.Add ||
                    token.Type == TokenType.Subtract ||
                    token.Type == TokenType.Multiply ||
                    token.Type == TokenType.Divide ||
-                   token.Type == TokenType.Modulo;
+                   token.Type == TokenType.Modulo ||
+                   token.Type == TokenType.LeftShift ||
+                   token.Type == TokenType.RightShift ||
+                   token.Type == TokenType.And ||
+                   token.Type == TokenType.Or ||
+                   token.Type == TokenType.Xor;
         }
 
         private static bool IsFunction(Token token)
@@ -204,15 +225,24 @@ namespace GlitchGame.Debugger
 
         private static int GetPrecedence(Token token)
         {
-            switch (token.Type)
+            switch (token.Type) // TODO: replace with dictionary
             {
-                case TokenType.Add:
-                case TokenType.Subtract:
-                    return 1;
                 case TokenType.Multiply:
                 case TokenType.Divide:
                 case TokenType.Modulo:
-                    return 2;
+                    return 10;
+                case TokenType.Add:
+                case TokenType.Subtract:
+                    return 9;
+                case TokenType.LeftShift:
+                case TokenType.RightShift:
+                    return 8;
+                case TokenType.And:
+                    return 7;
+                case TokenType.Xor:
+                    return 6;
+                case TokenType.Or:
+                    return 5;
                 default:
                     throw new WatchException("Operator precedence");
             }
@@ -229,7 +259,10 @@ namespace GlitchGame.Debugger
         #region Tokenizer
         private enum TokenType
         {
-            Number, Word, Add, Subtract, Multiply, Divide, Modulo, OpenParen, CloseParen
+            Number, Word,
+            Add, Subtract, Multiply, Divide, Modulo,
+            LeftShift, RightShift, And, Or, Xor,
+            OpenParen, CloseParen
         }
 
         private struct Token
@@ -324,7 +357,19 @@ namespace GlitchGame.Debugger
                 }
 
                 TokenType op;
-                if (Operators.TryGetValue(str[pos], out op))
+                if (pos < str.Length - 1)
+                {
+                    var opStr = "" + str[pos] + str[pos + 1];
+                    if (Operators.TryGetValue(opStr, out op))
+                    {
+                        pos += 2;
+                        prev = new Token(op);
+                        yield return prev;
+                        continue;
+                    }
+                }
+
+                if (Operators.TryGetValue("" + str[pos], out op))
                 {
                     pos++;
                     prev = new Token(op);
@@ -336,15 +381,20 @@ namespace GlitchGame.Debugger
             }
         }
 
-        private static readonly Dictionary<char, TokenType> Operators = new Dictionary<char, TokenType>
+        private static readonly Dictionary<string, TokenType> Operators = new Dictionary<string, TokenType>
         {
-            { '+', TokenType.Add },
-            { '-', TokenType.Subtract },
-            { '*', TokenType.Multiply },
-            { '/', TokenType.Divide },
-            { '%', TokenType.Modulo },
-            { '(', TokenType.OpenParen },
-            { ')', TokenType.CloseParen },
+            { "+",  TokenType.Add },
+            { "-",  TokenType.Subtract },
+            { "*",  TokenType.Multiply },
+            { "/",  TokenType.Divide },
+            { "%",  TokenType.Modulo },
+            { "<<", TokenType.LeftShift },
+            { ">>", TokenType.RightShift },
+            { "&",  TokenType.And },
+            { "|",  TokenType.Or },
+            { "^",  TokenType.Xor },
+            { "(",  TokenType.OpenParen },
+            { ")",  TokenType.CloseParen },
         };
         #endregion
     }

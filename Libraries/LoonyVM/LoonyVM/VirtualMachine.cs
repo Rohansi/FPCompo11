@@ -2,6 +2,19 @@
 
 namespace LoonyVM
 {
+    public enum Opcode
+    {
+        Mov, Add, Sub, Mul, Div, Rem, Inc, Dec, Not, And, Or,
+        Xor, Shl, Shr, Push, Pop, Jmp, Call, Ret, Cmp, Jz, Jnz,
+        Je, Jne, Ja, Jae, Jb, Jbe, Rand, Int, Iret, Ivt, Abs,
+        Retn, Xchg, Cmpxchg, Pusha, Popa, Sti, Cli, Neg, Count
+    }
+
+    public enum Register
+    {
+        R0, R1, R2, R3, R4, R5, R6, R7, R8, R9, BP, SP, IP, Count
+    }
+
     [Flags]
     public enum VmFlags
     {
@@ -24,14 +37,14 @@ namespace LoonyVM
 
         public int IP
         {
-            get { return Registers[0xC]; }
-            set { Registers[0xC] = value; }
+            get { return Registers[(int)Register.IP]; }
+            set { Registers[(int)Register.IP] = value; }
         }
 
         public int SP
         {
-            get { return Registers[0xB]; }
-            set { Registers[0xB] = value; }
+            get { return Registers[(int)Register.SP]; }
+            set { Registers[(int)Register.SP] = value; }
         }
 
         public readonly byte[] Memory;
@@ -46,7 +59,7 @@ namespace LoonyVM
             if (memorySize < 2 * 1024)
                 throw new ArgumentOutOfRangeException("memorySize", "VM should have at least 2kB of memory");
 
-            Registers = new int[13];
+            Registers = new int[(int)Register.Count];
             Memory = new byte[memorySize];
 
             IP = 0;
@@ -257,7 +270,7 @@ namespace LoonyVM
                         _instruction.Right.Set(xt);
                         break;
                     case Opcode.Cmpxchg:
-                        if (Registers[0] == _instruction.Left.Get())
+                        if (Registers[(int)Register.R0] == _instruction.Left.Get())
                         {
                             Flags |= VmFlags.Equal;
                             _instruction.Left.Set(_instruction.Right.Get());
@@ -265,17 +278,17 @@ namespace LoonyVM
                         else
                         {
                             Flags &= ~VmFlags.Equal;
-                            Registers[0] = _instruction.Left.Get();
+                            Registers[(int)Register.R0] = _instruction.Left.Get();
                         }
                         break;
                     case Opcode.Pusha:
-                        for (var i = 9; i >= 0; i--)
+                        for (var i = (int)Register.R9; i >= (int)Register.R0; i--)
                         {
                             Push(Registers[i]);
                         }
                         break;
                     case Opcode.Popa:
-                        for (var i = 0; i <= 9; i++)
+                        for (var i = (int)Register.R0; i <= (int)Register.R9; i++)
                         {
                             Registers[i] = Pop();
                         }
@@ -327,7 +340,7 @@ namespace LoonyVM
             Push(IP);
             Push((int)Flags);
 
-            for (var i = 10; i >= 0; i--)
+            for (var i = (int)Register.BP; i >= (int)Register.R0; i--)
             {
                 Push(Registers[i]);
             }
@@ -339,7 +352,7 @@ namespace LoonyVM
 
         private void InterruptReturn()
         {
-            for (var i = 0; i <= 10; i++)
+            for (var i = (int)Register.R0; i <= (int)Register.BP; i++)
             {
                 Registers[i] = Pop();
             }

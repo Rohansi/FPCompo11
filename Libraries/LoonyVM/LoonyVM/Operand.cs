@@ -41,7 +41,7 @@ namespace LoonyVM
         public int Get(bool resolvePointer = true, bool disableType = false)
         {
             int value = 0;
-            if (Type <= 0xC)
+            if (Type < (int)Register.Count)
                 value = _machine.Registers[Type];
             if (Type >= 0xD && Type <= 0xF)
                 value = Payload;
@@ -76,7 +76,7 @@ namespace LoonyVM
         {
             if (!IsPointer)
             {
-                if (Type <= 0xC)
+                if (Type < (int)Register.Count)
                     _machine.Registers[Type] = PreserveUpper(value, _machine.Registers[Type], ValueType);
                 return;
             }
@@ -101,12 +101,6 @@ namespace LoonyVM
             }
         }
 
-        private static readonly string[] RegisterNames =
-        {
-            "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9",
-            "bp", "sp", "ip"
-        };
-
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -130,13 +124,13 @@ namespace LoonyVM
 
             if (IsOffset)
             {
-                if (OffsetRegister <= 0xC)
-                    sb.Append(RegisterNames[OffsetRegister]);
+                if (OffsetRegister < (int)Register.Count)
+                    sb.Append(((Register)OffsetRegister).ToString().ToLower());
                 sb.Append(" + ");
             }
 
-            if (Type <= 0xC)
-                sb.Append(RegisterNames[Type]);
+            if (Type < (int)Register.Count)
+                sb.Append(((Register)Type).ToString().ToLower());
             if (Type >= 0xD && Type <= 0xF)
                 sb.AppendFormat("0x{0:X}", Payload);
 

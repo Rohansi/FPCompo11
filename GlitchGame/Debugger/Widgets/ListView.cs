@@ -82,12 +82,7 @@ namespace GlitchGame.Debugger.Widgets
                         reg.DrawText(1, 0, column.Name, new Character(0, 15, 24));
 
                         if (_sortColumn == j)
-                        {
-                            if (_sortAscending)
-                                reg.Set(0, 0, new Character(24));
-                            else
-                                reg.Set(0, 0, new Character(25));
-                        }
+                            reg.Set(0, 0, new Character(_sortAscending ? 24 : 25));
                     }
                     else
                     {

@@ -1,7 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 
-namespace GlitchGame
+namespace GlitchGame.Drawables
 {
     public class Background : Drawable
     {

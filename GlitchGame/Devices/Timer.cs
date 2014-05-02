@@ -35,7 +35,7 @@ namespace GlitchGame.Devices
                     _enabled = machine.Registers[1] != 0;
                     break;
                 case 1: // set frequency
-                    _updateEvery = (int)(Program.InstructionsPerSecond / Util.Clamp(machine.Registers[1], 1, 1000));
+                    _updateEvery = Program.InstructionsPerSecond / Util.Clamp(machine.Registers[1], 1, 1000);
                     break;
             }
         }

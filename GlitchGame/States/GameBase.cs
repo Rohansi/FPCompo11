@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using FarseerPhysics;
 using FarseerPhysics.Dynamics;
+using GlitchGame.Drawables;
 using GlitchGame.Entities;
 using Microsoft.Xna.Framework;
 using SFML.Graphics;

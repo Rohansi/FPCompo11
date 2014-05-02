@@ -40,8 +40,9 @@ namespace GlitchGame.Entities.Projectiles
                 if (b.Body.UserData is Projectile) // TODO: damage
                     return false;
 
-                if (b.Body.UserData is Entity)
-                    Hit((Entity)b.Body.UserData);
+                var entityB = b.Body.UserData as Entity;
+                if (entityB != null)
+                    Hit(entityB);
 
                 Dead = true;
                 return false;

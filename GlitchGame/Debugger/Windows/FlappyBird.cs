@@ -135,7 +135,6 @@ namespace GlitchGame.Debugger.Windows
         }
 
         private Window _window;
-        private Game _game;
 
         public FlappyBird(DebugView view)
             : base(view)
@@ -143,8 +142,8 @@ namespace GlitchGame.Debugger.Windows
             _window = new Window(25, 25, 100, 30, "Flappy Square");
             View.Desktop.Add(_window);
 
-            _game = new Game(0, 0, 98, 28);
-            _window.Add(_game);
+            var game = new Game(0, 0, 98, 28);
+            _window.Add(game);
         }
 
         public override void Reset()

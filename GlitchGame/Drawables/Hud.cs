@@ -3,7 +3,7 @@ using GlitchGame.States;
 using SFML.Graphics;
 using SFML.Window;
 
-namespace GlitchGame
+namespace GlitchGame.Drawables
 {
     public class Hud : Drawable
     {

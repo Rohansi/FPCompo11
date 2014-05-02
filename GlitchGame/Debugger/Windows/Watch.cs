@@ -14,7 +14,7 @@ namespace GlitchGame.Debugger.Windows
             public string Expression;
             public Func<Computer, int> Function;
 
-            public string Error = null;
+            public string Error;
         }
 
         private Window _window;
@@ -127,10 +127,7 @@ namespace GlitchGame.Debugger.Windows
             if (!_window.Visible)
                 return;
 
-            if (_editing == null)
-                _button.Caption = "Add";
-            else
-                _button.Caption = "Update";
+            _button.Caption = _editing == null ? "Add" : "Update";
         }
 
         public void Show()
